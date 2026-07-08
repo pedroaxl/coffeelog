@@ -1,8 +1,10 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 import type { Db } from "./db/connection.js";
 import { settingsRouter } from "./routes/settings.js";
+import { coffeesRouter } from "./routes/coffees.js";
 import { HttpError } from "./lib/http-error.js";
 
 export interface AppOptions {
@@ -16,9 +18,13 @@ export function buildApp(db: Db, opts: AppOptions = {}): Express {
   const app = express();
   app.use(express.json({ limit: "2mb" }));
 
+  // Photo uploads land wherever the data dir is; tests fall back to a temp dir.
+  const uploadsDir = opts.uploadsDir ?? os.tmpdir();
+
   const api = express.Router();
   api.get("/health", (_req, res) => res.json({ ok: true, version: "1.0.0" }));
   api.use("/settings", settingsRouter(db));
+  api.use("/coffees", coffeesRouter(db, uploadsDir));
   app.use("/api", api);
 
   if (opts.uploadsDir) {

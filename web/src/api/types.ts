@@ -40,6 +40,7 @@ export interface StorageUnit {
   frozenDate: string | null;
   openedDate: string | null;
   status: UnitStatus; // derived label used by the status-color system
+  active: boolean;
 }
 
 export interface Coffee {
@@ -58,6 +59,7 @@ export interface Coffee {
   purchaseDate: string | null;
   photoPath: string | null;
   score: number | null;
+  createdAt: string;
   tastingNotes: string[];
   recipe: Recipe | null;
   units: StorageUnit[];
