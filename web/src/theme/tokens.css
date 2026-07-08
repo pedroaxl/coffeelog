@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (no external CDN — works on a LAN with no internet). */
+@import "@fontsource/spectral/400.css";
+@import "@fontsource/spectral/500.css";
+@import "@fontsource/spectral/600.css";
+@import "@fontsource/spectral/700.css";
+@import "@fontsource-variable/ibm-plex-sans";
+
+/*
+ * CoffeeLog design tokens — lifted from the design handoff (README "Design Tokens").
+ * Exposed to Tailwind v4 via @theme so utilities like bg-brand, text-terracotta,
+ * rounded-card, shadow-card are available.
+ */
+@theme {
+  --font-serif: "Spectral", ui-serif, Georgia, serif;
+  --font-sans: "IBM Plex Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Ink / brand */
+  --color-ink: #2b211a;
+  --color-brand: #5c3d28;
+  --color-terracotta: #be6a3a;
+  --color-accent-deep: #9a5228;
+  --color-gold: #c79a33;
+  --color-gold-bright: #e7b84b;
+
+  /* Surfaces */
+  --color-page: #ede3d4;
+  --color-page-2: #f5ede1;
+  --color-cream: #fbf6ee;
+  --color-card: #fffdf9;
+  --color-settings-bg: #f3ece0;
+
+  /* Borders */
+  --color-border: #ede1cf;
+  --color-border-2: #e4d8c6;
+  --color-border-3: #eadfcd;
+  --color-divider: #f0e6d6;
+
+  /* Muted fills / text */
+  --color-tan: #f1e7d8;
+  --color-tan-2: #f5ede1;
+  --color-muted: #8a7867;
+  --color-muted-2: #b5a48f;
+
+  /* Chips */
+  --color-chip-terracotta-bg: #f3e6d6;
+
+  /* Destructive / success */
+  --color-danger: #c0503a;
+  --color-danger-bg: #f5e4de;
+  --color-success: #3e8e5b;
+
+  /* Unit-state status system */
+  --color-state-open: #be6a3a;
+  --color-state-open-bg: #f3e6d6;
+  --color-state-frozen: #5b7b8c;
+  --color-state-frozen-dot: #6c8ca6;
+  --color-state-frozen-bg: #eaf0f2;
+  --color-state-defrosted: #b07a1c;
+  --color-state-defrosted-bg: #f7eed8;
+  --color-state-consumed: #a99c8d;
+  --color-state-consumed-bg: #f0ebe3;
+
+  /* Dark recipe/surface */
+  --color-recipe: #2b211a;
+  --color-bezel: #241a13;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-card-lg: 20px;
+  --radius-btn: 13px;
+  --radius-input: 12px;
+  --radius-pill: 20px;
+  --radius-tile: 11px;
+
+  /* Shadows */
+  --shadow-card: 0 8px 18px -12px rgba(92, 61, 40, 0.35);
+  --shadow-sheet: 0 -10px 40px -12px rgba(0, 0, 0, 0.4);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbars inside app scroll regions for a cleaner mobile look. */
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}

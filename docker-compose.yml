@@ -1,0 +1,19 @@
+services:
+  coffeelog:
+    build: .
+    image: coffeelog:latest
+    container_name: coffeelog
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Set this to how you reach the app on your LAN so QR labels encode a URL
+      # your phone camera can open, e.g. http://192.168.0.12:8080
+      - PORT=8080
+    volumes:
+      # Single-directory persistence: SQLite DB + uploaded photos. Back up by
+      # copying this volume.
+      - coffeelog-data:/data
+
+volumes:
+  coffeelog-data:

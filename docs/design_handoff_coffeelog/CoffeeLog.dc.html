@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="design_doc_mode" content="canvas">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: #9A5228; }
+  a:hover { color: #BE6A3A; }
+  .cl-phone::-webkit-scrollbar { width: 0; height: 0; }
+  .cl-phone { scrollbar-width: none; }
+</style>
+</helmet>
+<div style="min-height:100vh;background:#EDE3D4;background-image:radial-gradient(circle at 20% 10%, #F5EDE1 0, #EBE0D0 60%);font-family:'IBM Plex Sans',system-ui,sans-serif;color:#2B211A;padding:56px 64px 120px;">
+
+  <div style="display:flex;align-items:flex-end;gap:24px;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:46px;height:46px;border-radius:14px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px -6px rgba(190,106,58,.55);">
+        <svg width="28" height="28" viewBox="0 0 48 48"><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="12.5" ry="19" fill="#F3EBDF"/><path d="M24 6 C 18 15, 30 33, 24 42" fill="none" stroke="#BE6A3A" stroke-width="2.6" stroke-linecap="round"/></g></svg>
+      </div>
+      <div>
+        <div style="font-family:'Spectral',serif;font-size:30px;font-weight:600;letter-spacing:-.5px;line-height:1;">CoffeeLog</div>
+        <div style="font-size:13px;color:#8A7867;margin-top:4px;">Specialty coffee management · v1 prototype</div>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:13.5px;color:#8A7867;max-width:640px;margin-bottom:44px;line-height:1.5;">
+    Static hi-fi screens, mobile-first. Each screen has a badge (e.g. <b style="color:#9A5228;">5a</b>) — reference it in chat to request tweaks.
+  </div>
+
+  <!-- ============ TURN 11 · HANDOFF SCREENS ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Onboarding · Edit · Recipe · Settings · Feedback</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">The remaining screens for developer handoff. Recipe uses fixed fields (method, dose, yield, ratio, temp, grinder) + a free-text protocol.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <!-- ===== 11a ONBOARDING / EMPTY HOME ===== -->
+      <div id="11a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">11a</span>
+          <span style="font-size:13px;color:#8A7867;">Empty home · first run</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#5C3D28;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;color:#F3EBDF;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;text-align:center;color:#F3EBDF;">
+            <div style="width:96px;height:96px;border-radius:28px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px -14px rgba(0,0,0,.45);margin-bottom:26px;">
+              <svg width="56" height="56" viewBox="0 0 48 48"><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="12.5" ry="19" fill="#F3EBDF"/><path d="M24 6 C 18 15, 30 33, 24 42" fill="none" stroke="#BE6A3A" stroke-width="2.6" stroke-linecap="round"/></g></svg>
+            </div>
+            <div style="font-family:'Spectral',serif;font-size:28px;font-weight:600;line-height:1.12;margin-bottom:12px;">Welcome to<br>CoffeeLog</div>
+            <div style="font-size:14px;line-height:1.5;color:rgba(243,235,223,.72);margin-bottom:40px;">Your cellar is empty. Add your first coffee to start tracking beans, units and recipes.</div>
+            <div style="width:100%;background:#BE6A3A;color:#fff;border-radius:15px;padding:15px;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:12px;box-shadow:0 12px 26px -12px rgba(0,0,0,.5);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add your first coffee</div>
+            <div style="width:100%;background:rgba(243,235,223,.1);color:#F3EBDF;border-radius:15px;padding:15px;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#F3EBDF" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg>Scan a label</div>
+          </div>
+          <div style="flex:none;padding:0 34px 30px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:rgba(243,235,223,.5);"><span style="width:6px;height:6px;border-radius:50%;background:#7FB08A;"></span>Connected to home server · 192.168.0.12</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 11b EDIT COFFEE ===== -->
+      <div id="11b" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">11b</span>
+          <span style="font-size:13px;color:#8A7867;">Edit coffee · full form</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #EADFCD;">
+            <span style="font-size:14px;color:#8A7867;">Cancel</span>
+            <span style="font-family:'Spectral',serif;font-size:18px;font-weight:600;">Edit coffee</span>
+            <span style="font-size:14px;color:#BE6A3A;font-weight:600;">Save</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:16px 22px 0;">
+            <!-- photo -->
+            <div style="display:flex;gap:13px;align-items:center;margin-bottom:18px;">
+              <div style="width:68px;height:80px;border-radius:12px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);position:relative;overflow:hidden;"><div style="position:absolute;bottom:0;left:0;right:0;padding:5px;text-align:center;font-size:10px;background:rgba(0,0,0,.35);color:#fff;">Change</div></div>
+              <div style="flex:1;">
+                <div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Coffee name</div>
+                <div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:12px;padding:11px 13px;font-weight:600;font-size:14px;">Sítio da Torre</div>
+              </div>
+            </div>
+            <div style="margin-bottom:14px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roaster</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">Coffeelab</div></div>
+            <div style="display:flex;gap:10px;margin-bottom:14px;">
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Variety</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">Catuaí Amarelo</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Process</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;display:flex;justify-content:space-between;align-items:center;">Natural <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:14px;">
+              <div style="flex:1.4;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Bean origin (region)</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">Carmo de Minas</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Country</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;display:flex;align-items:center;gap:6px;">🇧🇷 Brazil</div></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:14px;">
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Altitude</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">1,200 m</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roast level</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;display:flex;justify-content:space-between;align-items:center;">Med-light <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            </div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:8px;">Tasting notes</div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;">
+              <span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;">Caramel <svg width="11" height="11" viewBox="0 0 24 24" stroke="#9A5228" stroke-width="2.4" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+              <span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;">Cherry <svg width="11" height="11" viewBox="0 0 24 24" stroke="#9A5228" stroke-width="2.4" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+              <span style="font-size:12.5px;background:#fff;border:1px dashed #D9C6AC;color:#8A7867;padding:6px 12px;border-radius:20px;">+ add</span>
+            </div>
+          </div>
+          <div style="flex:none;padding:12px 22px 26px;background:#FBF6EE;border-top:1px solid #EADFCD;display:flex;gap:10px;">
+            <div style="flex:none;width:52px;background:#F5E4DE;border-radius:13px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0503A" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></div>
+            <div style="flex:1;background:#BE6A3A;color:#fff;border-radius:13px;padding:14px;text-align:center;font-weight:600;font-size:14.5px;">Save changes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 11c RECIPE EDITOR ===== -->
+      <div id="11c" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">11c</span>
+          <span style="font-size:13px;color:#8A7867;">Recipe · fixed fields + free text</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #EADFCD;">
+            <span style="font-size:14px;color:#8A7867;">Cancel</span>
+            <div style="text-align:center;"><div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;line-height:1;">Edit recipe</div><div style="font-size:11px;color:#8A7867;margin-top:2px;">Sítio da Torre</div></div>
+            <span style="font-size:14px;color:#BE6A3A;font-weight:600;">Save</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:16px 22px 0;">
+            <!-- method -->
+            <div style="margin-bottom:16px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Method</div>
+              <div style="display:flex;gap:8px;">
+                <span style="flex:1;text-align:center;font-size:13px;font-weight:600;background:#5C3D28;color:#FBF6EE;padding:9px;border-radius:11px;">V60</span>
+                <span style="flex:1;text-align:center;font-size:13px;background:#F1E7D8;color:#5C3D28;padding:9px;border-radius:11px;">Espresso</span>
+                <span style="flex:1;text-align:center;font-size:13px;background:#F1E7D8;color:#5C3D28;padding:9px;border-radius:11px;">Aeropress</span>
+                <span style="flex:none;width:42px;text-align:center;font-size:16px;background:#F1E7D8;color:#5C3D28;padding:9px 0;border-radius:11px;">···</span>
+              </div>
+            </div>
+            <!-- fixed numeric grid -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+              <div><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Dose</div><div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:12px;padding:11px 13px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;">15 <span style="color:#8A7867;font-weight:400;">g</span></div></div>
+              <div><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Yield (water)</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;">250 <span style="color:#8A7867;font-weight:400;">g</span></div></div>
+              <div><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Ratio</div><div style="background:#F5EDE1;border:1px solid #EADFCD;border-radius:12px;padding:11px 13px;font-size:15px;font-weight:600;color:#8A7867;">1 : 16.7</div></div>
+              <div><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Water temp</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:15px;font-weight:600;display:flex;justify-content:space-between;">92 <span style="color:#8A7867;font-weight:400;">°C</span></div></div>
+            </div>
+            <!-- grinder -->
+            <div style="display:flex;gap:10px;margin-bottom:18px;">
+              <div style="flex:1.5;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Grinder</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">Comandante C40</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Setting</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:14px;">22 clicks</div></div>
+            </div>
+            <!-- free text -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div style="font-size:12px;color:#8A7867;">Protocol (free text)</div><div style="font-size:11px;color:#B5A48F;">Markdown ok</div></div>
+            <div style="background:#2B211A;border-radius:14px;padding:14px;color:#EAD9C3;font-size:13px;line-height:1.6;min-height:118px;position:relative;">Bloom 40 g / 40 s.<br>1st pour → 150 g at 0:45.<br>2nd pour → 250 g at 1:20.<br>Drawdown by ~2:45.<span style="position:absolute;right:12px;bottom:10px;width:2px;height:16px;background:#BE6A3A;"></span></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 26px;background:#FBF6EE;border-top:1px solid #EADFCD;"><div style="background:#BE6A3A;color:#fff;border-radius:13px;padding:14px;text-align:center;font-weight:600;font-size:14.5px;">Save recipe</div></div>
+        </div>
+      </div>
+
+      <!-- ===== 11d SETTINGS / SELF-HOST ===== -->
+      <div id="11d" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">11d</span>
+          <span style="font-size:13px;color:#8A7867;">Settings · self-host</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#F3ECE0;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 14px;"><div style="font-family:'Spectral',serif;font-size:24px;font-weight:600;">Settings</div></div>
+          <div style="flex:1;overflow:hidden;padding:2px 22px 0;">
+            <!-- server -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Server</div>
+            <div style="background:#FFFDF9;border:1px solid #EADFCD;border-radius:14px;overflow:hidden;margin-bottom:20px;">
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Instance URL</span><span style="font-size:13px;color:#8A7867;">192.168.0.12:8080</span></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13.5px;">Sync status</span><span style="font-size:12.5px;color:#3E8E5B;font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#3E8E5B;"></span>Connected · 2 min ago</span></div>
+            </div>
+            <!-- printer -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Label printer</div>
+            <div style="background:#FFFDF9;border:1px solid #EADFCD;border-radius:14px;overflow:hidden;margin-bottom:20px;">
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Device</span><span style="font-size:13px;color:#8A7867;">Niimbot D110</span></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Integration</span><span style="font-size:11.5px;color:#B07A1C;background:#F7EED8;padding:3px 9px;border-radius:20px;font-weight:600;">Phase 1 · PNG export</span></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13.5px;">Label size</span><span style="font-size:13px;color:#8A7867;">40 × 30 mm</span></div>
+            </div>
+            <!-- alerts -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Freezer alerts</div>
+            <div style="background:#FFFDF9;border:1px solid #EADFCD;border-radius:14px;overflow:hidden;margin-bottom:20px;">
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Warn if not frozen after</span><span style="font-size:13px;color:#8A7867;">3 days</span></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Warn if frozen over</span><span style="font-size:13px;color:#8A7867;">40 days</span></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13.5px;">Weight unit</span><span style="font-size:13px;color:#8A7867;">grams (g)</span></div>
+            </div>
+            <!-- data -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Data</div>
+            <div style="background:#FFFDF9;border:1px solid #EADFCD;border-radius:14px;overflow:hidden;">
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F0E6D6;"><span style="font-size:13.5px;">Export backup (JSON)</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+              <div style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13.5px;color:#8A7867;">Version</span><span style="font-size:13px;color:#B5A48F;">CoffeeLog v1.0.0 · open source</span></div>
+            </div>
+          </div>
+          <div style="flex:none;height:84px;background:#FBF6EE;border-top:1px solid #EADFCD;display:flex;align-items:center;justify-content:space-around;padding:0 20px 18px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span style="font-size:10.5px;">Home</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;">Catalog</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg><span style="font-size:10.5px;">Scan</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#5C3D28;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 000 2l-2 1.6 2 3.4 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.4-2-1.6a7 7 0 00.1-1z"/></svg><span style="font-size:10.5px;font-weight:600;">Settings</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 11e FEEDBACK / TOASTS ===== -->
+      <div id="11e" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">11e</span>
+          <span style="font-size:13px;color:#8A7867;">Feedback · toasts &amp; confirms</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;color:#8A7867;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <!-- dimmed detail background -->
+          <div style="flex:1;position:relative;overflow:hidden;padding:8px 22px 0;filter:saturate(.9);">
+            <div style="opacity:.45;">
+              <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px;"><div style="width:60px;height:72px;border-radius:12px;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div><div><div style="font-size:12px;color:#8A7867;">Coffeelab</div><div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;">Sítio da Torre</div></div></div>
+              <div style="height:56px;background:#F1E7D8;border-radius:14px;margin-bottom:12px;"></div>
+              <div style="height:120px;background:#F1E7D8;border-radius:14px;margin-bottom:12px;"></div>
+              <div style="height:120px;background:#F1E7D8;border-radius:14px;"></div>
+            </div>
+            <!-- confirm sheet -->
+            <div style="position:absolute;inset:0;background:rgba(30,18,10,.35);"></div>
+            <div style="position:absolute;left:14px;right:14px;bottom:14px;background:#FBF6EE;border-radius:22px;padding:20px;box-shadow:0 -10px 40px -12px rgba(0,0,0,.4);">
+              <div style="width:48px;height:48px;border-radius:14px;background:#F5E4DE;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0503A" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></div>
+              <div style="font-family:'Spectral',serif;font-size:19px;font-weight:600;margin-bottom:6px;">Consume this tube?</div>
+              <div style="font-size:13.5px;color:#8A7867;line-height:1.5;margin-bottom:18px;">The 20 g tube will be marked as consumed and removed from stock. This can be undone from history.</div>
+              <div style="display:flex;gap:10px;">
+                <div style="flex:1;background:#F1E7D8;color:#5C3D28;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:14px;">Cancel</div>
+                <div style="flex:1;background:#C0503A;color:#fff;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:14px;">Consume</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- toast gallery below the phone -->
+        <div style="width:392px;margin-top:20px;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:12px;color:#8A7867;">Toast variants</div>
+          <div style="background:#26382C;color:#EAF3EC;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 8px 18px -12px rgba(0,0,0,.4);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#7FD096" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span style="flex:1;font-size:13.5px;">Portioned into 3 tubes · labels ready</span><span style="font-size:12.5px;color:#7FD096;font-weight:600;">View</span></div>
+          <div style="background:#2B211A;color:#EAD9C3;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;box-shadow:0 8px 18px -12px rgba(0,0,0,.4);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E7B84B" stroke-width="2.2"><path d="M12 8v4M12 16h.01M10.3 3.9l-8 14A2 2 0 004 21h16a2 2 0 001.7-3l-8-14a2 2 0 00-3.4 0z"/></svg><span style="flex:1;font-size:13.5px;">Gesha frozen for 42 days — use soon</span></div>
+          <div style="background:#F5E4DE;color:#7A2E20;border:1px solid #E9C4BA;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C0503A" stroke-width="2.2"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span style="flex:1;font-size:13.5px;">Couldn't reach server — changes saved locally</span><span style="font-size:12.5px;color:#C0503A;font-weight:600;">Retry</span></div>
+          <div style="background:#FFFDF9;color:#5C3D28;border:1px solid #EADFCD;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2.2"><path d="M9 14l-4-4 4-4M5 10h11a4 4 0 010 8h-1"/></svg><span style="flex:1;font-size:13.5px;">Tube consumed · 20 g removed</span><span style="font-size:12.5px;color:#BE6A3A;font-weight:600;">Undo</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 5 · HOME REFINADA ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Home · refined</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">No "suggestion". Two alerts (same structure, distinct colors): portion &amp; freeze and frozen too long. The arbitrary list becomes selectable lists.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <div id="5a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">5a</span>
+          <span style="font-size:13px;color:#8A7867;">Home · 2 alerts + lists</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#5C3D28;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;color:#F3EBDF;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:1;overflow:hidden;">
+            <div style="padding:4px 22px 20px;color:#F3EBDF;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:32px;height:32px;border-radius:10px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 48 48"><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="12.5" ry="19" fill="#F3EBDF"/><path d="M24 6 C 18 15, 30 33, 24 42" fill="none" stroke="#BE6A3A" stroke-width="2.8" stroke-linecap="round"/></g></svg></div>
+                  <span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;">CoffeeLog</span>
+                </div>
+                <div style="width:38px;height:38px;border-radius:50%;background:rgba(243,235,223,.15);display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F3EBDF" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <div style="flex:1;background:#BE6A3A;color:#fff;border-radius:14px;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg>Scan QR</div>
+                <div style="flex:1;background:transparent;border:1px solid rgba(243,235,223,.3);color:#F3EBDF;border-radius:14px;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#F3EBDF" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>New coffee</div>
+              </div>
+            </div>
+            <div style="background:#FBF6EE;border-radius:26px 26px 0 0;padding:18px 0 20px;min-height:420px;">
+              <!-- alerts -->
+              <div style="display:flex;flex-direction:column;gap:10px;padding:0 22px 20px;">
+                <div style="display:flex;align-items:center;gap:12px;background:#F5E7DC;border:1px solid #E7CDB6;border-radius:14px;padding:12px 14px;">
+                  <div style="width:34px;height:34px;border-radius:10px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg></div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#5C3D28;">Portion &amp; freeze</div><div style="font-size:11.5px;color:#8A7867;margin-top:1px;">2 coffees arrived and haven't been frozen</div></div>
+                  <span style="font-size:12px;font-weight:700;color:#fff;background:#BE6A3A;border-radius:20px;padding:2px 9px;">2</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;background:#E9F0F3;border:1px solid #CBDCE4;border-radius:14px;padding:12px 14px;">
+                  <div style="width:34px;height:34px;border-radius:10px;background:#5B7B8C;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg></div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#3E5967;">Frozen for too long</div><div style="font-size:11.5px;color:#7C93A0;margin-top:1px;">3 coffees frozen more than 40 days ago</div></div>
+                  <span style="font-size:12px;font-weight:700;color:#fff;background:#5B7B8C;border-radius:20px;padding:2px 9px;">3</span>
+                </div>
+              </div>
+              <!-- selectable lists -->
+              <div style="display:flex;gap:8px;padding:0 22px 14px;overflow:hidden;">
+                <span style="flex:none;font-size:12.5px;font-weight:600;background:#5C3D28;color:#FBF6EE;padding:8px 13px;border-radius:20px;">Most recent</span>
+                <span style="flex:none;font-size:12.5px;background:#F1E7D8;color:#5C3D28;padding:8px 13px;border-radius:20px;">Longest frozen</span>
+                <span style="flex:none;font-size:12.5px;background:#F1E7D8;color:#5C3D28;padding:8px 13px;border-radius:20px;">Top rated</span>
+                <span style="flex:none;font-size:12.5px;background:#F1E7D8;color:#5C3D28;padding:8px 13px;border-radius:20px;">Recently used</span>
+              </div>
+              <div style="margin:0 22px 11px;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:18px;padding:13px;display:flex;gap:12px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+                <div style="width:48px;height:56px;border-radius:10px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;justify-content:space-between;"><div style="font-weight:600;font-size:15px;">Sítio da Torre</div><span style="font-size:12px;color:#C79A33;">★★★★★</span></div>
+                  <div style="font-size:12px;color:#8A7867;margin:2px 0 8px;">Coffeelab · Brazil</div>
+                  <div style="display:flex;gap:6px;"><span style="font-size:11px;font-weight:600;background:#F3E6D6;color:#BE6A3A;padding:3px 8px;border-radius:20px;">Open · 180g</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#8A7867;padding:3px 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 28/06</span></div>
+                </div>
+              </div>
+              <div style="margin:0 22px 0;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:18px;padding:13px;display:flex;gap:12px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+                <div style="width:48px;height:56px;border-radius:10px;flex:none;background:linear-gradient(150deg,#C98A4E,#8A5A38);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;justify-content:space-between;"><div style="font-weight:600;font-size:15px;">Gesha Especial</div><span style="font-size:12px;color:#C79A33;">★★★★★</span></div>
+                  <div style="font-size:12px;color:#8A7867;margin:2px 0 8px;">Isso é Café · Colombia</div>
+                  <div style="display:flex;gap:6px;"><span style="font-size:11px;font-weight:600;background:#EAF0F2;color:#5B7B8C;padding:3px 8px;border-radius:20px;">Frozen · 95g</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#8A7867;padding:3px 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>12 d ago</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:none;height:84px;background:#FBF6EE;border-top:1px solid #EADFCD;display:flex;align-items:center;justify-content:space-around;padding:0 20px 18px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#5C3D28;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span style="font-size:10.5px;font-weight:600;">Home</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;">Catalog</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg><span style="font-size:10.5px;">Scan</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg><span style="font-size:10.5px;">Labels</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 3 · REFINO ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Catalog & Detail</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">Card 1c, unified filters (stars · longest frozen · recent · portion) and country fields.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <!-- ===== 3b CATÁLOGO ===== -->
+      <div id="3b" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">3b</span>
+          <span style="font-size:13px;color:#8A7867;">Catalog · card 1c + filters</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:1;overflow:hidden;padding:4px 22px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;">Catalog</div>
+              <div style="width:40px;height:40px;border-radius:12px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
+            </div>
+            <!-- scope segmented -->
+            <div style="display:flex;background:#F1E7D8;border-radius:12px;padding:4px;margin-bottom:14px;">
+              <div style="flex:1;background:#fff;border-radius:9px;text-align:center;padding:8px;font-size:12.5px;font-weight:600;color:#5C3D28;box-shadow:0 2px 6px -2px rgba(92,61,40,.3);">Available</div>
+              <div style="flex:1;text-align:center;padding:8px;font-size:12.5px;color:#8A7867;">All</div>
+              <div style="flex:1;text-align:center;padding:8px;font-size:12.5px;color:#8A7867;">Archived</div>
+            </div>
+            <!-- criteria chips -->
+            <div style="display:flex;gap:8px;margin-bottom:16px;overflow:hidden;">
+              <span style="flex:none;display:flex;align-items:center;gap:5px;font-size:12px;background:#F1E7D8;color:#C79A33;padding:7px 12px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C79A33" stroke="none"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.5 5.9 19.4 7.5 12.9 2.5 8.6l6.6-.6z"/></svg>Stars</span>
+              <span style="flex:none;display:flex;align-items:center;gap:5px;font-size:12px;background:#F1E7D8;color:#5B7B8C;padding:7px 12px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>longest</span>
+              <span style="flex:none;display:flex;align-items:center;gap:5px;font-size:12px;background:#F1E7D8;color:#5C3D28;padding:7px 12px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>Recent</span>
+              <span style="flex:none;display:flex;align-items:center;gap:5px;font-size:12px;background:#F1E7D8;color:#9A5228;padding:7px 12px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9A5228" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg>Portion</span>
+            </div>
+            <!-- card A1 -->
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:20px;padding:15px;margin-bottom:13px;box-shadow:0 8px 18px -12px rgba(92,61,40,.35);">
+              <div style="display:flex;gap:14px;">
+                <div style="width:58px;height:70px;border-radius:12px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;justify-content:space-between;"><div style="font-weight:600;font-size:16px;">Sítio da Torre</div><span style="font-size:11px;font-weight:600;color:#BE6A3A;background:#F3E6D6;padding:3px 8px;border-radius:8px;height:fit-content;">Open</span></div>
+                  <div style="font-size:12.5px;color:#8A7867;margin:3px 0 8px;">Coffeelab · Carmo de Minas, Brazil</div>
+                  <div style="color:#C79A33;font-size:13px;">★★★★★</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #F0E6D6;">
+                <div style="display:flex;gap:7px;">
+                  <span style="font-size:11px;color:#5C3D28;background:#F5EDE1;padding:4px 9px;border-radius:8px;">Natural</span>
+                  <span style="font-size:11px;color:#5C3D28;background:#F5EDE1;padding:4px 9px;border-radius:8px;">Catuaí</span>
+                </div>
+                <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:#8A7867;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 28/06</span>
+              </div>
+            </div>
+            <!-- card A2 old frozen -->
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:20px;padding:15px;margin-bottom:13px;box-shadow:0 8px 18px -12px rgba(92,61,40,.35);">
+              <div style="display:flex;gap:14px;">
+                <div style="width:58px;height:70px;border-radius:12px;flex:none;background:linear-gradient(150deg,#C98A4E,#8A5A38);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;justify-content:space-between;"><div style="font-weight:600;font-size:16px;">Gesha Especial</div><span style="font-size:11px;font-weight:600;color:#5B7B8C;background:#EAF0F2;padding:3px 8px;border-radius:8px;height:fit-content;">Frozen</span></div>
+                  <div style="font-size:12.5px;color:#8A7867;margin:3px 0 8px;">Isso é Café · Huila, Colombia</div>
+                  <div style="color:#C79A33;font-size:13px;">★★★★★</div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #F0E6D6;">
+                <div style="display:flex;gap:7px;">
+                  <span style="font-size:11px;color:#5C3D28;background:#F5EDE1;padding:4px 9px;border-radius:8px;">Lavado</span>
+                  <span style="font-size:11px;color:#5C3D28;background:#F5EDE1;padding:4px 9px;border-radius:8px;">Geisha</span>
+                </div>
+                <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:#B07A1C;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>frozen 45 d ago</span>
+              </div>
+            </div>
+            <!-- card A3 portion -->
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:20px;padding:15px;box-shadow:0 8px 18px -12px rgba(92,61,40,.35);">
+              <div style="display:flex;gap:14px;">
+                <div style="width:58px;height:70px;border-radius:12px;flex:none;background:linear-gradient(150deg,#A0764C,#6E4A30);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;justify-content:space-between;"><div style="font-weight:600;font-size:16px;">Daterra Sweet Blue</div><span style="font-size:11px;font-weight:600;color:#9A5228;background:#F3E6D6;padding:3px 8px;border-radius:8px;height:fit-content;">Portion</span></div>
+                  <div style="font-size:12.5px;color:#8A7867;margin:3px 0 8px;">Daterra · Cerrado, Brazil</div>
+                  <div style="color:#C79A33;font-size:13px;">★★★★<span style="color:#D9CDBC;">☆</span></div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #F0E6D6;">
+                <div style="display:flex;gap:7px;">
+                  <span style="font-size:11px;color:#5C3D28;background:#F5EDE1;padding:4px 9px;border-radius:8px;">Anaerobic</span>
+                </div>
+                <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:#8A7867;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 02/07</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex:none;height:84px;background:#FBF6EE;border-top:1px solid #EADFCD;display:flex;align-items:center;justify-content:space-around;padding:0 20px 18px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span style="font-size:10.5px;">Home</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#5C3D28;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:10.5px;font-weight:600;">Catalog</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg><span style="font-size:10.5px;">Scan</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#B5A48F;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg><span style="font-size:10.5px;">Labels</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 3c DETALHE ===== -->
+      <div id="3c" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">3c</span>
+          <span style="font-size:13px;color:#8A7867;">Detail · countries + portioning</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow-y:auto;position:relative;display:flex;flex-direction:column;">
+          <div style="height:270px;flex:none;background:linear-gradient(160deg,#8A5A38,#4A3020);position:relative;">
+            <div style="position:absolute;top:52px;left:22px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <div style="position:absolute;top:52px;right:22px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:110px;background:linear-gradient(transparent,rgba(30,18,10,.85));"></div>
+            <div style="position:absolute;bottom:18px;left:22px;right:22px;color:#F3EBDF;">
+              <div style="font-size:12.5px;opacity:.85;">Coffeelab</div>
+              <div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;line-height:1.05;margin-top:2px;">Sítio da Torre</div>
+            </div>
+          </div>
+          <div style="padding:18px 22px 40px;">
+            <!-- score editável (sem rótulo de ocasião) -->
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+              <div>
+                <div style="font-size:11.5px;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">Your score</div>
+                <div style="font-size:26px;color:#C79A33;letter-spacing:2px;margin-top:4px;">★★★★<span style="color:#E3D6C2;">★</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#BE6A3A;font-weight:600;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Edit</div>
+            </div>
+
+            <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin-bottom:10px;">Details</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#EDE1CF;border:1px solid #EDE1CF;border-radius:14px;overflow:hidden;margin-bottom:18px;">
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Variety</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Catuaí Amarelo</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Process</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Natural</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;grid-column:span 2;"><div style="font-size:11px;color:#8A7867;">Bean origin</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Carmo de Minas · Brazil</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Altitude</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">1,200 m</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Roast</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Medium-light</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;grid-column:span 2;"><div style="font-size:11px;color:#8A7867;">Roastery</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Coffeelab · São Paulo, Brazil</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Roast date</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Jun 28, 2026</div></div>
+              <div style="background:#FBF6EE;padding:11px 13px;"><div style="font-size:11px;color:#8A7867;">Purchase date</div><div style="font-size:13.5px;font-weight:600;margin-top:2px;">Jul 02, 2026</div></div>
+            </div>
+
+            <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin-bottom:10px;">Tasting notes</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">
+              <span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 13px;border-radius:20px;font-weight:500;">Caramel</span>
+              <span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 13px;border-radius:20px;font-weight:500;">Cherry</span>
+              <span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 13px;border-radius:20px;font-weight:500;">Milk chocolate</span>
+            </div>
+
+            <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin-bottom:10px;">Recipe</div>
+            <div style="background:#2B211A;border-radius:16px;padding:16px;color:#EAD9C3;margin-bottom:22px;">
+              <div style="display:flex;gap:18px;margin-bottom:12px;">
+                <div><div style="font-size:11px;opacity:.6;">Method</div><div style="font-size:14px;font-weight:600;margin-top:2px;color:#F3EBDF;">V60</div></div>
+                <div><div style="font-size:11px;opacity:.6;">Dose</div><div style="font-size:14px;font-weight:600;margin-top:2px;color:#F3EBDF;">15 g</div></div>
+                <div><div style="font-size:11px;opacity:.6;">Grinder</div><div style="font-size:14px;font-weight:600;margin-top:2px;color:#F3EBDF;">C40 · 22 clicks</div></div>
+              </div>
+              <div style="font-size:13px;line-height:1.55;opacity:.9;border-top:1px solid rgba(243,235,223,.15);padding-top:12px;">250 g water at 92 °C. Bloom 40 g / 40 s, then 3 pours up to 250 g. Total ~2:45.</div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+              <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;">Units · 180 g</div>
+              <div style="font-size:12px;color:#8A7867;">5 units</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:11px;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:11px 13px;">
+                <div style="width:9px;height:9px;border-radius:50%;background:#BE6A3A;flex:none;"></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">Open bag</span></div>
+                <span style="font-size:12.5px;color:#8A7867;">120 g</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:11px 13px;">
+                <div style="width:9px;height:9px;border-radius:50%;background:#6C8CA6;flex:none;"></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">2× 20 g tube · frozen</span></div>
+                <span style="font-size:12.5px;color:#8A7867;">40 g</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:11px 13px;">
+                <div style="width:9px;height:9px;border-radius:50%;background:#6C8CA6;flex:none;"></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">1× 20 g tube · frozen</span></div>
+                <span style="font-size:12.5px;color:#8A7867;">20 g</span>
+              </div>
+            </div>
+            <!-- portion action -->
+            <div style="background:#5C3D28;border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:13px;">
+              <div style="width:40px;height:40px;border-radius:11px;background:rgba(243,235,223,.12);display:flex;align-items:center;justify-content:center;flex:none;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#E7B84B" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg></div>
+              <div style="flex:1;color:#F3EBDF;">
+                <div style="font-size:14.5px;font-weight:600;">Portion &amp; freeze</div>
+                <div style="font-size:11.5px;opacity:.7;margin-top:2px;line-height:1.35;">Splits the open bag into new tubes — updates existing units.</div>
+              </div>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F3EBDF" stroke-width="2" style="opacity:.6;flex:none;"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 6 · TELAS RESTANTES ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Units · Labels · Scanner</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">The three screens that were missing for v1. States by color: <b style="color:#BE6A3A;">open</b> · <b style="color:#5B7B8C;">frozen</b> · <b style="color:#B07A1C;">thawed</b> · <b style="color:#A99C8D;">consumed</b>.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <!-- ===== 6a UNIDADES DE ARMAZENAMENTO ===== -->
+      <div id="6a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">6a</span>
+          <span style="font-size:13px;color:#8A7867;">Storage units</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 14px;display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:11px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <div style="flex:1;">
+              <div style="font-size:12px;color:#8A7867;">Units of</div>
+              <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;line-height:1;">Sítio da Torre</div>
+            </div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:0 22px;">
+            <!-- summary -->
+            <div style="display:flex;gap:10px;margin-bottom:16px;">
+              <div style="flex:1;background:#5C3D28;color:#F3EBDF;border-radius:15px;padding:13px 15px;"><div style="font-size:23px;font-weight:700;font-family:'Spectral',serif;">180 g</div><div style="font-size:11.5px;opacity:.7;margin-top:1px;">remaining</div></div>
+              <div style="flex:1;background:#FFFDF9;border:1px solid #EDE1CF;border-radius:15px;padding:13px 15px;"><div style="font-size:23px;font-weight:700;font-family:'Spectral',serif;color:#5C3D28;">4</div><div style="font-size:11.5px;color:#8A7867;margin-top:1px;">active units</div></div>
+            </div>
+            <!-- pacote -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;">Bag</div>
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:18px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+              <div style="width:40px;height:40px;border-radius:11px;background:#F3E6D6;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg></div>
+              <div style="flex:1;"><div style="font-weight:600;font-size:14.5px;">Open bag</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span style="width:7px;height:7px;border-radius:50%;background:#BE6A3A;"></span><span style="font-size:11.5px;color:#8A7867;">Thawed · opened 04/07</span></div></div>
+              <div style="text-align:right;"><div style="font-weight:700;font-size:15px;">120 g</div></div>
+            </div>
+            <!-- tubos -->
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;">
+              <span style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;">Falcon tubes</span>
+              <span style="font-size:11.5px;color:#8A7867;">60 g · 3 tubes</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:10px;background:#EAF0F2;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:14px;">2× 20 g tube</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span style="width:7px;height:7px;border-radius:50%;background:#5B7B8C;"></span><span style="font-size:11.5px;color:#8A7867;">Frozen · 07/07</span></div></div>
+                <span style="font-weight:700;font-size:14px;color:#5C3D28;">40 g</span>
+              </div>
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:10px;background:#F7EED8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:14px;">1× 20 g tube</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px;"><span style="width:7px;height:7px;border-radius:50%;background:#B07A1C;"></span><span style="font-size:11.5px;color:#8A7867;">Thawed · use soon</span></div></div>
+                <span style="font-weight:700;font-size:14px;color:#5C3D28;">20 g</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 2px;"><span style="width:7px;height:7px;border-radius:50%;background:#A99C8D;"></span><span style="font-size:12px;color:#A99C8D;">3 units consumed this month</span></div>
+            </div>
+          </div>
+          <!-- action bar -->
+          <div style="flex:none;padding:10px 22px 12px;display:flex;gap:10px;background:#FBF6EE;">
+            <div style="flex:1;background:#5C3D28;color:#F3EBDF;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E7B84B" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg>Portion</div>
+            <div style="flex:1;background:#F1E7D8;color:#5C3D28;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg>Labels</div>
+          </div>
+          <div style="flex:none;height:34px;background:#FBF6EE;"></div>
+        </div>
+      </div>
+
+      <!-- ===== 6b IMPRESSÃO DE ETIQUETAS ===== -->
+      <div id="6b" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">6b</span>
+          <span style="font-size:13px;color:#8A7867;">Print labels (batch)</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:11px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <div style="flex:1;"><div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;line-height:1;">Print labels</div><div style="font-size:12px;color:#8A7867;margin-top:3px;">Select units to generate QR</div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:6px 22px 0;">
+            <!-- label preview -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;">Label preview</div>
+            <div style="background:#fff;border:1px solid #E4D8C6;border-radius:14px;padding:14px;display:flex;gap:14px;align-items:center;margin-bottom:20px;box-shadow:0 8px 18px -12px rgba(92,61,40,.4);">
+              <svg width="82" height="82" viewBox="0 0 88 88" style="flex:none;"><rect width="88" height="88" rx="6" fill="#fff"/><rect x="6" y="6" width="24" height="24" rx="3" fill="#241A13"/><rect x="10" y="10" width="16" height="16" rx="2" fill="#fff"/><rect x="14" y="14" width="8" height="8" rx="1" fill="#241A13"/><rect x="58" y="6" width="24" height="24" rx="3" fill="#241A13"/><rect x="62" y="10" width="16" height="16" rx="2" fill="#fff"/><rect x="66" y="14" width="8" height="8" rx="1" fill="#241A13"/><rect x="6" y="58" width="24" height="24" rx="3" fill="#241A13"/><rect x="10" y="62" width="16" height="16" rx="2" fill="#fff"/><rect x="14" y="66" width="8" height="8" rx="1" fill="#241A13"/><g fill="#241A13"><rect x="38" y="8" width="5" height="5"/><rect x="46" y="8" width="5" height="5"/><rect x="38" y="16" width="5" height="5"/><rect x="50" y="16" width="5" height="5"/><rect x="8" y="38" width="5" height="5"/><rect x="16" y="38" width="5" height="5"/><rect x="24" y="38" width="5" height="5"/><rect x="38" y="38" width="5" height="5"/><rect x="46" y="38" width="5" height="5"/><rect x="54" y="38" width="5" height="5"/><rect x="62" y="38" width="5" height="5"/><rect x="74" y="38" width="5" height="5"/><rect x="8" y="46" width="5" height="5"/><rect x="20" y="46" width="5" height="5"/><rect x="38" y="46" width="5" height="5"/><rect x="50" y="46" width="5" height="5"/><rect x="62" y="46" width="5" height="5"/><rect x="70" y="46" width="5" height="5"/><rect x="38" y="54" width="5" height="5"/><rect x="46" y="54" width="5" height="5"/><rect x="58" y="54" width="5" height="5"/><rect x="74" y="54" width="5" height="5"/><rect x="38" y="62" width="5" height="5"/><rect x="50" y="62" width="5" height="5"/><rect x="66" y="62" width="5" height="5"/><rect x="42" y="70" width="5" height="5"/><rect x="54" y="70" width="5" height="5"/><rect x="70" y="70" width="5" height="5"/><rect x="62" y="74" width="5" height="5"/></g></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:22px;font-weight:700;font-family:'Spectral',serif;line-height:1;">20 g</div>
+                <div style="font-weight:600;font-size:14px;margin-top:6px;">Sítio da Torre</div>
+                <div style="font-size:12px;color:#8A7867;margin-top:1px;">Coffeelab</div>
+                <div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#5B7B8C;background:#EAF0F2;padding:3px 8px;border-radius:20px;margin-top:8px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>Frozen 07/07</div>
+              </div>
+            </div>
+            <!-- selection -->
+            <div style="font-size:11.5px;font-weight:600;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;">Sítio da Torre</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:11px;">
+                <div style="width:22px;height:22px;border-radius:7px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-11"/></svg></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">2× 20 g tube</span></div>
+                <span style="font-size:11px;color:#5B7B8C;background:#EAF0F2;padding:3px 8px;border-radius:20px;">Frozen</span>
+              </div>
+              <div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:11px;">
+                <div style="width:22px;height:22px;border-radius:7px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-11"/></svg></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">1× 20 g tube</span></div>
+                <span style="font-size:11px;color:#B07A1C;background:#F7EED8;padding:3px 8px;border-radius:20px;">Thawed</span>
+              </div>
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:13px;padding:11px 13px;display:flex;align-items:center;gap:11px;opacity:.75;">
+                <div style="width:22px;height:22px;border-radius:7px;border:2px solid #D9CBB8;flex:none;"></div>
+                <div style="flex:1;"><span style="font-weight:600;font-size:13.5px;">Open bag</span></div>
+                <span style="font-size:11px;color:#BE6A3A;background:#F3E6D6;padding:3px 8px;border-radius:20px;">Open</span>
+              </div>
+            </div>
+          </div>
+          <!-- export bar -->
+          <div style="flex:none;padding:12px 22px 14px;display:flex;align-items:center;gap:12px;background:#FBF6EE;border-top:1px solid #EADFCD;">
+            <div style="flex:none;"><div style="font-size:12px;color:#8A7867;">Selected</div><div style="font-size:16px;font-weight:700;color:#5C3D28;">2 labels</div></div>
+            <div style="flex:1;background:#BE6A3A;color:#fff;border-radius:13px;padding:14px;text-align:center;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Export PNG</div>
+          </div>
+          <div style="flex:none;height:26px;background:#FBF6EE;"></div>
+        </div>
+      </div>
+
+      <!-- ===== 6c SCANNER ===== -->
+      <div id="6c" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-family:'IBM Plex Sans';font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;letter-spacing:.4px;">6c</span>
+          <span style="font-size:13px;color:#8A7867;">Scanner → unit + recipe</span>
+        </div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#1A130D;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;color:#F3EBDF;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <!-- camera area -->
+          <div style="flex:1;position:relative;background:radial-gradient(circle at 50% 42%, #3A2A1E, #17110B);overflow:hidden;">
+            <!-- top controls -->
+            <div style="position:absolute;top:8px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;z-index:2;">
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+              <span style="color:#F3EBDF;font-size:14px;font-weight:600;">Scan label</span>
+              <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E7B84B" stroke-width="2"><path d="M13 2L4.5 13H12l-1 9 8.5-11H13z"/></svg></div>
+            </div>
+            <!-- scan frame -->
+            <div style="position:absolute;top:210px;left:96px;width:200px;height:200px;">
+              <div style="position:absolute;inset:0;border-radius:26px;box-shadow:0 0 0 2000px rgba(15,10,6,.55);"></div>
+              <div style="position:absolute;top:-2px;left:-2px;width:44px;height:44px;border-top:4px solid #BE6A3A;border-left:4px solid #BE6A3A;border-radius:22px 0 0 0;"></div>
+              <div style="position:absolute;top:-2px;right:-2px;width:44px;height:44px;border-top:4px solid #BE6A3A;border-right:4px solid #BE6A3A;border-radius:0 22px 0 0;"></div>
+              <div style="position:absolute;bottom:-2px;left:-2px;width:44px;height:44px;border-bottom:4px solid #BE6A3A;border-left:4px solid #BE6A3A;border-radius:0 0 0 22px;"></div>
+              <div style="position:absolute;bottom:-2px;right:-2px;width:44px;height:44px;border-bottom:4px solid #BE6A3A;border-right:4px solid #BE6A3A;border-radius:0 0 22px 0;"></div>
+              <div style="position:absolute;left:14px;right:14px;top:96px;height:2px;background:linear-gradient(90deg,transparent,#E7B84B,transparent);box-shadow:0 0 12px #E7B84B;"></div>
+            </div>
+            <div style="position:absolute;top:430px;left:0;right:0;text-align:center;color:rgba(243,235,223,.85);font-size:13.5px;">Point at the label's QR</div>
+            <!-- result sheet -->
+            <div style="position:absolute;left:0;right:0;bottom:0;background:#FBF6EE;border-radius:24px 24px 0 0;padding:16px 20px 22px;box-shadow:0 -18px 40px -20px rgba(0,0,0,.5);">
+              <div style="width:40px;height:4px;border-radius:2px;background:#E0D3C0;margin:0 auto 14px;"></div>
+              <div style="font-size:11px;font-weight:600;color:#3E8E5B;letter-spacing:.5px;display:flex;align-items:center;gap:5px;margin-bottom:10px;"><span style="width:7px;height:7px;border-radius:50%;background:#3E8E5B;"></span>UNIT SCANNED</div>
+              <div style="display:flex;gap:13px;align-items:center;margin-bottom:14px;">
+                <div style="width:50px;height:58px;border-radius:11px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div>
+                <div style="flex:1;">
+                  <div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;line-height:1.05;">Sítio da Torre</div>
+                  <div style="font-size:12px;color:#8A7867;margin:2px 0 6px;">20 g tube · <span style="color:#5B7B8C;font-weight:600;">Frozen 07/07</span></div>
+                  <div style="display:flex;gap:12px;font-size:11.5px;color:#5C3D28;"><span><b>V60</b></span><span>15 g dose</span><span>C40 · 22</span></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <div style="flex:1;background:#BE6A3A;color:#fff;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:14px;">Open unit</div>
+                <div style="flex:none;width:52px;background:#F1E7D8;border-radius:13px;display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2z"/><path d="M8 8h5M8 12h8M8 16h8"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 10 · DETALHE DA UNIDADE ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Unit detail</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">Where the scanner lands and where "Consume" starts. Shows state, weight, label, source coffee and recipe.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <div id="10a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">10a</span><span style="font-size:13px;color:#8A7867;">Unit · consume entry point</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 10px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:38px;height:38px;border-radius:11px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <span style="font-family:'Spectral',serif;font-size:18px;font-weight:600;">Unidade</span>
+            <div style="width:38px;height:38px;border-radius:11px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#5C3D28" stroke="none"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:8px 22px 0;">
+            <!-- state card -->
+            <div style="background:linear-gradient(160deg,#EAF0F2,#DCE7ED);border:1px solid #CBDCE4;border-radius:20px;padding:18px;margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                <div style="display:flex;align-items:center;gap:10px;"><div style="width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div><div><div style="font-weight:600;font-size:15px;color:#3E5967;">Falcon tube</div><div style="font-size:11.5px;color:#7C93A0;">Sítio da Torre</div></div></div>
+                <span style="font-size:11.5px;font-weight:600;color:#fff;background:#5B7B8C;padding:4px 11px;border-radius:20px;">Frozen</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;">
+                <div><span style="font-size:40px;font-weight:700;font-family:'Spectral',serif;color:#3E5967;line-height:1;">20</span><span style="font-size:18px;color:#7C93A0;"> g</span><div style="font-size:12px;color:#7C93A0;margin-top:4px;">Frozen 07/07 · 0 days ago</div></div>
+                <div style="display:flex;align-items:center;gap:9px;background:#fff;border-radius:11px;padding:8px 10px;">
+                  <svg width="34" height="34" viewBox="0 0 88 88"><rect width="88" height="88" rx="6" fill="#fff"/><rect x="6" y="6" width="24" height="24" rx="3" fill="#241A13"/><rect x="10" y="10" width="16" height="16" rx="2" fill="#fff"/><rect x="14" y="14" width="8" height="8" fill="#241A13"/><rect x="58" y="6" width="24" height="24" rx="3" fill="#241A13"/><rect x="62" y="10" width="16" height="16" rx="2" fill="#fff"/><rect x="66" y="14" width="8" height="8" fill="#241A13"/><rect x="6" y="58" width="24" height="24" rx="3" fill="#241A13"/><rect x="10" y="62" width="16" height="16" rx="2" fill="#fff"/><rect x="14" y="66" width="8" height="8" fill="#241A13"/><g fill="#241A13"><rect x="40" y="10" width="5" height="5"/><rect x="48" y="16" width="5" height="5"/><rect x="40" y="40" width="5" height="5"/><rect x="52" y="40" width="5" height="5"/><rect x="64" y="44" width="5" height="5"/><rect x="44" y="52" width="5" height="5"/><rect x="60" y="60" width="5" height="5"/><rect x="70" y="70" width="5" height="5"/><rect x="44" y="70" width="5" height="5"/></g></svg>
+                  <div style="font-size:10px;color:#7C93A0;line-height:1.3;">Label<br><b style="color:#3E5967;">#A4F2</b></div>
+                </div>
+              </div>
+            </div>
+            <!-- parent coffee -->
+            <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:15px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+              <div style="width:44px;height:50px;border-radius:9px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div>
+              <div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:14.5px;">Sítio da Torre</div><div style="font-size:12px;color:#8A7867;">Coffeelab · Brazil · <span style="color:#C79A33;">★★★★★</span></div></div>
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+            </div>
+            <!-- receita -->
+            <div style="background:#2B211A;border-radius:15px;padding:15px;color:#EAD9C3;margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><span style="font-size:12px;font-weight:600;color:#E7B84B;letter-spacing:.5px;">RECIPE</span><span style="font-size:11px;opacity:.6;">edit</span></div>
+              <div style="display:flex;gap:16px;margin-bottom:11px;">
+                <div><div style="font-size:10.5px;opacity:.6;">Method</div><div style="font-size:13.5px;font-weight:600;color:#F3EBDF;">V60</div></div>
+                <div><div style="font-size:10.5px;opacity:.6;">Dose</div><div style="font-size:13.5px;font-weight:600;color:#F3EBDF;">15 g</div></div>
+                <div><div style="font-size:10.5px;opacity:.6;">Grinder</div><div style="font-size:13.5px;font-weight:600;color:#F3EBDF;">C40 · 22</div></div>
+              </div>
+              <div style="font-size:12px;line-height:1.5;opacity:.85;border-top:1px solid rgba(243,235,223,.15);padding-top:10px;">250 g water at 92 °C · bloom 40 g/40 s · 3 pours · ~2:45</div>
+            </div>
+          </div>
+          <!-- actions: consumir = entry point -->
+          <div style="flex:none;padding:8px 22px 16px;">
+            <div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px;box-shadow:0 12px 24px -12px rgba(190,106,58,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4zM6 1v3M10 1v3M14 1v3"/></svg>Consume this unit</div>
+            <div style="display:flex;gap:10px;">
+              <div style="flex:1;background:#F1E7D8;color:#5C3D28;border-radius:13px;padding:12px;text-align:center;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>Thaw</div>
+              <div style="flex:1;background:#F1E7D8;color:#5C3D28;border-radius:13px;padding:12px;text-align:center;font-weight:600;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg>Label</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 7 · FLUXOS ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Flows · New coffee &amp; Portion</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">Two 3-step wizards each.</div>
+
+    <!-- FLOW: NEW COFFEE -->
+    <div style="font-family:'IBM Plex Sans';font-size:14px;font-weight:600;color:#9A5228;margin:0 0 14px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A5228" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>New coffee</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;margin-bottom:64px;">
+
+      <!-- 7a new coffee · step 1 -->
+      <div id="7a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7a</span><span style="font-size:13px;color:#8A7867;">Step 1 · Identification</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span style="font-family:'Spectral',serif;font-size:18px;font-weight:600;">New coffee</span><span style="font-size:12.5px;color:#8A7867;">1 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:33%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:8px 22px 0;">
+            <div style="border:2px dashed #D9C6AC;border-radius:18px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:20px;background:#FBF6EE;">
+              <div style="width:52px;height:52px;border-radius:14px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M4 8a2 2 0 012-2h1l1-2h6l1 2h1a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="12" cy="12" r="3.2"/></svg></div>
+              <span style="font-size:13px;color:#8A7867;">Add coffee photo</span>
+            </div>
+            <div style="margin-bottom:14px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Coffee name</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;">Sítio da Torre</div></div>
+            <div style="margin-bottom:14px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roaster</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:12px 14px;font-size:14px;">Coffeelab</div></div>
+            <div style="margin-bottom:16px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roastery country</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:12px 14px;font-size:14px;display:flex;justify-content:space-between;align-items:center;">São Paulo, Brazil<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div style="display:flex;gap:10px;align-items:center;background:#F5EDE1;border:1px dashed #D9C6AC;border-radius:12px;padding:11px 13px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2" style="flex:none;"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span style="font-size:12px;color:#7A6552;line-height:1.35;">The <b style="color:#5C3D28;">score</b> is set after the first brew.</span></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Continue</div></div>
+        </div>
+      </div>
+
+      <!-- 7b new coffee · step 2 -->
+      <div id="7b" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7b</span><span style="font-size:13px;color:#8A7867;">Step 2 · Bean details</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div><span style="font-family:'Spectral',serif;font-size:18px;font-weight:600;">Bean details</span><span style="font-size:12.5px;color:#8A7867;">2 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:66%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:12px 22px 0;">
+            <div style="display:flex;gap:12px;margin-bottom:14px;">
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Variety</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;">Catuaí Amarelo</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Process</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;">Natural<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            </div>
+            <div style="margin-bottom:14px;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Origin country</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;">Brazil<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div style="display:flex;gap:12px;margin-bottom:14px;">
+              <div style="flex:1.4;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Region</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;">Carmo de Minas</div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Altitude</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;">1,200 m</div></div>
+            </div>
+            <div style="display:flex;gap:12px;margin-bottom:14px;">
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roast</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;">Medium-light<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+              <div style="flex:1;"><div style="font-size:12px;color:#8A7867;margin-bottom:6px;">Roast date</div><div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:11px 13px;font-size:13.5px;">28/06/26</div></div>
+            </div>
+            <div><div style="font-size:12px;color:#8A7867;margin-bottom:8px;">Tasting notes</div><div style="display:flex;flex-wrap:wrap;gap:8px;"><span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;">Caramel</span><span style="font-size:12.5px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;">Cherry</span><span style="font-size:12.5px;background:#FBF6EE;border:1px dashed #D9C6AC;color:#8A7867;padding:6px 12px;border-radius:20px;">+ add</span></div></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Continue</div></div>
+        </div>
+      </div>
+
+      <!-- 7c new coffee · step 3 -->
+      <div id="7c" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7c</span><span style="font-size:13px;color:#8A7867;">Step 3 · Initial stock</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div><span style="font-family:'Spectral',serif;font-size:18px;font-weight:600;">Initial stock</span><span style="font-size:12.5px;color:#8A7867;">3 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:100%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:14px 22px 0;">
+            <div style="font-size:12px;color:#8A7867;margin-bottom:8px;">Bag weight</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><div style="width:46px;height:46px;border-radius:12px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M5 12h14"/></svg></div><div style="flex:1;text-align:center;background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:12px;"><span style="font-size:22px;font-weight:700;font-family:'Spectral',serif;">250</span><span style="font-size:14px;color:#8A7867;"> g</span></div><div style="width:46px;height:46px;border-radius:12px;background:#5C3D28;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div></div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:8px;">Initial state</div>
+            <div style="display:flex;gap:8px;margin-bottom:22px;"><div style="flex:1;background:#FBF6EE;border:1px solid #E4D8C6;border-radius:12px;padding:11px;text-align:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg><div style="font-size:12px;color:#8A7867;margin-top:3px;">Sealed</div></div><div style="flex:1;background:#FBF6EE;border:1px solid #E4D8C6;border-radius:12px;padding:11px;text-align:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M4 8l8-4 8 4M4 8l8 4 8-4"/></svg><div style="font-size:12px;color:#8A7867;margin-top:3px;">Open</div></div><div style="flex:1;background:#EAF0F2;border:1.5px solid #5B7B8C;border-radius:12px;padding:11px;text-align:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg><div style="font-size:12px;font-weight:600;color:#3E5967;margin-top:3px;">Frozen</div></div></div>
+            <div style="background:#5C3D28;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:11px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E7B84B" stroke-width="2"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg><div style="color:#F3EBDF;"><div style="font-size:14px;font-weight:600;">1 bag · 250 g</div><div style="font-size:11.5px;opacity:.7;">will be recorded as frozen</div></div></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Save coffee</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FLOW: PORTION -->
+    <div style="font-family:'IBM Plex Sans';font-size:14px;font-weight:600;color:#9A5228;margin:0 0 14px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A5228" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg>Portion &amp; freeze</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <!-- 7d portion · step 1 -->
+      <div id="7d" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7d</span><span style="font-size:13px;color:#8A7867;">Step 1 · Source</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div><span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Portion</span><span style="font-size:12.5px;color:#8A7867;">1 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:33%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:14px 22px 0;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;"><div style="width:40px;height:48px;border-radius:9px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div><div><div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Sítio da Torre</div><div style="font-size:12px;color:#8A7867;">Coffeelab · Brazil</div></div></div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:10px;">Which unit to portion?</div>
+            <div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:15px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+              <div style="width:22px;height:22px;border-radius:50%;border:6px solid #BE6A3A;background:#fff;flex:none;"></div>
+              <div style="width:38px;height:38px;border-radius:10px;background:#F3E6D6;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg></div>
+              <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Open bag</div><div style="font-size:11.5px;color:#8A7867;">Thawed</div></div>
+              <span style="font-weight:700;font-size:16px;color:#5C3D28;">250 g</span>
+            </div>
+            <div style="background:#FBF6EE;border:1px solid #EDE1CF;border-radius:15px;padding:14px;display:flex;align-items:center;gap:12px;opacity:.6;">
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid #D9CBB8;flex:none;"></div>
+              <div style="width:38px;height:38px;border-radius:10px;background:#EAF0F2;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div>
+              <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Frozen tubes</div><div style="font-size:11.5px;color:#8A7867;">not portionable</div></div>
+              <span style="font-weight:700;font-size:15px;color:#8A7867;">60 g</span>
+            </div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Continue</div></div>
+        </div>
+      </div>
+
+      <!-- 7e portion · step 2 -->
+      <div id="7e" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7e</span><span style="font-size:13px;color:#8A7867;">Step 2 · Define tubes</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div><span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Define tubes</span><span style="font-size:12.5px;color:#8A7867;">2 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:66%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:16px 22px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><span style="font-size:12px;color:#8A7867;">Weight of each tube</span><span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#BE6A3A;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg>Match all to 20 g</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+              <div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:9px;"><span style="font-size:13px;color:#8A7867;flex:1;">Tube 1</span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M5 12h14"/></svg></div><span style="font-size:16px;font-weight:700;font-family:'Spectral',serif;min-width:40px;text-align:center;">20<span style="font-size:11px;color:#8A7867;font-weight:400;font-family:'IBM Plex Sans';"> g</span></span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2" style="margin-left:2px;"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+              <div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:9px;"><span style="font-size:13px;color:#8A7867;flex:1;">Tube 2</span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M5 12h14"/></svg></div><span style="font-size:16px;font-weight:700;font-family:'Spectral',serif;min-width:40px;text-align:center;">15<span style="font-size:11px;color:#8A7867;font-weight:400;font-family:'IBM Plex Sans';"> g</span></span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2" style="margin-left:2px;"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+              <div style="background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:9px;"><span style="font-size:13px;color:#8A7867;flex:1;">Tube 3</span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M5 12h14"/></svg></div><span style="font-size:16px;font-weight:700;font-family:'Spectral',serif;min-width:40px;text-align:center;">15<span style="font-size:11px;color:#8A7867;font-weight:400;font-family:'IBM Plex Sans';"> g</span></span><div style="width:28px;height:28px;border-radius:8px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2" style="margin-left:2px;"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></div>
+            </div>
+            <div style="border:1.5px dashed #D9C6AC;border-radius:12px;padding:11px;text-align:center;font-size:13px;color:#9A5228;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9A5228" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add tube</div>
+            <div style="font-size:12px;color:#8A7867;margin:18px 0 8px;">New tubes’ state</div>
+            <div style="display:flex;gap:8px;margin-bottom:18px;"><div style="flex:1;background:#EAF0F2;border:1.5px solid #5B7B8C;border-radius:12px;padding:11px;text-align:center;font-size:13px;font-weight:600;color:#3E5967;">Freeze</div><div style="flex:1;background:#FBF6EE;border:1px solid #E4D8C6;border-radius:12px;padding:11px;text-align:center;font-size:13px;color:#8A7867;">Thawed</div></div>
+            <!-- live preview -->
+            <div style="background:#5C3D28;border-radius:16px;padding:15px;color:#F3EBDF;">
+              <div style="font-size:11.5px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Resulting stock</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:9px;border-bottom:1px solid rgba(243,235,223,.15);"><span style="font-size:13.5px;">Open bag</span><span style="font-size:14px;font-weight:700;">250 → <span style="color:#E7B84B;">200 g</span></span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:9px;"><span style="font-size:13.5px;">+ 3 tubes (20+15+15) · frozen</span><span style="font-size:14px;font-weight:700;color:#E7B84B;">50 g</span></div>
+            </div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Continue</div></div>
+        </div>
+      </div>
+
+      <!-- 7f portion · step 3 -->
+      <div id="7f" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">7f</span><span style="font-size:13px;color:#8A7867;">Step 3 · Confirm</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div><span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Confirm</span><span style="font-size:12.5px;color:#8A7867;">3 of 3</span></div>
+            <div style="height:5px;border-radius:3px;background:#EADFCD;overflow:hidden;"><div style="width:100%;height:100%;background:#BE6A3A;border-radius:3px;"></div></div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:16px 22px 0;">
+            <div style="font-size:12px;color:#8A7867;margin-bottom:10px;">Portioning result</div>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:22px;">
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;"><div style="width:9px;height:9px;border-radius:50%;background:#BE6A3A;flex:none;"></div><div style="flex:1;"><div style="font-weight:600;font-size:14px;">Open bag</div><div style="font-size:11.5px;color:#8A7867;">Thawed · updated</div></div><span style="font-weight:700;font-size:15px;">205 g</span></div>
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;"><div style="width:9px;height:9px;border-radius:50%;background:#5B7B8C;flex:none;"></div><div style="flex:1;"><div style="font-weight:600;font-size:14px;">3× 15 g tube <span style="font-size:11px;font-weight:600;color:#3E8E5B;background:#E4F0E7;padding:2px 7px;border-radius:20px;margin-left:4px;">novo</span></div><div style="font-size:11.5px;color:#8A7867;">Frozen · today 07/07</div></div><span style="font-weight:700;font-size:15px;">45 g</span></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#F1E7D8;border-radius:14px;padding:14px 16px;"><div style="display:flex;align-items:center;gap:10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg><div><div style="font-size:13.5px;font-weight:600;color:#5C3D28;">Generate tube labels</div><div style="font-size:11px;color:#8A7867;">3 labels with QR and weight</div></div></div><div style="width:44px;height:26px;border-radius:13px;background:#BE6A3A;position:relative;flex:none;"><div style="position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;"></div></div></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12l5 5 9-11"/></svg>Confirm &amp; imprimir</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 9 · CONSUMIR ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Flow · Consume a portion</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">Pick the unit → two paths: take grams from an open bag, or consume a whole frozen tube.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:56px;">
+
+      <!-- 9a escolher unidade -->
+      <div id="9a" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">9a</span><span style="font-size:13px;color:#8A7867;">Pick the unit</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 8px;display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+            <span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;">Consume</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:10px 22px 0;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;"><div style="width:40px;height:48px;border-radius:9px;flex:none;background:linear-gradient(150deg,#8A5A38,#5C3D28);"></div><div><div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Sítio da Torre</div><div style="font-size:12px;color:#8A7867;">180 g · 4 units</div></div></div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:10px;">Which unit will you consume from?</div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+                <div style="width:38px;height:38px;border-radius:10px;background:#F3E6D6;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Open bag</div><div style="display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="width:7px;height:7px;border-radius:50%;background:#BE6A3A;"></span><span style="font-size:11.5px;color:#8A7867;">Thawed · take by gram</span></div></div>
+                <span style="font-weight:700;font-size:14px;color:#5C3D28;">120 g</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+                <div style="width:38px;height:38px;border-radius:10px;background:#EAF0F2;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:14px;">20 g tube</div><div style="display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="width:7px;height:7px;border-radius:50%;background:#5B7B8C;"></span><span style="font-size:11.5px;color:#8A7867;">Frozen · 2 available</span></div></div>
+                <span style="font-weight:700;font-size:14px;color:#5C3D28;">20 g</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:13px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 14px -10px rgba(92,61,40,.3);">
+                <div style="width:38px;height:38px;border-radius:10px;background:#F7EED8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:14px;">20 g tube</div><div style="display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="width:7px;height:7px;border-radius:50%;background:#B07A1C;"></span><span style="font-size:11.5px;color:#8A7867;">Thawed · use soon</span></div></div>
+                <span style="font-weight:700;font-size:14px;color:#5C3D28;">20 g</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5A48F" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9b consumir do pacote aberto -->
+      <div id="9b" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">9b</span><span style="font-size:13px;color:#8A7867;">From open bag · by gram</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 8px;display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;">Consume</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:12px 22px 0;">
+            <div style="background:#F3E6D6;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:11px;margin-bottom:24px;"><div style="width:9px;height:9px;border-radius:50%;background:#BE6A3A;"></div><div style="flex:1;"><div style="font-weight:600;font-size:14px;color:#5C3D28;">Open bag</div><div style="font-size:11.5px;color:#8A7867;">Thawed</div></div><span style="font-weight:700;font-size:15px;color:#5C3D28;">120 g</span></div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:14px;text-align:center;">How much did you use?</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:18px;">
+              <div style="width:52px;height:52px;border-radius:14px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.5"><path d="M5 12h14"/></svg></div>
+              <div style="text-align:center;"><span style="font-size:46px;font-weight:700;font-family:'Spectral',serif;line-height:1;">18</span><span style="font-size:18px;color:#8A7867;"> g</span></div>
+              <div style="width:52px;height:52px;border-radius:14px;background:#5C3D28;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;">
+              <span style="font-size:13px;background:#F1E7D8;color:#5C3D28;padding:8px 15px;border-radius:20px;">15 g</span>
+              <span style="font-size:13px;background:#5C3D28;color:#FBF6EE;padding:8px 15px;border-radius:20px;font-weight:600;">18 g</span>
+              <span style="font-size:13px;background:#F1E7D8;color:#5C3D28;padding:8px 15px;border-radius:20px;">20 g</span>
+              <span style="font-size:13px;background:#F1E7D8;color:#8A7867;padding:8px 15px;border-radius:20px;">Other</span>
+            </div>
+            <div style="background:#5C3D28;border-radius:16px;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;color:#F3EBDF;"><span style="font-size:13.5px;">Remaining in bag</span><span style="font-size:16px;font-weight:700;">120 → <span style="color:#E7B84B;">102 g</span></span></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Log consumption</div></div>
+        </div>
+      </div>
+
+      <!-- 9c consume frozen tube -->
+      <div id="9c" style="width:392px;flex:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">9c</span><span style="font-size:13px;color:#8A7867;">Frozen tube · whole portion</span></div>
+        <div class="cl-phone" style="width:392px;height:844px;background:#FBF6EE;border-radius:48px;border:11px solid #241A13;box-shadow:0 40px 80px -30px rgba(40,25,15,.55);overflow:hidden;position:relative;display:flex;flex-direction:column;">
+          <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px;font-size:14px;font-weight:600;"><span>9:41</span><span style="letter-spacing:2px;">●●● ▂▄▆ ▮</span></div>
+          <div style="flex:none;padding:4px 22px 8px;display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:#F1E7D8;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;">Consume</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:12px 22px 0;">
+            <div style="background:#EAF0F2;border-radius:14px;padding:14px 15px;display:flex;align-items:center;gap:12px;margin-bottom:16px;"><div style="width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M9 3h6M10 3v13a2 2 0 004 0V3"/></svg></div><div style="flex:1;"><div style="font-weight:600;font-size:14.5px;color:#3E5967;">20 g tube</div><div style="display:flex;align-items:center;gap:6px;margin-top:2px;"><span style="width:7px;height:7px;border-radius:50%;background:#5B7B8C;"></span><span style="font-size:11.5px;color:#7C93A0;">Frozen · 07/07</span></div></div><span style="font-weight:700;font-size:15px;color:#3E5967;">20 g</span></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;background:#F5EDE1;border:1px dashed #D9C6AC;border-radius:12px;padding:12px 13px;margin-bottom:20px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span style="font-size:12px;color:#7A6552;line-height:1.4;">A tube is a whole portion. Using it removes it from stock entirely.</span></div>
+            <div style="font-size:12px;color:#8A7867;margin-bottom:10px;">What to do with the tube?</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px;">
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;">
+                <div style="width:22px;height:22px;border-radius:50%;border:2px solid #D9CBB8;flex:none;"></div>
+                <div style="width:34px;height:34px;border-radius:9px;background:#F7EED8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:13.5px;">Thaw</div><div style="font-size:11px;color:#8A7867;">stays in stock to use later</div></div>
+              </div>
+              <div style="background:#FFFDF9;border:1.5px solid #BE6A3A;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;">
+                <div style="width:22px;height:22px;border-radius:50%;border:6px solid #BE6A3A;background:#fff;flex:none;"></div>
+                <div style="width:34px;height:34px;border-radius:9px;background:#F0EBE3;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M5 12l5 5 9-11"/></svg></div>
+                <div style="flex:1;"><div style="font-weight:600;font-size:13.5px;">Consume now</div><div style="font-size:11px;color:#8A7867;">marks the tube as consumed</div></div>
+              </div>
+            </div>
+            <div style="background:#5C3D28;border-radius:16px;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;color:#F3EBDF;"><span style="font-size:13.5px;">Coffee stock</span><span style="font-size:16px;font-weight:700;">180 → <span style="color:#E7B84B;">160 g</span></span></div>
+          </div>
+          <div style="flex:none;padding:12px 22px 16px;"><div style="background:#BE6A3A;color:#fff;border-radius:14px;padding:15px;text-align:center;font-weight:600;font-size:15px;">Consume tube</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ TURN 8 · DESKTOP ============ -->
+  <section style="margin-bottom:96px;">
+    <div style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#5C3D28;margin:0 0 6px;">Desktop / wide tablet</div>
+    <div style="font-size:13px;color:#8A7867;margin-bottom:24px;">Same system, using the width. Fixed sidebar + content.</div>
+    <div style="display:flex;flex-direction:column;gap:56px;">
+
+      <!-- 8a Catalog desktop -->
+      <div id="8a" style="width:1180px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">8a</span><span style="font-size:13px;color:#8A7867;">Catalog · grid</span></div>
+        <div style="width:1180px;height:740px;background:#FBF6EE;border-radius:18px;border:1px solid #E4D8C6;box-shadow:0 40px 80px -40px rgba(40,25,15,.5);overflow:hidden;display:flex;">
+          <!-- sidebar -->
+          <div style="width:236px;flex:none;background:#5C3D28;padding:26px 20px;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:36px;"><div style="width:38px;height:38px;border-radius:11px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;"><svg width="23" height="23" viewBox="0 0 48 48"><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="12.5" ry="19" fill="#F3EBDF"/><path d="M24 6 C 18 15, 30 33, 24 42" fill="none" stroke="#BE6A3A" stroke-width="2.8" stroke-linecap="round"/></g></svg></div><span style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#F3EBDF;">CoffeeLog</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span style="font-size:14px;">Home</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;background:rgba(243,235,223,.12);color:#F3EBDF;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:14px;font-weight:600;">Catalog</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg><span style="font-size:14px;">Labels</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg><span style="font-size:14px;">Scanner</span></div>
+            </div>
+            <div style="margin-top:auto;display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:11px;background:rgba(243,235,223,.06);"><div style="width:34px;height:34px;border-radius:50%;background:#BE6A3A;"></div><div><div style="font-size:13px;font-weight:600;color:#F3EBDF;">Rafa</div><div style="font-size:11px;color:rgba(243,235,223,.6);">self-hosted</div></div></div>
+          </div>
+          <!-- main -->
+          <div style="flex:1;padding:30px 34px;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+              <div><div style="font-family:'Spectral',serif;font-size:30px;font-weight:600;">Catalog</div><div style="font-size:13px;color:#8A7867;margin-top:2px;">14 coffees · 3.8 kg in stock</div></div>
+              <div style="display:flex;gap:12px;align-items:center;">
+                <div style="display:flex;align-items:center;gap:9px;background:#FFFDF9;border:1px solid #E4D8C6;border-radius:12px;padding:10px 15px;width:240px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span style="font-size:13px;color:#A99C8D;">Search coffee…</span></div>
+                <div style="background:#BE6A3A;color:#fff;border-radius:12px;padding:11px 18px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>New coffee</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;">
+              <div style="display:flex;background:#F1E7D8;border-radius:11px;padding:4px;"><div style="background:#fff;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;color:#5C3D28;box-shadow:0 2px 6px -2px rgba(92,61,40,.3);">Available</div><div style="padding:8px 18px;font-size:13px;color:#8A7867;">All</div><div style="padding:8px 18px;font-size:13px;color:#8A7867;">Archived</div></div>
+              <div style="display:flex;gap:9px;">
+                <span style="display:flex;align-items:center;gap:5px;font-size:12.5px;background:#F1E7D8;color:#C79A33;padding:8px 13px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#C79A33" stroke="none"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.5 5.9 19.4 7.5 12.9 2.5 8.6l6.6-.6z"/></svg>Stars</span>
+                <span style="display:flex;align-items:center;gap:5px;font-size:12.5px;background:#F1E7D8;color:#5B7B8C;padding:8px 13px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>longest</span>
+                <span style="display:flex;align-items:center;gap:5px;font-size:12.5px;background:#F1E7D8;color:#5C3D28;padding:8px 13px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>Recent</span>
+                <span style="display:flex;align-items:center;gap:5px;font-size:12.5px;background:#F1E7D8;color:#9A5228;padding:8px 13px;border-radius:20px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9A5228" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg>Portion</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+              <!-- gc1 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#8A5A38,#5C3D28);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#BE6A3A;background:#F3E6D6;padding:4px 9px;border-radius:8px;">Open</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Sítio da Torre</div><span style="font-size:12px;color:#C79A33;">★★★★★</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Coffeelab · Brazil</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">180 g</span><span style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 28/06</span></div></div>
+              </div>
+              <!-- gc2 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#C98A4E,#8A5A38);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#5B7B8C;background:#EAF0F2;padding:4px 9px;border-radius:8px;">Frozen</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Gesha Especial</div><span style="font-size:12px;color:#C79A33;">★★★★★</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Isso é Café · Colombia</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">95 g</span><span style="display:flex;align-items:center;gap:4px;font-weight:600;color:#B07A1C;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B07A1C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>45 d ago</span></div></div>
+              </div>
+              <!-- gc3 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#A0764C,#6E4A30);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#9A5228;background:#F3E6D6;padding:4px 9px;border-radius:8px;">Portion</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Daterra Sweet Blue</div><span style="font-size:12px;color:#C79A33;">★★★★☆</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Daterra · Brazil</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">250 g</span><span style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 02/07</span></div></div>
+              </div>
+              <!-- gc4 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#966B45,#5E3F29);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#5B7B8C;background:#EAF0F2;padding:4px 9px;border-radius:8px;">Frozen</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Serra Negra</div><span style="font-size:12px;color:#C79A33;">★★★★☆</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Um Coffee · Brazil</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">300 g</span><span style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>20 d ago</span></div></div>
+              </div>
+              <!-- gc5 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#B08A5E,#70502F);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#5B7B8C;background:#EAF0F2;padding:4px 9px;border-radius:8px;">Frozen</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Fazenda Passeio</div><span style="font-size:12px;color:#C79A33;">★★★☆☆</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Lucca · Brazil</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">120 g</span><span style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5B7B8C" stroke-width="2"><path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/></svg>8 d ago</span></div></div>
+              </div>
+              <!-- gc6 -->
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -12px rgba(92,61,40,.3);">
+                <div style="height:120px;background:linear-gradient(150deg,#8E6440,#523620);position:relative;"><span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;color:#BE6A3A;background:#F3E6D6;padding:4px 9px;border-radius:8px;">Open</span></div>
+                <div style="padding:14px;"><div style="display:flex;justify-content:space-between;align-items:start;"><div style="font-weight:600;font-size:15px;">Blend Casa</div><span style="font-size:12px;color:#C79A33;">★★★☆☆</span></div><div style="font-size:12px;color:#8A7867;margin:3px 0 10px;">Orfeu · Brazil</div><div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#8A7867;"><span style="font-weight:600;color:#5C3D28;">210 g</span><span style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 3c2 3.5 4.5 5 4.5 8.5a4.5 4.5 0 11-9 0C7.5 9 9 7.5 9.5 6c.4 1.7 1.5 2.5 1.5 2.5C11 6.5 11 4.5 12 3z"/></svg>roasted 01/07</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8b Detalhe desktop -->
+      <div id="8b" style="width:1180px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-weight:700;font-size:13px;background:#BE6A3A;color:#fff;padding:4px 11px;border-radius:8px;">8b</span><span style="font-size:13px;color:#8A7867;">Detail · two columns</span></div>
+        <div style="width:1180px;height:760px;background:#FBF6EE;border-radius:18px;border:1px solid #E4D8C6;box-shadow:0 40px 80px -40px rgba(40,25,15,.5);overflow:hidden;display:flex;">
+          <div style="width:236px;flex:none;background:#5C3D28;padding:26px 20px;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:36px;"><div style="width:38px;height:38px;border-radius:11px;background:#BE6A3A;display:flex;align-items:center;justify-content:center;"><svg width="23" height="23" viewBox="0 0 48 48"><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="12.5" ry="19" fill="#F3EBDF"/><path d="M24 6 C 18 15, 30 33, 24 42" fill="none" stroke="#BE6A3A" stroke-width="2.8" stroke-linecap="round"/></g></svg></div><span style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:#F3EBDF;">CoffeeLog</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span style="font-size:14px;">Home</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;background:rgba(243,235,223,.12);color:#F3EBDF;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span style="font-size:14px;font-weight:600;">Catalog</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg><span style="font-size:14px;">Labels</span></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:11px;color:rgba(243,235,223,.7);"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg><span style="font-size:14px;">Scanner</span></div>
+            </div>
+          </div>
+          <!-- main two-col -->
+          <div style="flex:1;overflow:hidden;display:flex;">
+            <!-- left col -->
+            <div style="flex:1.5;padding:26px 28px;overflow:hidden;">
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#8A7867;margin-bottom:16px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A7867" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>Catalog / Sítio da Torre</div>
+              <div style="height:180px;border-radius:16px;background:linear-gradient(150deg,#8A5A38,#4A3020);position:relative;margin-bottom:20px;overflow:hidden;">
+                <div style="position:absolute;bottom:16px;left:18px;color:#F3EBDF;"><div style="font-size:12.5px;opacity:.85;">Coffeelab · São Paulo, Brazil</div><div style="font-family:'Spectral',serif;font-size:28px;font-weight:600;">Sítio da Torre</div></div>
+              </div>
+              <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin-bottom:12px;">Details</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#EDE1CF;border:1px solid #EDE1CF;border-radius:14px;overflow:hidden;margin-bottom:20px;">
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Variety</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">Catuaí Amarelo</div></div>
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Process</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">Natural</div></div>
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Altitude</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">1,200 m</div></div>
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Origin</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">Carmo de Minas, BR</div></div>
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Roast</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">Medium-light · 28/06</div></div>
+                <div style="background:#FBF6EE;padding:12px 14px;"><div style="font-size:11px;color:#8A7867;">Purchase</div><div style="font-size:13.5px;font-weight:600;margin-top:3px;">07/02/26</div></div>
+              </div>
+              <div style="display:flex;gap:20px;">
+                <div style="flex:1;"><div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin-bottom:10px;">Tasting notes</div><div style="display:flex;flex-wrap:wrap;gap:7px;"><span style="font-size:12px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;">Caramel</span><span style="font-size:12px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;">Cherry</span><span style="font-size:12px;background:#F3E6D6;color:#9A5228;padding:6px 12px;border-radius:20px;">Milk chocolate</span></div></div>
+              </div>
+              <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;margin:20px 0 10px;">Recipe</div>
+              <div style="background:#2B211A;border-radius:14px;padding:16px;color:#EAD9C3;display:flex;gap:22px;align-items:center;">
+                <div><div style="font-size:11px;opacity:.6;">Method</div><div style="font-size:14px;font-weight:600;color:#F3EBDF;">V60</div></div>
+                <div><div style="font-size:11px;opacity:.6;">Dose</div><div style="font-size:14px;font-weight:600;color:#F3EBDF;">15 g</div></div>
+                <div><div style="font-size:11px;opacity:.6;">Grinder</div><div style="font-size:14px;font-weight:600;color:#F3EBDF;">C40 · 22</div></div>
+                <div style="flex:1;font-size:12px;line-height:1.4;opacity:.85;border-left:1px solid rgba(243,235,223,.15);padding-left:18px;">92 °C · bloom 40 g/40 s · 3 pours up to 250 g · ~2:45</div>
+              </div>
+            </div>
+            <!-- right col -->
+            <div style="width:352px;flex:none;background:#F5EDE1;border-left:1px solid #EADFCD;padding:26px 24px;overflow:hidden;">
+              <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:15px;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;"><div><div style="font-size:11px;color:#8A7867;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">Your score</div><div style="font-size:26px;color:#C79A33;letter-spacing:2px;margin-top:4px;">★★★★<span style="color:#E3D6C2;">★</span></div></div><div style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#BE6A3A;font-weight:600;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#BE6A3A" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Edit</div></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;"><div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;">Units · 180 g</div><span style="font-size:12px;color:#8A7867;">4 active</span></div>
+              <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px;">
+                <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;"><div style="width:9px;height:9px;border-radius:50%;background:#BE6A3A;flex:none;"></div><div style="flex:1;"><div style="font-weight:600;font-size:13.5px;">Open bag</div><div style="font-size:11px;color:#8A7867;">Thawed</div></div><span style="font-weight:700;font-size:14px;">120 g</span></div>
+                <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;"><div style="width:9px;height:9px;border-radius:50%;background:#5B7B8C;flex:none;"></div><div style="flex:1;"><div style="font-weight:600;font-size:13.5px;">2× 20 g tube</div><div style="font-size:11px;color:#8A7867;">Frozen · 07/07</div></div><span style="font-weight:700;font-size:14px;">40 g</span></div>
+                <div style="background:#FFFDF9;border:1px solid #EDE1CF;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:11px;"><div style="width:9px;height:9px;border-radius:50%;background:#B07A1C;flex:none;"></div><div style="flex:1;"><div style="font-weight:600;font-size:13.5px;">1× 20 g tube</div><div style="font-size:11px;color:#8A7867;">Thawed · use soon</div></div><span style="font-weight:700;font-size:14px;">20 g</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="background:#BE6A3A;color:#fff;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><path d="M8 7.5l12 9M8 16.5l12-9"/></svg>Portion &amp; freeze</div>
+                <div style="background:#F1E7D8;color:#5C3D28;border-radius:13px;padding:13px;text-align:center;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#5C3D28" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V4h8v3M8 20v-4h8v4"/></svg>Print labels</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  
+
+  
+
+</div>
+</x-dc>
+</body>
+</html>
