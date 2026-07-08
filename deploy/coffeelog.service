@@ -1,0 +1,15 @@
+[Unit]
+Description=CoffeeLog
+After=network.target
+
+[Service]
+# Adjust WorkingDirectory and DATA_DIR if you cloned somewhere other than /opt/coffeelog.
+WorkingDirectory=/opt/coffeelog
+Environment=PORT=8080
+Environment=DATA_DIR=/opt/coffeelog/data
+ExecStart=/usr/bin/node server/dist/index.js
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

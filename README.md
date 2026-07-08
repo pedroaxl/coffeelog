@@ -38,6 +38,9 @@ and desktop over your local network.
 
 ## Run it
 
+See **[docs/DEPLOY.md](docs/DEPLOY.md)** for the full guide, including a native
+Proxmox LXC + systemd setup and local-development notes.
+
 ### With Docker (recommended for your server)
 
 ```bash
