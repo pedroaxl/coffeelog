@@ -7,6 +7,7 @@ import { settingsRouter } from "./routes/settings.js";
 import { coffeesRouter } from "./routes/coffees.js";
 import { unitsRouter, consumeRouter } from "./routes/units.js";
 import { alertsRouter } from "./routes/alerts.js";
+import { labelsRouter, scanRouter } from "./routes/labels.js";
 import { HttpError } from "./lib/http-error.js";
 
 export interface AppOptions {
@@ -30,6 +31,8 @@ export function buildApp(db: Db, opts: AppOptions = {}): Express {
   api.use("/units", unitsRouter(db));
   api.use("/consume", consumeRouter(db));
   api.use("/alerts", alertsRouter(db));
+  api.use("/labels", labelsRouter(db));
+  api.use("/scan", scanRouter(db));
   app.use("/api", api);
 
   if (opts.uploadsDir) {

@@ -9,6 +9,7 @@ import { NewCoffeeWizard } from "./screens/NewCoffeeWizard";
 import { StorageUnitsScreen } from "./screens/StorageUnitsScreen";
 import { PortionWizard } from "./screens/PortionWizard";
 import { UnitDetailScreen } from "./screens/UnitDetailScreen";
+import { ResolveUnitScreen } from "./screens/ResolveUnitScreen";
 import { ScanScreen } from "./screens/ScanScreen";
 import { LabelsScreen } from "./screens/LabelsScreen";
 import { SettingsScreen } from "./screens/SettingsScreen";
@@ -31,4 +32,6 @@ export const router = createBrowserRouter([
       { path: "/settings", element: <SettingsScreen /> },
     ],
   },
+  // Landing for a scanned label URL — resolves and redirects to the unit.
+  { path: "/u/:qrId", element: <ResolveUnitScreen /> },
 ]);

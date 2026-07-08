@@ -30,8 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 make g++ ca-certificates && npm install --omit=dev --workspace=@coffeelog/server \
     && apt-get purge -y python3 make g++ && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
-# Built server code and the static web bundle (served by the server).
+# Built server code, bundled label fonts, and the static web bundle.
 COPY --from=build /app/server/dist ./server/dist
+COPY --from=build /app/server/assets ./server/assets
 COPY --from=build /app/web/dist ./server/web
 
 VOLUME ["/data"]
