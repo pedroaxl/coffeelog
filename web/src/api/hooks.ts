@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "./client";
-import type { Coffee, Recipe, Settings } from "./types";
+import type { Alerts, Coffee, ConsumeResult, Recipe, Settings, TempState } from "./types";
 
 // ---- Coffees ----
 
@@ -90,6 +90,74 @@ export function useDeleteCoffee() {
     mutationFn: (id: number) => api.del<void>(`/coffees/${id}`),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["coffees"] }),
   });
+}
+
+// ---- Storage units (portion / consume / state) ----
+
+function useCoffeeCacheSync() {
+  const qc = useQueryClient();
+  return (coffee: Coffee) => {
+    qc.setQueryData(["coffee", coffee.id], coffee);
+    qc.invalidateQueries({ queryKey: ["coffees"] });
+    qc.invalidateQueries({ queryKey: ["alerts"] });
+    qc.invalidateQueries({ queryKey: ["unit"] });
+  };
+}
+
+export interface PortionInput {
+  tubes: { weightG: number }[];
+  tubeState: TempState;
+}
+
+export function usePortion(unitId: number) {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (input: PortionInput) => api.post<Coffee>(`/units/${unitId}/portion`, input),
+    onSuccess: sync,
+  });
+}
+
+export function useSetUnitState(unitId: number) {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (patch: { sealState?: "sealed" | "open"; tempState?: TempState }) =>
+      api.patch<Coffee>(`/units/${unitId}`, patch),
+    onSuccess: sync,
+  });
+}
+
+export function useConsume(unitId: number) {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (input: { grams?: number; note?: string | null }) =>
+      api.post<ConsumeResult>(`/units/${unitId}/consume`, input),
+    onSuccess: (res) => sync(res.coffee),
+  });
+}
+
+export function useUndoConsume() {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (logId: number) => api.post<Coffee>(`/consume/${logId}/undo`),
+    onSuccess: sync,
+  });
+}
+
+export interface UnitDetail {
+  coffee: Coffee;
+  unit: Coffee["units"][number];
+}
+
+export function useUnit(unitId: number | undefined) {
+  return useQuery({
+    queryKey: ["unit", unitId],
+    queryFn: () => api.get<UnitDetail>(`/units/${unitId}`),
+    enabled: unitId != null && !Number.isNaN(unitId),
+  });
+}
+
+export function useAlerts() {
+  return useQuery({ queryKey: ["alerts"], queryFn: () => api.get<Alerts>("/alerts") });
 }
 
 // ---- Settings ----

@@ -23,6 +23,7 @@ export interface CoffeeFields {
 export interface Coffee extends CoffeeFields {
   id: number;
   createdAt: string;
+  lastUsedAt: string | null; // most recent (non-undone) consumption
   tastingNotes: string[];
   recipe: Recipe | null;
   units: StorageUnit[];
@@ -71,6 +72,11 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
   const units = listUnitsByCoffee(db, row.id);
   const active = units.filter((u) => u.active);
   const remainingG = active.reduce((sum, u) => sum + u.weightG, 0);
+  const lastUsed = db
+    .prepare(
+      "SELECT MAX(created_at) AS t FROM consumption_log WHERE coffee_id = ? AND undone = 0"
+    )
+    .get(row.id) as { t: string | null };
   return {
     id: row.id,
     name: row.name,
@@ -88,6 +94,7 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     photoPath: row.photo_path,
     score: row.score,
     createdAt: row.created_at,
+    lastUsedAt: lastUsed.t,
     tastingNotes: getNotes(db, row.id),
     recipe: getRecipeForCoffee(db, row.id),
     units,

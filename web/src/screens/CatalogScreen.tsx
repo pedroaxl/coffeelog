@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Plus, Star, Snowflake, Clock, Split } from "lucide-react";
 import { useCoffees } from "../api/hooks";
 import { CoffeeCard } from "../components/CoffeeCard";
@@ -25,9 +25,15 @@ const SORTS: { key: CatalogSort; label: string; icon: typeof Star; color: string
 /** Catalog (badge 3b) — scope segmented control + filter chips + rich cards. */
 export function CatalogScreen() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const initialSort = (["stars", "longest", "recent", "portion"] as CatalogSort[]).includes(
+    params.get("filter") as CatalogSort
+  )
+    ? (params.get("filter") as CatalogSort)
+    : "recent";
   const { data: coffees, isLoading } = useCoffees();
   const [scope, setScope] = useState<CatalogScope>("available");
-  const [sort, setSort] = useState<CatalogSort>("recent");
+  const [sort, setSort] = useState<CatalogSort>(initialSort);
   const [query, setQuery] = useState("");
 
   const list = coffees ? filterAndSort(coffees, scope, sort, query) : [];

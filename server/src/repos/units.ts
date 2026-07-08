@@ -78,6 +78,27 @@ export function getUnit(db: Db, id: number): StorageUnit | undefined {
   return row ? mapUnit(row) : undefined;
 }
 
+export function coffeeIdForUnit(db: Db, id: number): number | undefined {
+  const row = db.prepare("SELECT coffee_id FROM storage_units WHERE id = ?").get(id) as
+    | { coffee_id: number }
+    | undefined;
+  return row?.coffee_id;
+}
+
+export function coffeeIdForQr(db: Db, qrId: string): number | undefined {
+  const row = db.prepare("SELECT coffee_id FROM storage_units WHERE qr_id = ?").get(qrId) as
+    | { coffee_id: number }
+    | undefined;
+  return row?.coffee_id;
+}
+
+export function unitIdForQr(db: Db, qrId: string): number | undefined {
+  const row = db.prepare("SELECT id FROM storage_units WHERE qr_id = ?").get(qrId) as
+    | { id: number }
+    | undefined;
+  return row?.id;
+}
+
 export interface CreateUnitInput {
   coffeeId: number;
   kind: UnitKind;

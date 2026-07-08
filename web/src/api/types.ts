@@ -60,10 +60,21 @@ export interface Coffee {
   photoPath: string | null;
   score: number | null;
   createdAt: string;
+  lastUsedAt: string | null;
   tastingNotes: string[];
   recipe: Recipe | null;
   units: StorageUnit[];
   remainingG: number;
   activeUnitCount: number;
   status: "available" | "archived"; // derived
+}
+
+export interface Alerts {
+  portionFreeze: Coffee[];
+  frozenTooLong: Coffee[];
+}
+
+export interface ConsumeResult {
+  coffee: Coffee;
+  logId: number;
 }

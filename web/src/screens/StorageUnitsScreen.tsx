@@ -1,0 +1,147 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { ChevronLeft, Package, TestTube, Split, Tags } from "lucide-react";
+import { useCoffee } from "../api/hooks";
+import { StateDot } from "../components/StatePill";
+import { STATUS_STYLES, gramsLabel, shortDate } from "../lib/format";
+import type { StorageUnit } from "../api/types";
+
+function UnitRow({ unit, onClick }: { unit: StorageUnit; onClick: () => void }) {
+  const s = STATUS_STYLES[unit.status];
+  const Icon = unit.kind === "bag" ? Package : TestTube;
+  const date = unit.frozenDate ?? unit.openedDate;
+  return (
+    <button
+      onClick={onClick}
+      className="flex w-full items-center gap-3 rounded-card border border-border bg-card px-[13px] py-3 text-left"
+    >
+      <span
+        className="flex h-9 w-9 flex-none items-center justify-center rounded-tile"
+        style={{ background: s.bg }}
+      >
+        <Icon size={19} color={s.color} />
+      </span>
+      <span className="flex-1">
+        <span className="block text-[14px] font-semibold">
+          {unit.kind === "bag" ? (unit.sealState === "open" ? "Open bag" : "Sealed bag") : "Falcon tube"}
+        </span>
+        <span className="mt-[3px] flex items-center gap-[6px]">
+          <StateDot status={unit.status} size={7} />
+          <span className="text-[11.5px] text-muted">
+            {s.label}
+            {date ? ` · ${shortDate(date)}` : ""}
+          </span>
+        </span>
+      </span>
+      <span className="text-[14px] font-bold text-brand">{gramsLabel(unit.weightG)}</span>
+    </button>
+  );
+}
+
+/** Storage units (badge 6a) — summary tiles, bag, tubes, consumed footer, actions. */
+export function StorageUnitsScreen() {
+  const { id } = useParams();
+  const coffeeId = Number(id);
+  const navigate = useNavigate();
+  const { data: coffee, isLoading } = useCoffee(coffeeId);
+
+  if (isLoading || !coffee) {
+    return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
+  }
+
+  const bags = coffee.units.filter((u) => u.kind === "bag" && u.active);
+  const tubes = coffee.units.filter((u) => u.kind === "tube" && u.active);
+  const consumedCount = coffee.units.filter((u) => u.kind === "tube" && u.consumed).length;
+  const tubesWeight = tubes.reduce((s, t) => s + t.weightG, 0);
+  const openBag = bags.find((b) => b.sealState === "open");
+
+  return (
+    <div className="flex min-h-full flex-col bg-cream">
+      <div className="flex flex-none items-center gap-3 px-[22px] pb-3 pt-4">
+        <button
+          onClick={() => navigate(`/catalog/${coffeeId}`)}
+          aria-label="Back"
+          className="flex h-[38px] w-[38px] items-center justify-center rounded-tile bg-tan"
+        >
+          <ChevronLeft size={20} color="#5C3D28" />
+        </button>
+        <div className="min-w-0">
+          <div className="text-[12px] text-muted">Units of</div>
+          <div className="truncate font-serif text-[20px] font-semibold leading-none">
+            {coffee.name}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 px-[22px] pb-4">
+        {/* summary tiles */}
+        <div className="mb-4 flex gap-[10px]">
+          <div className="flex-1 rounded-[15px] bg-brand px-[15px] py-[13px] text-[#F3EBDF]">
+            <div className="font-serif text-[23px] font-bold">{gramsLabel(coffee.remainingG)}</div>
+            <div className="mt-[1px] text-[11.5px] opacity-70">remaining</div>
+          </div>
+          <div className="flex-1 rounded-[15px] border border-border bg-card px-[15px] py-[13px]">
+            <div className="font-serif text-[23px] font-bold text-brand">{coffee.activeUnitCount}</div>
+            <div className="mt-[1px] text-[11.5px] text-muted">active units</div>
+          </div>
+        </div>
+
+        {/* bag */}
+        <div className="mb-2 text-[11.5px] font-semibold uppercase tracking-[0.6px] text-muted">Bag</div>
+        {bags.length > 0 ? (
+          <div className="mb-[18px] flex flex-col gap-2">
+            {bags.map((b) => (
+              <UnitRow key={b.id} unit={b} onClick={() => navigate(`/units/${b.id}`)} />
+            ))}
+          </div>
+        ) : (
+          <p className="mb-[18px] text-[13px] text-muted">No bag — fully portioned or used.</p>
+        )}
+
+        {/* tubes */}
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="text-[11.5px] font-semibold uppercase tracking-[0.6px] text-muted">
+            Falcon tubes
+          </span>
+          {tubes.length > 0 && (
+            <span className="text-[11.5px] text-muted">
+              {gramsLabel(tubesWeight)} · {tubes.length} tubes
+            </span>
+          )}
+        </div>
+        {tubes.length > 0 ? (
+          <div className="flex flex-col gap-2">
+            {tubes.map((t) => (
+              <UnitRow key={t.id} unit={t} onClick={() => navigate(`/units/${t.id}`)} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-[13px] text-muted">No tubes yet — portion the bag to create some.</p>
+        )}
+
+        {consumedCount > 0 && (
+          <div className="mt-3 flex items-center gap-2 px-[2px] py-2">
+            <StateDot status="consumed" size={7} />
+            <span className="text-[12px] text-state-consumed">{consumedCount} tubes consumed</span>
+          </div>
+        )}
+      </div>
+
+      {/* actions */}
+      <div className="flex flex-none gap-[10px] border-t border-border-3 bg-cream px-[22px] py-3 pb-6">
+        <button
+          disabled={!openBag}
+          onClick={() => openBag && navigate(`/catalog/${coffeeId}/portion`)}
+          className="flex flex-1 items-center justify-center gap-[7px] rounded-btn bg-brand py-[13px] text-[13.5px] font-semibold text-[#F3EBDF] disabled:opacity-40"
+        >
+          <Split size={17} color="#E7B84B" /> Portion
+        </button>
+        <button
+          onClick={() => navigate(`/labels?coffee=${coffeeId}`)}
+          className="flex flex-1 items-center justify-center gap-[7px] rounded-btn bg-tan py-[13px] text-[13.5px] font-semibold text-brand"
+        >
+          <Tags size={17} color="#5C3D28" /> Labels
+        </button>
+      </div>
+    </div>
+  );
+}
