@@ -15,7 +15,7 @@ function DetailCell({ label, value, span }: { label: string; value: string; span
   );
 }
 
-function UnitRow({ unit }: { unit: Coffee["units"][number] }) {
+function UnitRow({ unit, onClick }: { unit: Coffee["units"][number]; onClick: () => void }) {
   const label =
     unit.kind === "bag"
       ? unit.sealState === "open"
@@ -23,11 +23,15 @@ function UnitRow({ unit }: { unit: Coffee["units"][number] }) {
         : "Sealed bag"
       : "Falcon tube";
   return (
-    <div className="flex items-center gap-[11px] rounded-input border border-border bg-card px-[13px] py-[11px]">
+    <button
+      onClick={onClick}
+      className="flex items-center gap-[11px] rounded-input border border-border bg-card px-[13px] py-[11px] text-left"
+    >
       <StateDot status={unit.status} />
       <span className="flex-1 text-[13.5px] font-semibold">{label}</span>
       <span className="text-[12.5px] text-muted">{gramsLabel(unit.weightG)}</span>
-    </div>
+      <ChevronRight size={16} color="#B5A48F" />
+    </button>
   );
 }
 
@@ -45,6 +49,7 @@ export function CoffeeDetailScreen() {
   const origin = [coffee.beanRegion, coffee.beanCountry].filter(Boolean).join(" · ");
   const roastery = [coffee.roasteryName, coffee.roasteryCountry].filter(Boolean).join(" · ");
   const activeUnits = coffee.units.filter((u) => u.active);
+  const hasPortionableBag = coffee.units.some((u) => u.kind === "bag" && u.active);
   const r = coffee.recipe;
 
   return (
@@ -172,34 +177,41 @@ export function CoffeeDetailScreen() {
           <h2 className="font-serif text-[16px] font-semibold">
             Units · {gramsLabel(coffee.remainingG)}
           </h2>
-          <span className="text-[12px] text-muted">{coffee.activeUnitCount} units</span>
+          <button
+            onClick={() => navigate(`/catalog/${coffee.id}/units`)}
+            className="flex items-center gap-[2px] text-[12px] font-semibold text-terracotta"
+          >
+            Manage <ChevronRight size={13} color="#BE6A3A" />
+          </button>
         </div>
         {activeUnits.length > 0 ? (
           <div className="mb-4 flex flex-col gap-2">
             {activeUnits.map((u) => (
-              <UnitRow key={u.id} unit={u} />
+              <UnitRow key={u.id} unit={u} onClick={() => navigate(`/units/${u.id}`)} />
             ))}
           </div>
         ) : (
           <p className="mb-4 text-[13px] text-muted">No active units — this coffee is used up.</p>
         )}
 
-        {/* portion action (Phase 2 flow) */}
-        <button
-          onClick={() => navigate(`/catalog/${coffee.id}/units`)}
-          className="flex w-full items-center gap-[13px] rounded-card bg-brand px-4 py-[15px] text-left"
-        >
-          <span className="flex h-10 w-10 flex-none items-center justify-center rounded-tile bg-white/10">
-            <Split size={21} color="#E7B84B" />
-          </span>
-          <span className="flex-1 text-[#F3EBDF]">
-            <span className="block text-[14.5px] font-semibold">Portion &amp; freeze</span>
-            <span className="mt-[2px] block text-[11.5px] leading-[1.35] opacity-70">
-              Splits the open bag into new tubes — updates existing units.
+        {/* portion action — launches the wizard directly (works from any bag) */}
+        {hasPortionableBag && (
+          <button
+            onClick={() => navigate(`/catalog/${coffee.id}/portion`)}
+            className="flex w-full items-center gap-[13px] rounded-card bg-brand px-4 py-[15px] text-left"
+          >
+            <span className="flex h-10 w-10 flex-none items-center justify-center rounded-tile bg-white/10">
+              <Split size={21} color="#E7B84B" />
             </span>
-          </span>
-          <ChevronRight size={20} color="#F3EBDF" className="flex-none opacity-60" />
-        </button>
+            <span className="flex-1 text-[#F3EBDF]">
+              <span className="block text-[14.5px] font-semibold">Portion &amp; freeze</span>
+              <span className="mt-[2px] block text-[11.5px] leading-[1.35] opacity-70">
+                Splits a bag into new tubes — updates existing units.
+              </span>
+            </span>
+            <ChevronRight size={20} color="#F3EBDF" className="flex-none opacity-60" />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -52,6 +52,25 @@ describe("label rendering", () => {
     expect(res.body.length).toBeGreaterThan(1000);
   });
 
+  it("renders without throwing for very long coffee and roaster names", async () => {
+    const { app } = testApp();
+    const created = await request(app)
+      .post("/api/coffees")
+      .send({
+        name: "Fazenda Santa Inês Yellow Bourbon Natural Microlote Especial",
+        roaster: "Um Coffee Co. Roastery & Specialty Beans Curitiba",
+        initialUnit: { weightG: 250, initialState: "open" },
+      });
+    const bagId = created.body.units[0].id;
+    const portioned = await request(app)
+      .post(`/api/units/${bagId}/portion`)
+      .send({ tubes: [{ weightG: 20 }], tubeState: "frozen" });
+    const tube = portioned.body.units.find((u: { kind: string }) => u.kind === "tube");
+    const res = await request(app).get(`/api/labels/unit/${tube.id}.png`);
+    expect(res.status).toBe(200);
+    expect(res.body.slice(0, 4).toString("hex")).toBe("89504e47");
+  });
+
   it("exports a single unit as a PNG and multiple as a ZIP", async () => {
     const { app } = testApp();
     const { tube } = await seedTube(app);

@@ -52,7 +52,8 @@ export function StorageUnitsScreen() {
   const tubes = coffee.units.filter((u) => u.kind === "tube" && u.active);
   const consumedCount = coffee.units.filter((u) => u.kind === "tube" && u.consumed).length;
   const tubesWeight = tubes.reduce((s, t) => s + t.weightG, 0);
-  const openBag = bags.find((b) => b.sealState === "open");
+  // Any active bag can be portioned — portioning opens a sealed bag automatically.
+  const canPortion = bags.length > 0;
 
   return (
     <div className="flex min-h-full flex-col bg-cream">
@@ -129,8 +130,8 @@ export function StorageUnitsScreen() {
       {/* actions */}
       <div className="flex flex-none gap-[10px] border-t border-border-3 bg-cream px-[22px] py-3 pb-6">
         <button
-          disabled={!openBag}
-          onClick={() => openBag && navigate(`/catalog/${coffeeId}/portion`)}
+          disabled={!canPortion}
+          onClick={() => canPortion && navigate(`/catalog/${coffeeId}/portion`)}
           className="flex flex-1 items-center justify-center gap-[7px] rounded-btn bg-brand py-[13px] text-[13.5px] font-semibold text-[#F3EBDF] disabled:opacity-40"
         >
           <Split size={17} color="#E7B84B" /> Portion

@@ -20,17 +20,19 @@ export function PortionWizard() {
   const [tubeState, setTubeState] = useState<TempState>("frozen");
   const [matchValue, setMatchValue] = useState("15");
 
-  const portion = usePortion(sourceId ?? 0);
+  // Only bags are portionable (frozen tubes are not). A single bag is used
+  // automatically even if the user never taps it — so bind the mutation to the
+  // *effective* source, not just the tapped one.
+  const sources = (coffee?.units ?? []).filter((u) => u.kind === "bag" && u.active);
+  const source: StorageUnit | undefined =
+    sources.find((s) => s.id === sourceId) ?? (sources.length === 1 ? sources[0] : undefined);
+  const effectiveSourceId = source?.id ?? null;
+
+  const portion = usePortion(effectiveSourceId ?? 0);
 
   if (isLoading || !coffee) {
     return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
   }
-
-  // Only bags are portionable (frozen tubes are not).
-  const sources = coffee.units.filter((u) => u.kind === "bag" && u.active);
-  const source: StorageUnit | undefined =
-    sources.find((s) => s.id === sourceId) ?? (sources.length === 1 ? sources[0] : undefined);
-  const effectiveSourceId = source?.id ?? null;
 
   const weights = tubes.map((t) => Number(t) || 0);
   const total = weights.reduce((s, w) => s + w, 0);
@@ -75,7 +77,9 @@ export function PortionWizard() {
               Pick which unit to portion from. Frozen tubes aren't portionable.
             </p>
             {sources.length === 0 && (
-              <p className="text-[13.5px] text-muted">No open bag to portion. Open a bag first.</p>
+              <p className="text-[13.5px] text-muted">
+                No bag to portion — this coffee only has tubes left.
+              </p>
             )}
             <div className="flex flex-col gap-2">
               {sources.map((s) => {

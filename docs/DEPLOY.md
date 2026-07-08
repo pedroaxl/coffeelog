@@ -5,6 +5,13 @@ one SQLite file. That makes it easy to run either as a native service or as a
 Docker container. Below are the paths for a home server (e.g. Proxmox) plus how
 to run it locally for testing.
 
+> **Ports:** in **production there is only one port** (`8080`). The same process
+> serves the web app *and* the `/api`. The two-port split (web on `5173`, API on
+> `8080`) exists **only in development** with `npm run dev` — you do not expose
+> `5173` on your server. Production serving depends on `npm run build` having
+> produced `web/dist` first (the server logs which web directory it serves, or a
+> warning if none is found).
+
 ---
 
 ## Run locally (testing & debugging)
@@ -113,3 +120,16 @@ Uses the repo's [`Dockerfile`](../Dockerfile) and [`docker-compose.yml`](../dock
   manual code entry — but your **phone's native camera** opening the label URL
   works regardless. For the in-app camera on the LAN, front it with HTTPS (e.g. a
   Caddy reverse proxy) later.
+
+---
+
+## Troubleshooting
+
+- **`Cannot GET /` at the root (API works, site doesn't):** the server didn't find
+  the built web app. Make sure you ran `npm run build` (it produces `web/dist`),
+  then restart. The startup logs print either `Serving web app from: …` or a
+  warning that no build was found. There is only one port to open (`8080`) — you
+  do **not** need to expose `5173` in production; that's dev-only.
+- **QR opens the wrong address:** set **Settings → Instance URL** to how you reach
+  the server on your LAN (e.g. `192.168.0.50:8080`). Labels printed afterwards
+  encode that address; re-export any labels you generated before setting it.
