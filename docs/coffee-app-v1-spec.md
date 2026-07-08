@@ -10,7 +10,7 @@
 
 ## 1. Contexto e objetivo
 
-Referência de inspiração: [Coffee Library](https://coffeelibrary.app/), um app iOS de catálogo pessoal de cafés com foco em:
+Referência de inspiração: app iOS de catálogo pessoal de cafés com foco em:
 - Catálogo de cafés (dados do pacote)
 - Autofill por foto (Apple Intelligence)
 - Lembretes de descanso pós-torra
