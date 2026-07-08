@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ScanLine, Plus, Split, Snowflake, ChevronRight } from "lucide-react";
-import { BeanMark } from "../components/Logo";
+import { BeanMark, LogoTile } from "../components/Logo";
 import { CoffeeCard } from "../components/CoffeeCard";
-import { useAlerts, useCoffees } from "../api/hooks";
+import { useAlerts, useCoffees, useSettings } from "../api/hooks";
 import { earliestFrozenDate } from "../lib/coffee";
 import type { Coffee } from "../api/types";
 
@@ -39,6 +39,8 @@ export function HomeScreen() {
   const { data: alerts } = useAlerts();
   const { data: coffees } = useCoffees();
   const [list, setList] = useState<ListKey>("recent");
+
+  if (coffees && coffees.length === 0) return <EmptyHome />;
 
   const shown = coffees ? selectList(coffees, list) : [];
 
@@ -145,6 +147,47 @@ export function HomeScreen() {
           ) : (
             shown.map((c) => <CoffeeCard key={c.id} coffee={c} />)
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Empty home / first run (badge 11a). */
+function EmptyHome() {
+  const navigate = useNavigate();
+  const { data: settings } = useSettings();
+  return (
+    <div className="flex min-h-full flex-col bg-brand">
+      <div className="flex flex-1 flex-col items-center justify-center px-9 text-center text-[#F3EBDF]">
+        <div className="mb-7">
+          <LogoTile size={96} radius={28} />
+        </div>
+        <div className="mb-3 font-serif text-[28px] font-semibold leading-[1.12]">
+          Welcome to
+          <br />
+          CoffeeLog
+        </div>
+        <p className="mb-10 text-[14px] leading-[1.5] text-[#F3EBDF]/70">
+          Your cellar is empty. Add your first coffee to start tracking beans, units and recipes.
+        </p>
+        <button
+          onClick={() => navigate("/catalog/new")}
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-[15px] bg-terracotta py-[15px] text-[15px] font-semibold text-white"
+        >
+          <Plus size={19} /> Add your first coffee
+        </button>
+        <button
+          onClick={() => navigate("/scan")}
+          className="flex w-full items-center justify-center gap-2 rounded-[15px] bg-white/10 py-[15px] text-[15px] font-semibold text-[#F3EBDF]"
+        >
+          <ScanLine size={19} /> Scan a label
+        </button>
+      </div>
+      <div className="flex-none px-9 pb-8 text-center">
+        <div className="inline-flex items-center gap-[7px] text-[12px] text-[#F3EBDF]/50">
+          <span className="h-[6px] w-[6px] rounded-full bg-[#7FB08A]" />
+          Connected to home server{settings?.instanceUrl ? ` · ${settings.instanceUrl}` : ""}
         </div>
       </div>
     </div>

@@ -84,7 +84,7 @@ export function CoffeeDetailScreen() {
         </div>
       </div>
 
-      <div className="px-[22px] pb-10 pt-[18px]">
+      <div className="mx-auto max-w-[760px] px-[22px] pb-10 pt-[18px]">
         {/* score */}
         <div className="mb-[18px] flex items-center justify-between rounded-card border border-border bg-card px-4 py-[14px]">
           <div>

@@ -7,7 +7,7 @@ import type { Settings } from "../api/types";
 const settings: Settings = {
   instanceUrl: "192.168.0.12:8080",
   warnNotFrozenAfterDays: 3,
-  warnFrozenOverDays: 40,
+  warnFrozenOverDays: 45,
   labelWidthMm: 40,
   labelHeightMm: 30,
   labelDpi: 300,
@@ -30,11 +30,11 @@ function renderWithClient(ui: React.ReactNode) {
 }
 
 describe("SettingsScreen", () => {
-  it("shows the Niimbot B1 printer and seeded thresholds from the API", async () => {
+  it("shows the editable Niimbot B1 printer, thresholds and option chips", async () => {
     renderWithClient(<SettingsScreen />);
-    expect(await screen.findByText("Niimbot B1")).toBeInTheDocument();
-    expect(screen.getByText("3 days")).toBeInTheDocument();
-    expect(screen.getByText("40 days")).toBeInTheDocument();
-    expect(screen.getByText(/V60 02/)).toBeInTheDocument();
+    expect(await screen.findByDisplayValue("Niimbot B1")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("3")).toBeInTheDocument(); // warn-not-frozen days
+    expect(screen.getByDisplayValue("45")).toBeInTheDocument(); // warn-frozen-over days
+    expect(screen.getByText(/V60 02/)).toBeInTheDocument(); // method chip
   });
 });

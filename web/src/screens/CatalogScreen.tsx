@@ -104,7 +104,7 @@ export function CatalogScreen() {
         </div>
       )}
 
-      <div className="flex flex-col gap-[13px]">
+      <div className="grid grid-cols-1 gap-[13px] md:grid-cols-2 xl:grid-cols-3">
         {list.map((c) => (
           <CoffeeCard key={c.id} coffee={c} />
         ))}
