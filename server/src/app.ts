@@ -42,10 +42,16 @@ export function buildApp(db: Db, opts: AppOptions = {}): Express {
   }
 
   // Serve the built SPA (production). API + uploads are matched first above.
+  // index.html must never be cached: it points at hash-named bundles, and a
+  // stale copy leaves the browser running an old app against a new API.
   if (opts.webDist && fs.existsSync(opts.webDist)) {
-    app.use(express.static(opts.webDist));
+    const noCacheHtml = (res: Response, filePath: string) => {
+      if (filePath.endsWith(".html")) res.setHeader("Cache-Control", "no-cache");
+    };
+    app.use(express.static(opts.webDist, { index: false, setHeaders: noCacheHtml }));
     app.get("*", (req, res, next) => {
       if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) return next();
+      res.setHeader("Cache-Control", "no-cache");
       res.sendFile(path.join(opts.webDist!, "index.html"));
     });
   }

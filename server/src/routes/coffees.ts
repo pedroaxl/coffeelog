@@ -228,6 +228,27 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
     })
   );
 
+  /**
+   * Back-compat: the pre-multi-photo client posted a single file as "photo" to
+   * this path. A browser running a cached bundle would otherwise 404 here, so
+   * keep accepting it and append like /photos does.
+   */
+  router.post(
+    "/:id/photo",
+    upload.single("photo"),
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      if (!req.file) throw badRequest("No photo uploaded");
+      try {
+        addPhoto(db, id, await savePhoto(uploadsDir, req.file));
+      } catch {
+        throw badRequest("Couldn't read that image — try a JPEG, PNG or HEIC photo");
+      }
+      res.json(getCoffee(db, id));
+    })
+  );
+
   const photoPathSchema = z.object({ path: z.string().min(1).max(300) });
 
   router.delete(

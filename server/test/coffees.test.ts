@@ -151,4 +151,16 @@ describe("photos", () => {
       .attach("photos", Buffer.from("not an image"), "notes.txt");
     expect(res.status).toBe(400);
   });
+
+  // A browser running a cached pre-multi-photo bundle posts a single "photo".
+  it("still accepts the legacy single-photo endpoint", async () => {
+    const { app } = testApp();
+    const created = await request(app).post("/api/coffees").send(newCoffeePayload());
+    const res = await request(app)
+      .post(`/api/coffees/${created.body.id}/photo`)
+      .attach("photo", await imageBuffer("#5c3d28"), "package.webp");
+    expect(res.status).toBe(200);
+    expect(res.body.photos).toHaveLength(1);
+    expect(res.body.photoPath).toMatch(/^\/uploads\/.+\.jpg$/);
+  });
 });
