@@ -15,6 +15,8 @@ const baseSettings: Settings = {
   printerDevice: "Niimbot B1",
   methodOptions: [],
   grinderOptions: [],
+  varietyOptions: [],
+  processOptions: [],
 };
 
 async function seedTube(app: import("express").Express) {

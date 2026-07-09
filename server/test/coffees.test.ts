@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import request from "supertest";
+import sharp from "sharp";
 import { testApp } from "./helpers.js";
 
 function newCoffeePayload(overrides: Record<string, unknown> = {}) {
@@ -96,5 +97,35 @@ describe("coffees CRUD", () => {
     expect((await request(app).post("/api/coffees").send({ roaster: "x" })).status).toBe(400);
     expect((await request(app).get("/api/coffees/999")).status).toBe(404);
     expect((await request(app).patch("/api/coffees/999/score").send({ score: 3 })).status).toBe(404);
+  });
+});
+
+describe("photo upload", () => {
+  it("accepts an image, converts it to JPEG, and sets photoPath", async () => {
+    const { app } = testApp();
+    const created = await request(app).post("/api/coffees").send(newCoffeePayload());
+    const id = created.body.id;
+
+    // A WebP upload should come back as a stored .jpg (server converts via sharp).
+    const webp = await sharp({
+      create: { width: 20, height: 20, channels: 3, background: "#be6a3a" },
+    })
+      .webp()
+      .toBuffer();
+
+    const res = await request(app)
+      .post(`/api/coffees/${id}/photo`)
+      .attach("photo", webp, "package.webp");
+    expect(res.status).toBe(200);
+    expect(res.body.photoPath).toMatch(/^\/uploads\/.+\.jpg$/);
+  });
+
+  it("rejects a non-image with a helpful error", async () => {
+    const { app } = testApp();
+    const created = await request(app).post("/api/coffees").send(newCoffeePayload());
+    const res = await request(app)
+      .post(`/api/coffees/${created.body.id}/photo`)
+      .attach("photo", Buffer.from("not an image"), "notes.txt");
+    expect(res.status).toBe(400);
   });
 });

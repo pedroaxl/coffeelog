@@ -19,6 +19,8 @@ const patchSchema = z
     printerDevice: z.string().max(100),
     methodOptions: stringList,
     grinderOptions: stringList,
+    varietyOptions: stringList,
+    processOptions: stringList,
   })
   .partial()
   .strict();

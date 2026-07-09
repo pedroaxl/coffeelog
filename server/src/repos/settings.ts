@@ -11,6 +11,8 @@ export interface Settings {
   printerDevice: string;
   methodOptions: string[];
   grinderOptions: string[];
+  varietyOptions: string[];
+  processOptions: string[];
 }
 
 interface SettingsRow {
@@ -24,6 +26,8 @@ interface SettingsRow {
   printer_device: string;
   method_options: string;
   grinder_options: string;
+  variety_options: string;
+  process_options: string;
 }
 
 function mapRow(row: SettingsRow): Settings {
@@ -38,6 +42,8 @@ function mapRow(row: SettingsRow): Settings {
     printerDevice: row.printer_device,
     methodOptions: safeParseArray(row.method_options),
     grinderOptions: safeParseArray(row.grinder_options),
+    varietyOptions: safeParseArray(row.variety_options),
+    processOptions: safeParseArray(row.process_options),
   };
 }
 
@@ -66,6 +72,8 @@ export interface SettingsPatch {
   printerDevice?: string;
   methodOptions?: string[];
   grinderOptions?: string[];
+  varietyOptions?: string[];
+  processOptions?: string[];
 }
 
 const COLUMN_MAP: Record<keyof SettingsPatch, string> = {
@@ -79,6 +87,8 @@ const COLUMN_MAP: Record<keyof SettingsPatch, string> = {
   printerDevice: "printer_device",
   methodOptions: "method_options",
   grinderOptions: "grinder_options",
+  varietyOptions: "variety_options",
+  processOptions: "process_options",
 };
 
 export function updateSettings(db: Db, patch: SettingsPatch): Settings {

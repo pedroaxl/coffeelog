@@ -15,6 +15,8 @@ const settings: Settings = {
   printerDevice: "Niimbot B1",
   methodOptions: ["V60 02", "Origami (Conical)"],
   grinderOptions: ["1Zpresso ZP6"],
+  varietyOptions: ["Bourbon", "Geisha"],
+  processOptions: ["Natural", "Washed"],
 };
 
 beforeEach(() => {

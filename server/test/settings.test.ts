@@ -19,6 +19,8 @@ describe("settings", () => {
     expect(res.status).toBe(200);
     expect(res.body.methodOptions).toEqual(DEFAULT_METHOD_OPTIONS);
     expect(res.body.grinderOptions).toEqual(DEFAULT_GRINDER_OPTIONS);
+    expect(res.body.varietyOptions).toContain("Bourbon");
+    expect(res.body.processOptions).toContain("Natural");
     expect(res.body.printerDevice).toBe("Niimbot B1");
     expect(res.body.warnNotFrozenAfterDays).toBe(3);
     expect(res.body.warnFrozenOverDays).toBe(40);

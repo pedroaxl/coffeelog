@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, ChevronLeft, Camera } from "lucide-react";
-import { useCreateCoffee, useUploadPhoto, type CoffeeInput } from "../api/hooks";
-import { Field, TextField } from "../components/Form";
+import { X, ChevronLeft } from "lucide-react";
+import { useCreateCoffee, useUploadPhoto, useSettings, type CoffeeInput } from "../api/hooks";
+import { Field, TextField, SelectField } from "../components/Form";
+import { CountrySelect } from "../components/CountrySelect";
+import { PhotoPicker } from "../components/PhotoPicker";
+import { useToast } from "../components/Toast";
 import { gramsLabel } from "../lib/format";
+import { withValue } from "../lib/options";
 
 type InitialState = "sealed" | "open" | "frozen";
 
@@ -16,10 +20,11 @@ const STATE_OPTIONS: { key: InitialState; label: string; hint: string }[] = [
 /** New coffee wizard (badges 7a → 7b → 7c). No score field (set later). */
 export function NewCoffeeWizard() {
   const navigate = useNavigate();
+  const toast = useToast();
   const create = useCreateCoffee();
+  const { data: settings } = useSettings();
   const [createdId, setCreatedId] = useState<number | null>(null);
   const uploadPhoto = useUploadPhoto(createdId ?? 0);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState(1);
   const [photo, setPhoto] = useState<{ file: File; url: string } | null>(null);
@@ -49,7 +54,11 @@ export function NewCoffeeWizard() {
     const coffee = await create.mutateAsync(input);
     setCreatedId(coffee.id);
     if (photo) {
-      await uploadPhoto.mutateAsync(photo.file).catch(() => undefined);
+      try {
+        await uploadPhoto.mutateAsync(photo.file);
+      } catch {
+        toast({ variant: "error", message: "Coffee saved, but the photo couldn't be uploaded." });
+      }
     }
     navigate(`/catalog/${coffee.id}`);
   }
@@ -81,28 +90,9 @@ export function NewCoffeeWizard() {
       <div className="flex-1 px-[22px] py-5">
         {step === 1 && (
           <div className="flex flex-col gap-[14px]">
-            <button
-              onClick={() => fileRef.current?.click()}
-              className="mx-auto flex h-[120px] w-[120px] flex-col items-center justify-center gap-2 overflow-hidden rounded-[16px] border border-dashed border-border-2 bg-card text-muted"
-            >
-              {photo ? (
-                <img src={photo.url} alt="" className="h-full w-full object-cover" />
-              ) : (
-                <>
-                  <Camera size={26} color="#B5A48F" />
-                  <span className="text-[11px]">Add photo</span>
-                </>
-              )}
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) setPhoto({ file, url: URL.createObjectURL(file) });
-              }}
+            <PhotoPicker
+              previewUrl={photo?.url ?? null}
+              onFile={(file) => setPhoto({ file, url: URL.createObjectURL(file) })}
             />
             <Field label="Coffee name">
               <TextField value={val("name")} onChange={set("name")} focused placeholder="e.g. Sítio da Torre" />
@@ -111,7 +101,7 @@ export function NewCoffeeWizard() {
               <TextField value={val("roaster")} onChange={set("roaster")} />
             </Field>
             <Field label="Roastery country">
-              <TextField value={val("roasteryCountry")} onChange={set("roasteryCountry")} />
+              <CountrySelect value={val("roasteryCountry")} onChange={set("roasteryCountry")} />
             </Field>
           </div>
         )}
@@ -120,10 +110,20 @@ export function NewCoffeeWizard() {
           <div className="flex flex-col gap-[14px]">
             <div className="flex gap-[10px]">
               <Field label="Variety" className="flex-1">
-                <TextField value={val("variety")} onChange={set("variety")} />
+                <SelectField
+                  value={val("variety")}
+                  onChange={set("variety")}
+                  options={withValue(settings?.varietyOptions ?? [], val("variety"))}
+                  placeholder="Select…"
+                />
               </Field>
               <Field label="Process" className="flex-1">
-                <TextField value={val("process")} onChange={set("process")} />
+                <SelectField
+                  value={val("process")}
+                  onChange={set("process")}
+                  options={withValue(settings?.processOptions ?? [], val("process"))}
+                  placeholder="Select…"
+                />
               </Field>
             </div>
             <div className="flex gap-[10px]">
@@ -131,7 +131,7 @@ export function NewCoffeeWizard() {
                 <TextField value={val("beanRegion")} onChange={set("beanRegion")} />
               </Field>
               <Field label="Country" className="flex-1">
-                <TextField value={val("beanCountry")} onChange={set("beanCountry")} />
+                <CountrySelect value={val("beanCountry")} onChange={set("beanCountry")} placeholder="Select…" />
               </Field>
             </div>
             <div className="flex gap-[10px]">

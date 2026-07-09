@@ -152,6 +152,15 @@ export function SettingsScreen() {
             </Row>
           </Section>
 
+          <Section title="Coffee options">
+            <Row label="Varieties" align="start" last={false}>
+              <TagEditor tags={data.varietyOptions} onChange={(t) => patch({ varietyOptions: t }, "Varieties updated")} />
+            </Row>
+            <Row label="Processes" align="start" last>
+              <TagEditor tags={data.processOptions} onChange={(t) => patch({ processOptions: t }, "Processes updated")} />
+            </Row>
+          </Section>
+
           <Section title="Data">
             <a
               href="/api/backup"

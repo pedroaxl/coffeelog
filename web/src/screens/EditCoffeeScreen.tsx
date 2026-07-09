@@ -1,10 +1,19 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
-import { useCoffee, useUpdateCoffee, useUploadPhoto, useDeleteCoffee } from "../api/hooks";
-import { Field, TextField } from "../components/Form";
+import {
+  useCoffee,
+  useUpdateCoffee,
+  useUploadPhoto,
+  useDeleteCoffee,
+  useSettings,
+} from "../api/hooks";
+import { Field, TextField, SelectField } from "../components/Form";
 import { TagEditor } from "../components/TagEditor";
-import { CoffeePhoto } from "../components/CoffeePhoto";
+import { CountrySelect } from "../components/CountrySelect";
+import { PhotoPicker } from "../components/PhotoPicker";
+import { useToast } from "../components/Toast";
+import { withValue } from "../lib/options";
 
 const numOrNull = (v: string) => (v.trim() === "" ? null : Number(v.replace(/[^\d.]/g, "")));
 
@@ -14,10 +23,11 @@ export function EditCoffeeScreen() {
   const coffeeId = Number(id);
   const navigate = useNavigate();
   const { data: coffee, isLoading } = useCoffee(coffeeId);
+  const { data: settings } = useSettings();
   const update = useUpdateCoffee(coffeeId);
   const uploadPhoto = useUploadPhoto(coffeeId);
   const del = useDeleteCoffee();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
 
   const [form, setForm] = useState<Record<string, string>>({});
   const [notes, setNotes] = useState<string[] | null>(null);
@@ -70,22 +80,16 @@ export function EditCoffeeScreen() {
       </div>
 
       <div className="flex-1 px-[22px] py-4">
-        <div className="mb-[18px] flex items-center gap-[13px]">
-          <button onClick={() => fileRef.current?.click()} className="relative overflow-hidden rounded-[12px]">
-            <CoffeePhoto src={coffee.photoPath} width={68} height={80} />
-            <span className="absolute inset-x-0 bottom-0 bg-black/35 py-1 text-center text-[10px] text-white">
-              {uploadPhoto.isPending ? "…" : "Change"}
-            </span>
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) uploadPhoto.mutate(file);
-            }}
+        <div className="mb-[18px] flex items-start gap-[16px]">
+          <PhotoPicker
+            previewUrl={coffee.photoPath}
+            busy={uploadPhoto.isPending}
+            size={92}
+            onFile={(file) =>
+              uploadPhoto.mutate(file, {
+                onError: () => toast({ variant: "error", message: "Couldn't upload that photo." }),
+              })
+            }
           />
           <Field label="Coffee name" className="flex-1">
             <TextField value={get("name", coffee.name)} onChange={set("name")} focused />
@@ -98,10 +102,18 @@ export function EditCoffeeScreen() {
 
         <div className="mb-[14px] flex gap-[10px]">
           <Field label="Variety" className="flex-1">
-            <TextField value={get("variety", coffee.variety)} onChange={set("variety")} />
+            <SelectField
+              value={get("variety", coffee.variety)}
+              onChange={set("variety")}
+              options={withValue(settings?.varietyOptions ?? [], get("variety", coffee.variety))}
+            />
           </Field>
           <Field label="Process" className="flex-1">
-            <TextField value={get("process", coffee.process)} onChange={set("process")} />
+            <SelectField
+              value={get("process", coffee.process)}
+              onChange={set("process")}
+              options={withValue(settings?.processOptions ?? [], get("process", coffee.process))}
+            />
           </Field>
         </div>
 
@@ -110,7 +122,7 @@ export function EditCoffeeScreen() {
             <TextField value={get("beanRegion", coffee.beanRegion)} onChange={set("beanRegion")} />
           </Field>
           <Field label="Country" className="flex-1">
-            <TextField value={get("beanCountry", coffee.beanCountry)} onChange={set("beanCountry")} />
+            <CountrySelect value={get("beanCountry", coffee.beanCountry)} onChange={set("beanCountry")} />
           </Field>
         </div>
 
@@ -145,7 +157,7 @@ export function EditCoffeeScreen() {
             <TextField value={get("roasteryName", coffee.roasteryName)} onChange={set("roasteryName")} />
           </Field>
           <Field label="Roastery country" className="flex-1">
-            <TextField
+            <CountrySelect
               value={get("roasteryCountry", coffee.roasteryCountry)}
               onChange={set("roasteryCountry")}
             />

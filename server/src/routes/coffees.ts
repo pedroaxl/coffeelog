@@ -15,7 +15,7 @@ import {
 } from "../repos/coffees.js";
 import { upsertRecipe } from "../repos/recipes.js";
 import { insertUnit } from "../repos/units.js";
-import { photoUpload, photoUrl, removePhoto } from "../services/photos.js";
+import { photoUpload, savePhoto, removePhoto } from "../services/photos.js";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -105,7 +105,7 @@ function bagStateFromInitial(state: "sealed" | "open" | "frozen") {
 
 export function coffeesRouter(db: Db, uploadsDir: string): Router {
   const router = Router();
-  const upload = photoUpload(uploadsDir);
+  const upload = photoUpload();
 
   router.get(
     "/",
@@ -206,8 +206,13 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
       const coffee = getCoffee(db, id);
       if (!coffee) throw notFound("Coffee");
       if (!req.file) throw badRequest("No photo uploaded");
+      let url: string;
+      try {
+        url = await savePhoto(uploadsDir, req.file);
+      } catch {
+        throw badRequest("Couldn't read that image — try a JPEG, PNG or HEIC photo");
+      }
       removePhoto(uploadsDir, coffee.photoPath);
-      const url = photoUrl(req.file.filename);
       updateCoffee(db, id, { photoPath: url });
       res.json(getCoffee(db, id));
     })

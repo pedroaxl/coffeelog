@@ -1,28 +1,34 @@
 import multer from "multer";
 import path from "node:path";
 import fs from "node:fs";
+import sharp from "sharp";
 import { newQrId } from "../lib/ids.js";
 
-const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
-const EXT: Record<string, string> = {
-  "image/jpeg": ".jpg",
-  "image/png": ".png",
-  "image/webp": ".webp",
-  "image/gif": ".gif",
-};
-
-/** Multer middleware that stores a single "photo" upload into the data dir. */
-export function photoUpload(uploadsDir: string) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-  const storage = multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, uploadsDir),
-    filename: (_req, file, cb) => cb(null, `${Date.now()}-${newQrId()}${EXT[file.mimetype] ?? ""}`),
-  });
+/**
+ * Accept the upload into memory (no disk write yet, no mimetype gate). sharp
+ * validates and converts it, so HEIC from an iPhone, PNG, WebP, etc. all work.
+ */
+export function photoUpload() {
   return multer({
-    storage,
-    limits: { fileSize: 8 * 1024 * 1024 },
-    fileFilter: (_req, file, cb) => cb(null, ALLOWED.has(file.mimetype)),
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 30 * 1024 * 1024 },
   });
+}
+
+/**
+ * Convert an uploaded image to a web-friendly JPEG: auto-orient from EXIF,
+ * downscale to a sane max, and store under the data dir. Returns the public URL.
+ * Throws if the buffer isn't a decodable image.
+ */
+export async function savePhoto(uploadsDir: string, file: Express.Multer.File): Promise<string> {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  const filename = `${Date.now()}-${newQrId()}.jpg`;
+  await sharp(file.buffer)
+    .rotate() // honor EXIF orientation (phone photos)
+    .resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true })
+    .jpeg({ quality: 82 })
+    .toFile(path.join(uploadsDir, filename));
+  return photoUrl(filename);
 }
 
 /** Public URL path served by express.static("/uploads"). */

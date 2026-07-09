@@ -20,6 +20,7 @@
     "multer": "^2.0.1",
     "nanoid": "^5.0.9",
     "qrcode": "^1.5.4",
+    "sharp": "^0.33.5",
     "zod": "^3.24.1"
   },
   "devDependencies": {

@@ -9,6 +9,8 @@ export interface Settings {
   printerDevice: string;
   methodOptions: string[];
   grinderOptions: string[];
+  varietyOptions: string[];
+  processOptions: string[];
 }
 
 export type UnitKind = "bag" | "tube";

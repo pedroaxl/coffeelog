@@ -82,17 +82,19 @@ CREATE TABLE IF NOT EXISTS settings (
   instance_url              TEXT NOT NULL DEFAULT '',
   warn_not_frozen_after_days INTEGER NOT NULL DEFAULT 3,
   warn_frozen_over_days     INTEGER NOT NULL DEFAULT 40,
-  label_width_mm            REAL NOT NULL DEFAULT 40,
+  label_width_mm            REAL NOT NULL DEFAULT 50,
   label_height_mm           REAL NOT NULL DEFAULT 30,
   label_dpi                 INTEGER NOT NULL DEFAULT 300,
   weight_unit               TEXT NOT NULL DEFAULT 'g',
   printer_device            TEXT NOT NULL DEFAULT 'Niimbot B1',
   method_options            TEXT NOT NULL DEFAULT '[]',   -- JSON array
-  grinder_options           TEXT NOT NULL DEFAULT '[]'    -- JSON array
+  grinder_options           TEXT NOT NULL DEFAULT '[]',   -- JSON array
+  variety_options           TEXT NOT NULL DEFAULT '[]',   -- JSON array
+  process_options           TEXT NOT NULL DEFAULT '[]'    -- JSON array
 );
 `;
 
-/** Real defaults for the two user-managed option lists (see brief's corrections). */
+/** Real defaults for the user-managed option lists (see brief's corrections). */
 export const DEFAULT_METHOD_OPTIONS = [
   "V60 02",
   "Origami (Conical)",
@@ -102,3 +104,23 @@ export const DEFAULT_METHOD_OPTIONS = [
 ];
 
 export const DEFAULT_GRINDER_OPTIONS = ["1Zpresso ZP6", "1Zpresso K-Ultra"];
+
+export const DEFAULT_VARIETY_OPTIONS = [
+  "Bourbon",
+  "Yellow Bourbon",
+  "Catuaí",
+  "Caturra",
+  "Geisha",
+  "Typica",
+  "Mundo Novo",
+  "SL28",
+  "Pacamara",
+];
+
+export const DEFAULT_PROCESS_OPTIONS = [
+  "Natural",
+  "Washed",
+  "Honey",
+  "Anaerobic",
+  "Pulped Natural",
+];
