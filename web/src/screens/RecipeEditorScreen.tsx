@@ -2,8 +2,14 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCoffee, usePutRecipe, useSettings } from "../api/hooks";
 import { Field, TextField, SelectField } from "../components/Form";
+import type { BrewType } from "../api/types";
 
 const numOrNull = (v: string) => (v.trim() === "" ? null : Number(v));
+
+const BREW_TYPES: { key: BrewType; label: string }[] = [
+  { key: "filter", label: "Filter" },
+  { key: "espresso", label: "Espresso" },
+];
 
 /** Recipe editor (badge 11c) — Method + Grinder come from the Settings lists. */
 export function RecipeEditorScreen() {
@@ -15,6 +21,7 @@ export function RecipeEditorScreen() {
   const putRecipe = usePutRecipe(coffeeId);
 
   const r = coffee?.recipe;
+  const [brewType, setBrewType] = useState<BrewType | null | undefined>(undefined);
   const [method, setMethod] = useState<string | null | undefined>(undefined);
   const [dose, setDose] = useState<string | undefined>();
   const [yieldG, setYieldG] = useState<string | undefined>();
@@ -27,6 +34,7 @@ export function RecipeEditorScreen() {
     return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
   }
 
+  const brewTypeVal = brewType !== undefined ? brewType : r?.brewType ?? null;
   const methodVal = method !== undefined ? method : r?.method ?? null;
   const doseVal = dose ?? (r?.doseG != null ? String(r.doseG) : "");
   const yieldVal = yieldG ?? (r?.yieldG != null ? String(r.yieldG) : "");
@@ -45,6 +53,7 @@ export function RecipeEditorScreen() {
 
   async function save() {
     await putRecipe.mutateAsync({
+      brewType: brewTypeVal,
       method: methodVal,
       doseG: numOrNull(doseVal),
       yieldG: numOrNull(yieldVal),
@@ -72,6 +81,25 @@ export function RecipeEditorScreen() {
       </div>
 
       <div className="flex-1 px-[22px] py-4">
+        <Field label="Brew type" className="mb-4">
+          <div className="flex gap-2">
+            {BREW_TYPES.map((b) => {
+              const active = brewTypeVal === b.key;
+              return (
+                <button
+                  key={b.key}
+                  onClick={() => setBrewType(active ? null : b.key)}
+                  className={`flex-1 rounded-[11px] py-[10px] text-[13px] ${
+                    active ? "bg-brand font-semibold text-cream" : "bg-tan text-brand"
+                  }`}
+                >
+                  {b.label}
+                </button>
+              );
+            })}
+          </div>
+        </Field>
+
         <Field label="Method" className="mb-4">
           <div className="flex flex-wrap gap-2">
             {methodOptions.map((m) => {
@@ -95,7 +123,7 @@ export function RecipeEditorScreen() {
           <Field label="Dose">
             <TextField value={doseVal} onChange={setDose} type="number" suffix="g" focused />
           </Field>
-          <Field label="Yield (water)">
+          <Field label={brewTypeVal === "espresso" ? "Yield (out)" : "Yield (water)"}>
             <TextField value={yieldVal} onChange={setYieldG} type="number" suffix="g" />
           </Field>
           <Field label="Ratio">

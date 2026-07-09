@@ -26,14 +26,16 @@ export function createDb(path: string): Db {
 
 /** Add columns introduced after a database may already have been created. */
 function migrate(db: Db): void {
-  const cols = new Set(
-    (db.prepare("PRAGMA table_info(settings)").all() as { name: string }[]).map((c) => c.name)
-  );
-  const ensure = (name: string, ddl: string) => {
-    if (!cols.has(name)) db.exec(`ALTER TABLE settings ADD COLUMN ${ddl}`);
+  const ensureColumn = (table: string, column: string, ddl: string) => {
+    const cols = new Set(
+      (db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[]).map((c) => c.name)
+    );
+    if (!cols.has(column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
   };
-  ensure("variety_options", "variety_options TEXT NOT NULL DEFAULT '[]'");
-  ensure("process_options", "process_options TEXT NOT NULL DEFAULT '[]'");
+
+  ensureColumn("settings", "variety_options", "variety_options TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn("settings", "process_options", "process_options TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn("recipes", "brew_type", "brew_type TEXT");
 
   // Move any existing single photo into the coffee_photos table (idempotent).
   db.exec(`

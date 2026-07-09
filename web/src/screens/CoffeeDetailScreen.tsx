@@ -210,7 +210,14 @@ export function CoffeeDetailScreen() {
 
         {/* recipe */}
         <div className="mb-[10px] flex items-center justify-between">
-          <h2 className="font-serif text-[16px] font-semibold">Recipe</h2>
+          <div className="flex items-center gap-[10px]">
+            <h2 className="font-serif text-[16px] font-semibold">Recipe</h2>
+            {r?.brewType && (
+              <span className="rounded-pill bg-chip-terracotta-bg px-[10px] py-[3px] text-[11px] font-semibold uppercase tracking-[0.4px] text-accent-deep">
+                {r.brewType === "espresso" ? "Espresso" : "Filter"}
+              </span>
+            )}
+          </div>
           <button
             onClick={() => navigate(`/catalog/${coffee.id}/recipe`)}
             className="flex items-center gap-[5px] text-[12.5px] font-semibold text-terracotta"
@@ -219,7 +226,7 @@ export function CoffeeDetailScreen() {
           </button>
         </div>
         <div className="mb-[22px] rounded-card bg-recipe p-4 text-[#EAD9C3]">
-          {r && (r.method || r.doseG || r.grinder || r.protocol) ? (
+          {r && (r.brewType || r.method || r.doseG || r.grinder || r.protocol) ? (
             <>
               <div className="mb-3 flex gap-[18px]">
                 <RecipeStat label="Method" value={r.method ?? "—"} />

@@ -18,8 +18,11 @@ export type SealState = "sealed" | "open";
 export type TempState = "frozen" | "defrosted";
 export type UnitStatus = "open" | "frozen" | "defrosted" | "consumed";
 
+export type BrewType = "filter" | "espresso";
+
 export interface Recipe {
   id: number;
+  brewType: BrewType | null;
   method: string | null;
   doseG: number | null;
   yieldG: number | null;

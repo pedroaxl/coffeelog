@@ -147,9 +147,16 @@ export function UnitDetailScreen() {
         </button>
 
         {/* recipe recap */}
-        {r && (r.method || r.doseG || r.grinder) && (
+        {r && (r.brewType || r.method || r.doseG || r.grinder) && (
           <div className="mb-4 rounded-card bg-recipe p-4 text-[#EAD9C3]">
-            <div className="mb-2 text-[12px] font-semibold tracking-[0.5px] text-gold-bright">RECIPE</div>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="text-[12px] font-semibold tracking-[0.5px] text-gold-bright">RECIPE</span>
+              {r.brewType && (
+                <span className="rounded-pill bg-white/10 px-[8px] py-[2px] text-[10px] font-semibold uppercase tracking-[0.4px]">
+                  {r.brewType === "espresso" ? "Espresso" : "Filter"}
+                </span>
+              )}
+            </div>
             <div className="flex gap-4 text-[13.5px]">
               {r.method && <span><b className="text-[#F3EBDF]">{r.method}</b></span>}
               {r.doseG != null && <span>{r.doseG} g dose</span>}

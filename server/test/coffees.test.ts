@@ -54,6 +54,25 @@ describe("coffees CRUD", () => {
       .send(newCoffeePayload({ recipe: { method: "V60 02", doseG: 15, yieldG: 250 } }));
     expect(res.body.recipe.ratio).toBe(16.7);
     expect(res.body.recipe.method).toBe("V60 02");
+    expect(res.body.recipe.brewType).toBeNull(); // unset by default
+  });
+
+  it("stores the recipe brew type and rejects unknown values", async () => {
+    const { app } = testApp();
+    const created = await request(app)
+      .post("/api/coffees")
+      .send(newCoffeePayload({ recipe: { brewType: "filter", method: "V60 02", doseG: 15 } }));
+    expect(created.body.recipe.brewType).toBe("filter");
+
+    const id = created.body.id;
+    const updated = await request(app)
+      .put(`/api/coffees/${id}/recipe`)
+      .send({ brewType: "espresso", doseG: 18, yieldG: 36 });
+    expect(updated.body.recipe.brewType).toBe("espresso");
+    expect(updated.body.recipe.ratio).toBe(2);
+
+    const bad = await request(app).put(`/api/coffees/${id}/recipe`).send({ brewType: "cold brew" });
+    expect(bad.status).toBe(400);
   });
 
   it("sets and clears the score anytime", async () => {

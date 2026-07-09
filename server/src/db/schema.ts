@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS tasting_notes (
 CREATE TABLE IF NOT EXISTS recipes (
   id              INTEGER PRIMARY KEY AUTOINCREMENT,
   coffee_id       INTEGER NOT NULL REFERENCES coffees(id) ON DELETE CASCADE,
+  brew_type       TEXT,               -- 'filter' | 'espresso'
   method          TEXT,
   dose_g          REAL,
   yield_g         REAL,

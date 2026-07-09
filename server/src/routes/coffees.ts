@@ -48,6 +48,7 @@ const coffeeFields = z.object({
 });
 
 const recipeInput = z.object({
+  brewType: z.enum(["filter", "espresso"]).nullish(),
   method: nullableString,
   doseG: z.number().min(0).max(1000).nullish(),
   yieldG: z.number().min(0).max(5000).nullish(),

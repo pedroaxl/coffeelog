@@ -1,7 +1,11 @@
 import type { Db } from "../db/connection.js";
 
+/** Whether the recipe is a filter (pour-over/immersion) or an espresso recipe. */
+export type BrewType = "filter" | "espresso";
+
 export interface Recipe {
   id: number;
+  brewType: BrewType | null;
   method: string | null;
   doseG: number | null;
   yieldG: number | null;
@@ -14,6 +18,7 @@ export interface Recipe {
 
 interface RecipeRow {
   id: number;
+  brew_type: BrewType | null;
   method: string | null;
   dose_g: number | null;
   yield_g: number | null;
@@ -30,6 +35,7 @@ function mapRecipe(row: RecipeRow): Recipe {
       : null;
   return {
     id: row.id,
+    brewType: row.brew_type,
     method: row.method,
     doseG: row.dose_g,
     yieldG: row.yield_g,
@@ -50,6 +56,7 @@ export function getRecipeForCoffee(db: Db, coffeeId: number): Recipe | null {
 }
 
 export interface RecipeInput {
+  brewType?: BrewType | null;
   method?: string | null;
   doseG?: number | null;
   yieldG?: number | null;
@@ -67,6 +74,7 @@ export function upsertRecipe(db: Db, coffeeId: number, input: RecipeInput): Reci
 
   const params = {
     coffeeId,
+    brewType: input.brewType ?? null,
     method: input.method ?? null,
     doseG: input.doseG ?? null,
     yieldG: input.yieldG ?? null,
@@ -78,15 +86,15 @@ export function upsertRecipe(db: Db, coffeeId: number, input: RecipeInput): Reci
 
   if (existing) {
     db.prepare(
-      `UPDATE recipes SET method=@method, dose_g=@doseG, yield_g=@yieldG,
+      `UPDATE recipes SET brew_type=@brewType, method=@method, dose_g=@doseG, yield_g=@yieldG,
         water_temp_c=@waterTempC, grinder=@grinder, grinder_setting=@grinderSetting,
         protocol=@protocol WHERE id=@id`
     ).run({ ...params, id: existing.id });
   } else {
     db.prepare(
       `INSERT INTO recipes
-        (coffee_id, method, dose_g, yield_g, water_temp_c, grinder, grinder_setting, protocol)
-       VALUES (@coffeeId, @method, @doseG, @yieldG, @waterTempC, @grinder, @grinderSetting, @protocol)`
+        (coffee_id, brew_type, method, dose_g, yield_g, water_temp_c, grinder, grinder_setting, protocol)
+       VALUES (@coffeeId, @brewType, @method, @doseG, @yieldG, @waterTempC, @grinder, @grinderSetting, @protocol)`
     ).run(params);
   }
   return getRecipeForCoffee(db, coffeeId)!;
