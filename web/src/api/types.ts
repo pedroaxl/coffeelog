@@ -59,7 +59,8 @@ export interface Coffee {
   roastLevel: string | null;
   roastDate: string | null;
   purchaseDate: string | null;
-  photoPath: string | null;
+  photoPath: string | null; // cover (photos[0])
+  photos: string[];
   score: number | null;
   createdAt: string;
   lastUsedAt: string | null;

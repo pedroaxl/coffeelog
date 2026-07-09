@@ -100,32 +100,55 @@ describe("coffees CRUD", () => {
   });
 });
 
-describe("photo upload", () => {
-  it("accepts an image, converts it to JPEG, and sets photoPath", async () => {
+async function imageBuffer(color: string) {
+  return sharp({ create: { width: 20, height: 20, channels: 3, background: color } })
+    .webp()
+    .toBuffer();
+}
+
+describe("photos", () => {
+  it("accepts an image, converts it to JPEG, and sets the cover", async () => {
+    const { app } = testApp();
+    const created = await request(app).post("/api/coffees").send(newCoffeePayload());
+    const res = await request(app)
+      .post(`/api/coffees/${created.body.id}/photos`)
+      .attach("photos", await imageBuffer("#be6a3a"), "package.webp");
+    expect(res.status).toBe(200);
+    expect(res.body.photos).toHaveLength(1);
+    expect(res.body.photoPath).toMatch(/^\/uploads\/.+\.jpg$/);
+    expect(res.body.photoPath).toBe(res.body.photos[0]);
+  });
+
+  it("stores multiple photos, sets a new cover, and deletes one", async () => {
     const { app } = testApp();
     const created = await request(app).post("/api/coffees").send(newCoffeePayload());
     const id = created.body.id;
 
-    // A WebP upload should come back as a stored .jpg (server converts via sharp).
-    const webp = await sharp({
-      create: { width: 20, height: 20, channels: 3, background: "#be6a3a" },
-    })
-      .webp()
-      .toBuffer();
+    const two = await request(app)
+      .post(`/api/coffees/${id}/photos`)
+      .attach("photos", await imageBuffer("#111111"), "front.webp")
+      .attach("photos", await imageBuffer("#eeeeee"), "back.webp");
+    expect(two.body.photos).toHaveLength(2);
+    const [first, second] = two.body.photos;
 
-    const res = await request(app)
-      .post(`/api/coffees/${id}/photo`)
-      .attach("photo", webp, "package.webp");
-    expect(res.status).toBe(200);
-    expect(res.body.photoPath).toMatch(/^\/uploads\/.+\.jpg$/);
+    // make the second photo the cover
+    const primary = await request(app)
+      .patch(`/api/coffees/${id}/photos/primary`)
+      .send({ path: second });
+    expect(primary.body.photos[0]).toBe(second);
+    expect(primary.body.photoPath).toBe(second);
+
+    // delete the (now second) photo
+    const del = await request(app).delete(`/api/coffees/${id}/photos`).send({ path: first });
+    expect(del.body.photos).toEqual([second]);
   });
 
   it("rejects a non-image with a helpful error", async () => {
     const { app } = testApp();
     const created = await request(app).post("/api/coffees").send(newCoffeePayload());
     const res = await request(app)
-      .post(`/api/coffees/${created.body.id}/photo`)
-      .attach("photo", Buffer.from("not an image"), "notes.txt");
+      .post(`/api/coffees/${created.body.id}/photos`)
+      .attach("photos", Buffer.from("not an image"), "notes.txt");
     expect(res.status).toBe(400);
   });
 });

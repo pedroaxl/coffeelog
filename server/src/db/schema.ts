@@ -25,6 +25,16 @@ CREATE TABLE IF NOT EXISTS coffees (
   created_at       TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS coffee_photos (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  coffee_id  INTEGER NOT NULL REFERENCES coffees(id) ON DELETE CASCADE,
+  path       TEXT NOT NULL,
+  position   INTEGER NOT NULL DEFAULT 0,     -- 0 = cover
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_photos_coffee ON coffee_photos(coffee_id);
+
 CREATE TABLE IF NOT EXISTS tasting_notes (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   coffee_id  INTEGER NOT NULL REFERENCES coffees(id) ON DELETE CASCADE,

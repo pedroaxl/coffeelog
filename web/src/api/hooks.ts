@@ -76,13 +76,31 @@ export function usePutRecipe(id: number) {
   });
 }
 
-export function useUploadPhoto() {
+export function useUploadPhotos() {
   const invalidate = useInvalidateCoffees();
   return useMutation({
     // id is passed at call time — binding it at hook-creation risked a stale 0
     // during the create-then-upload flow in the new-coffee wizard.
-    mutationFn: ({ id, file }: { id: number; file: File }) =>
-      api.upload<Coffee>(`/coffees/${id}/photo`, file),
+    mutationFn: ({ id, files }: { id: number; files: File | File[] }) =>
+      api.upload<Coffee>(`/coffees/${id}/photos`, files),
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeletePhoto() {
+  const invalidate = useInvalidateCoffees();
+  return useMutation({
+    mutationFn: ({ id, path }: { id: number; path: string }) =>
+      api.del<Coffee>(`/coffees/${id}/photos`, { path }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useSetPrimaryPhoto() {
+  const invalidate = useInvalidateCoffees();
+  return useMutation({
+    mutationFn: ({ id, path }: { id: number; path: string }) =>
+      api.patch<Coffee>(`/coffees/${id}/photos/primary`, { path }),
     onSuccess: invalidate,
   });
 }
@@ -123,8 +141,12 @@ export function usePortion(unitId: number) {
 export function useSetUnitState(unitId: number) {
   const sync = useCoffeeCacheSync();
   return useMutation({
-    mutationFn: (patch: { sealState?: "sealed" | "open"; tempState?: TempState }) =>
-      api.patch<Coffee>(`/units/${unitId}`, patch),
+    mutationFn: (patch: {
+      sealState?: "sealed" | "open";
+      tempState?: TempState;
+      frozenDate?: string | null;
+      openedDate?: string | null;
+    }) => api.patch<Coffee>(`/units/${unitId}`, patch),
     onSuccess: sync,
   });
 }

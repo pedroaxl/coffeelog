@@ -20,9 +20,10 @@ export function UnitDetailScreen() {
   const undo = useUndoConsume();
   const setState = useSetUnitState(id);
 
-  const [sheet, setSheet] = useState<null | "consume">(null);
+  const [sheet, setSheet] = useState<null | "consume" | "editDate">(null);
   const [grams, setGrams] = useState("18");
   const [note, setNote] = useState("");
+  const [frozenDraft, setFrozenDraft] = useState("");
 
   if (isLoading || !data) {
     return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
@@ -105,8 +106,19 @@ export function UnitDetailScreen() {
               </span>
               <span className="text-[18px]" style={{ color: s.color + "cc" }}> g</span>
               {unit.frozenDate && (
-                <div className="mt-1 text-[12px]" style={{ color: s.color + "cc" }}>
-                  Frozen {shortDate(unit.frozenDate)} · {days} day{days === 1 ? "" : "s"} ago
+                <div className="mt-1 flex items-center gap-2 text-[12px]" style={{ color: s.color + "cc" }}>
+                  <span>
+                    Frozen {shortDate(unit.frozenDate)} · {days} day{days === 1 ? "" : "s"} ago
+                  </span>
+                  <button
+                    onClick={() => {
+                      setFrozenDraft(unit.frozenDate ?? "");
+                      setSheet("editDate");
+                    }}
+                    className="font-semibold underline"
+                  >
+                    Edit
+                  </button>
                 </div>
               )}
             </div>
@@ -233,6 +245,47 @@ export function UnitDetailScreen() {
             style={{ background: isBag ? "#BE6A3A" : "#C0503A" }}
           >
             {isBag ? "Log consumption" : "Consume"}
+          </button>
+        </div>
+      </BottomSheet>
+
+      {/* edit frozen date (for coffees frozen before you started tracking) */}
+      <BottomSheet open={sheet === "editDate"} onClose={() => setSheet(null)}>
+        <div className="mb-1 font-serif text-[19px] font-semibold">Edit frozen date</div>
+        <p className="mb-4 text-[13.5px] leading-[1.5] text-muted">
+          Set when this unit was actually frozen — useful for coffee you froze before you
+          started using the app.
+        </p>
+        <input
+          type="date"
+          value={frozenDraft}
+          max={new Date().toISOString().slice(0, 10)}
+          onChange={(e) => setFrozenDraft(e.target.value)}
+          className="mb-4 w-full rounded-input border border-border-2 bg-card px-[13px] py-[11px] text-[14px] outline-none focus:border-terracotta"
+        />
+        <div className="flex gap-[10px]">
+          <button
+            onClick={() => setSheet(null)}
+            className="flex-1 rounded-btn bg-tan py-[13px] text-center text-[14px] font-semibold text-brand"
+          >
+            Cancel
+          </button>
+          <button
+            disabled={!frozenDraft || setState.isPending}
+            onClick={() =>
+              setState.mutate(
+                { frozenDate: frozenDraft },
+                {
+                  onSuccess: () => {
+                    setSheet(null);
+                    toast({ message: "Frozen date updated" });
+                  },
+                }
+              )
+            }
+            className="flex-1 rounded-btn bg-terracotta py-[13px] text-center text-[14px] font-semibold text-white disabled:opacity-50"
+          >
+            Save
           </button>
         </div>
       </BottomSheet>

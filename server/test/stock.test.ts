@@ -129,3 +129,19 @@ describe("a fully consumed coffee derives as archived", () => {
     expect(after.body.remainingG).toBe(0);
   });
 });
+
+describe("editing the frozen date", () => {
+  it("backdates a frozen unit's frozen date", async () => {
+    const { app } = testApp();
+    const created = await request(app)
+      .post("/api/coffees")
+      .send({ name: "Old freeze", initialUnit: { weightG: 250, initialState: "frozen" } });
+    const bagId = created.body.units[0].id;
+
+    const res = await request(app).patch(`/api/units/${bagId}`).send({ frozenDate: "2026-01-15" });
+    expect(res.status).toBe(200);
+    const bag = res.body.units.find((u: { id: number }) => u.id === bagId);
+    expect(bag.frozenDate).toBe("2026-01-15");
+    expect(bag.status).toBe("frozen");
+  });
+});

@@ -15,6 +15,12 @@ import {
 } from "../repos/coffees.js";
 import { upsertRecipe } from "../repos/recipes.js";
 import { insertUnit } from "../repos/units.js";
+import {
+  addPhoto,
+  removePhotoRow,
+  setPrimaryPhoto,
+  removeAllPhotoRows,
+} from "../repos/coffeePhotos.js";
 import { photoUpload, savePhoto, removePhoto } from "../services/photos.js";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -198,22 +204,54 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
     })
   );
 
+  // Upload one or more photos (appended). The first photo is the cover.
   router.post(
-    "/:id/photo",
-    upload.single("photo"),
+    "/:id/photos",
+    upload.array("photos", 8),
     asyncHandler(async (req, res) => {
       const id = Number(req.params.id);
-      const coffee = getCoffee(db, id);
-      if (!coffee) throw notFound("Coffee");
-      if (!req.file) throw badRequest("No photo uploaded");
-      let url: string;
-      try {
-        url = await savePhoto(uploadsDir, req.file);
-      } catch {
-        throw badRequest("Couldn't read that image — try a JPEG, PNG or HEIC photo");
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+      if (files.length === 0) throw badRequest("No photo uploaded");
+      let saved = 0;
+      for (const file of files) {
+        try {
+          const url = await savePhoto(uploadsDir, file);
+          addPhoto(db, id, url);
+          saved++;
+        } catch {
+          /* skip unreadable files */
+        }
       }
-      removePhoto(uploadsDir, coffee.photoPath);
-      updateCoffee(db, id, { photoPath: url });
+      if (saved === 0) throw badRequest("Couldn't read that image — try a JPEG, PNG or HEIC photo");
+      res.json(getCoffee(db, id));
+    })
+  );
+
+  const photoPathSchema = z.object({ path: z.string().min(1).max(300) });
+
+  router.delete(
+    "/:id/photos",
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      const parsed = photoPathSchema.safeParse(req.body);
+      if (!parsed.success) throw badRequest("Missing photo path");
+      if (removePhotoRow(db, id, parsed.data.path)) {
+        removePhoto(uploadsDir, parsed.data.path);
+      }
+      res.json(getCoffee(db, id));
+    })
+  );
+
+  router.patch(
+    "/:id/photos/primary",
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      const parsed = photoPathSchema.safeParse(req.body);
+      if (!parsed.success) throw badRequest("Missing photo path");
+      setPrimaryPhoto(db, id, parsed.data.path);
       res.json(getCoffee(db, id));
     })
   );
@@ -224,7 +262,7 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
       const id = Number(req.params.id);
       const coffee = getCoffee(db, id);
       if (!coffee) throw notFound("Coffee");
-      removePhoto(uploadsDir, coffee.photoPath);
+      for (const p of removeAllPhotoRows(db, id)) removePhoto(uploadsDir, p);
       deleteCoffee(db, id);
       res.status(204).end();
     })

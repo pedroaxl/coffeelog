@@ -23,11 +23,16 @@ function row(db: Db, unitId: number): UnitRow {
   return r;
 }
 
-/** Change a unit's seal/temp state, keeping the frozen/opened dates consistent. */
+/** Change a unit's seal/temp state (and optionally correct its dates). */
 export function setUnitState(
   db: Db,
   unitId: number,
-  patch: { sealState?: SealState; tempState?: TempState }
+  patch: {
+    sealState?: SealState;
+    tempState?: TempState;
+    frozenDate?: string | null;
+    openedDate?: string | null;
+  }
 ): number {
   const r = row(db, unitId);
   if (r.consumed === 1) throw badRequest("Consumed units can't change state");
@@ -45,6 +50,9 @@ export function setUnitState(
     if (patch.tempState === "frozen" && tempState !== "frozen") frozenDate = today();
     tempState = patch.tempState;
   }
+  // Explicit date corrections (e.g. a coffee frozen before you started the app).
+  if (patch.frozenDate !== undefined) frozenDate = patch.frozenDate;
+  if (patch.openedDate !== undefined) openedDate = patch.openedDate;
 
   db.prepare(
     `UPDATE storage_units SET seal_state=@sealState, temp_state=@tempState,

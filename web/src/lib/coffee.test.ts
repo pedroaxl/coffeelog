@@ -36,6 +36,7 @@ function coffee(partial: Partial<Coffee>): Coffee {
     roastDate: null,
     purchaseDate: null,
     photoPath: null,
+    photos: [],
     score: null,
     createdAt: "2026-07-01T00:00:00",
     lastUsedAt: null,

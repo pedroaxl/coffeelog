@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, ChevronLeft } from "lucide-react";
-import { useCreateCoffee, useUploadPhoto, useSettings, type CoffeeInput } from "../api/hooks";
+import { useCreateCoffee, useUploadPhotos, useSettings, type CoffeeInput } from "../api/hooks";
 import { Field, TextField, SelectField } from "../components/Form";
 import { CountrySelect } from "../components/CountrySelect";
 import { PhotoPicker } from "../components/PhotoPicker";
@@ -23,7 +23,7 @@ export function NewCoffeeWizard() {
   const toast = useToast();
   const create = useCreateCoffee();
   const { data: settings } = useSettings();
-  const uploadPhoto = useUploadPhoto();
+  const uploadPhotos = useUploadPhotos();
 
   const [step, setStep] = useState(1);
   const [photo, setPhoto] = useState<{ file: File; url: string } | null>(null);
@@ -53,7 +53,7 @@ export function NewCoffeeWizard() {
     const coffee = await create.mutateAsync(input);
     if (photo) {
       try {
-        await uploadPhoto.mutateAsync({ id: coffee.id, file: photo.file });
+        await uploadPhotos.mutateAsync({ id: coffee.id, files: [photo.file] });
       } catch {
         toast({ variant: "error", message: "Coffee saved, but the photo couldn't be uploaded." });
       }

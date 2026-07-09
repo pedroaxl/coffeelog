@@ -23,9 +23,9 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   return data as T;
 }
 
-async function upload<T>(path: string, file: File, field = "photo"): Promise<T> {
+async function upload<T>(path: string, files: File | File[], field = "photos"): Promise<T> {
   const form = new FormData();
-  form.append(field, file);
+  for (const file of Array.isArray(files) ? files : [files]) form.append(field, file);
   const res = await fetch(`/api${path}`, { method: "POST", body: form });
   const text = await res.text();
   const data = text ? JSON.parse(text) : undefined;
@@ -38,6 +38,6 @@ export const api = {
   post: <T>(path: string, body?: unknown) => request<T>("POST", path, body),
   put: <T>(path: string, body?: unknown) => request<T>("PUT", path, body),
   patch: <T>(path: string, body?: unknown) => request<T>("PATCH", path, body),
-  del: <T>(path: string) => request<T>("DELETE", path),
+  del: <T>(path: string, body?: unknown) => request<T>("DELETE", path, body),
   upload,
 };

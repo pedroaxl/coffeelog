@@ -4,14 +4,16 @@ import { Trash2 } from "lucide-react";
 import {
   useCoffee,
   useUpdateCoffee,
-  useUploadPhoto,
+  useUploadPhotos,
+  useDeletePhoto,
+  useSetPrimaryPhoto,
   useDeleteCoffee,
   useSettings,
 } from "../api/hooks";
 import { Field, TextField, SelectField } from "../components/Form";
 import { TagEditor } from "../components/TagEditor";
 import { CountrySelect } from "../components/CountrySelect";
-import { PhotoPicker } from "../components/PhotoPicker";
+import { PhotoGallery } from "../components/PhotoGallery";
 import { useToast } from "../components/Toast";
 import { withValue } from "../lib/options";
 
@@ -25,7 +27,9 @@ export function EditCoffeeScreen() {
   const { data: coffee, isLoading } = useCoffee(coffeeId);
   const { data: settings } = useSettings();
   const update = useUpdateCoffee(coffeeId);
-  const uploadPhoto = useUploadPhoto();
+  const uploadPhotos = useUploadPhotos();
+  const deletePhoto = useDeletePhoto();
+  const setPrimary = useSetPrimaryPhoto();
   const del = useDeleteCoffee();
   const toast = useToast();
 
@@ -80,22 +84,25 @@ export function EditCoffeeScreen() {
       </div>
 
       <div className="flex-1 px-[22px] py-4">
-        <div className="mb-[18px] flex items-start gap-[16px]">
-          <PhotoPicker
-            previewUrl={coffee.photoPath}
-            busy={uploadPhoto.isPending}
-            size={92}
-            onFile={(file) =>
-              uploadPhoto.mutate(
-                { id: coffeeId, file },
+        <div className="mb-[6px] text-[12px] text-muted">Photos</div>
+        <div className="mb-[18px]">
+          <PhotoGallery
+            photos={coffee.photos}
+            busy={uploadPhotos.isPending}
+            onAdd={(files) =>
+              uploadPhotos.mutate(
+                { id: coffeeId, files },
                 { onError: () => toast({ variant: "error", message: "Couldn't upload that photo." }) }
               )
             }
+            onRemove={(path) => deletePhoto.mutate({ id: coffeeId, path })}
+            onSetCover={(path) => setPrimary.mutate({ id: coffeeId, path })}
           />
-          <Field label="Coffee name" className="flex-1">
-            <TextField value={get("name", coffee.name)} onChange={set("name")} focused />
-          </Field>
         </div>
+
+        <Field label="Coffee name" className="mb-[14px]">
+          <TextField value={get("name", coffee.name)} onChange={set("name")} focused />
+        </Field>
 
         <Field label="Roaster" className="mb-[14px]">
           <TextField value={get("roaster", coffee.roaster)} onChange={set("roaster")} />

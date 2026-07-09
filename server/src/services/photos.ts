@@ -23,10 +23,13 @@ export function photoUpload() {
 export async function savePhoto(uploadsDir: string, file: Express.Multer.File): Promise<string> {
   fs.mkdirSync(uploadsDir, { recursive: true });
   const filename = `${Date.now()}-${newQrId()}.jpg`;
+  // Keep a high-resolution copy: rich enough for the detail hero on hi-DPI
+  // screens and to zoom in and read package fine print, while still compressing
+  // multi-megabyte phone photos to a sensible size.
   await sharp(file.buffer)
     .rotate() // honor EXIF orientation (phone photos)
-    .resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true })
-    .jpeg({ quality: 82 })
+    .resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true })
+    .jpeg({ quality: 88, mozjpeg: true })
     .toFile(path.join(uploadsDir, filename));
   return photoUrl(filename);
 }

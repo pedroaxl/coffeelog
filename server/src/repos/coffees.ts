@@ -2,6 +2,7 @@ import type { Db } from "../db/connection.js";
 import { getNotes, replaceNotes } from "./notes.js";
 import { getRecipeForCoffee, type Recipe } from "./recipes.js";
 import { listUnitsByCoffee, type StorageUnit } from "./units.js";
+import { listPhotoPaths } from "./coffeePhotos.js";
 
 export interface CoffeeFields {
   name: string;
@@ -24,6 +25,7 @@ export interface Coffee extends CoffeeFields {
   id: number;
   createdAt: string;
   lastUsedAt: string | null; // most recent (non-undone) consumption
+  photos: string[]; // ordered; photoPath (cover) = photos[0]
   tastingNotes: string[];
   recipe: Recipe | null;
   units: StorageUnit[];
@@ -77,6 +79,7 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
       "SELECT MAX(created_at) AS t FROM consumption_log WHERE coffee_id = ? AND undone = 0"
     )
     .get(row.id) as { t: string | null };
+  const photos = listPhotoPaths(db, row.id);
   return {
     id: row.id,
     name: row.name,
@@ -91,7 +94,8 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     roastLevel: row.roast_level,
     roastDate: row.roast_date,
     purchaseDate: row.purchase_date,
-    photoPath: row.photo_path,
+    photoPath: photos[0] ?? null, // cover, derived from coffee_photos
+    photos,
     score: row.score,
     createdAt: row.created_at,
     lastUsedAt: lastUsed.t,

@@ -34,6 +34,14 @@ function migrate(db: Db): void {
   };
   ensure("variety_options", "variety_options TEXT NOT NULL DEFAULT '[]'");
   ensure("process_options", "process_options TEXT NOT NULL DEFAULT '[]'");
+
+  // Move any existing single photo into the coffee_photos table (idempotent).
+  db.exec(`
+    INSERT INTO coffee_photos (coffee_id, path, position)
+    SELECT id, photo_path, 0 FROM coffees
+    WHERE photo_path IS NOT NULL AND photo_path <> ''
+      AND id NOT IN (SELECT coffee_id FROM coffee_photos)
+  `);
 }
 
 function seedSettings(db: Db): void {

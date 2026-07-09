@@ -1,17 +1,49 @@
+import { useState, type ReactNode } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, Pencil, ChevronRight, Split } from "lucide-react";
+import { ChevronLeft, Pencil, ChevronRight, Split, Expand } from "lucide-react";
 import { useCoffee, usePatchScore } from "../api/hooks";
 import { StarPicker } from "../components/StarScore";
 import { StateDot } from "../components/StatePill";
+import { ImageLightbox } from "../components/ImageLightbox";
 import { longDate, gramsLabel } from "../lib/format";
+import { flagForName } from "../lib/countries";
 import type { Coffee } from "../api/types";
 
-function DetailCell({ label, value, span }: { label: string; value: string; span?: boolean }) {
+function DetailCell({ label, value, span }: { label: string; value: ReactNode; span?: boolean }) {
+  const empty = value == null || value === "" || (Array.isArray(value) && value.length === 0);
   return (
     <div className={`bg-cream px-[13px] py-[11px] ${span ? "col-span-2" : ""}`}>
       <div className="text-[11px] text-muted">{label}</div>
-      <div className="mt-[2px] text-[13.5px] font-semibold">{value || "—"}</div>
+      <div className="mt-[2px] text-[13.5px] font-semibold">{empty ? "—" : value}</div>
     </div>
+  );
+}
+
+/** A country with its flag, or just the name if the flag is unknown. */
+function CountryText({ country }: { country: string | null }) {
+  if (!country) return null;
+  const flag = flagForName(country);
+  return (
+    <>
+      {flag && <span className="mr-[4px]">{flag}</span>}
+      {country}
+    </>
+  );
+}
+
+/** Join parts with " · ", skipping empty ones. */
+function DotList({ parts }: { parts: ReactNode[] }) {
+  const items = parts.filter((p) => p !== null && p !== undefined && p !== "");
+  if (items.length === 0) return null;
+  return (
+    <>
+      {items.map((p, i) => (
+        <span key={i}>
+          {i > 0 && " · "}
+          {p}
+        </span>
+      ))}
+    </>
   );
 }
 
@@ -42,12 +74,14 @@ export function CoffeeDetailScreen() {
   const navigate = useNavigate();
   const { data: coffee, isLoading } = useCoffee(coffeeId);
   const patchScore = usePatchScore(coffeeId);
+  const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (isLoading) return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
   if (!coffee) return <div className="min-h-full bg-cream p-6 text-muted">Coffee not found.</div>;
 
-  const origin = [coffee.beanRegion, coffee.beanCountry].filter(Boolean).join(" · ");
-  const roastery = [coffee.roasteryName, coffee.roasteryCountry].filter(Boolean).join(" · ");
+  // The wizard captures "Roaster" + roastery country; fall back to the roaster
+  // name so the Roastery row never shows only a country.
+  const roasteryName = coffee.roasteryName || coffee.roaster;
   const activeUnits = coffee.units.filter((u) => u.active);
   const hasPortionableBag = coffee.units.some((u) => u.kind === "bag" && u.active);
   const r = coffee.recipe;
@@ -56,7 +90,8 @@ export function CoffeeDetailScreen() {
     <div className="min-h-full bg-cream">
       {/* photo hero */}
       <div
-        className="relative h-[270px]"
+        className={`relative h-[270px] ${coffee.photoPath ? "cursor-zoom-in" : ""}`}
+        onClick={() => coffee.photoPath && setLightbox(0)}
         style={{
           background: coffee.photoPath
             ? undefined
@@ -64,24 +99,35 @@ export function CoffeeDetailScreen() {
         }}
       >
         {coffee.photoPath && (
-          <img src={coffee.photoPath} alt="" className="h-full w-full object-cover" />
+          <img src={coffee.photoPath} alt={coffee.name} className="h-full w-full object-cover" />
         )}
         <button
-          onClick={() => navigate("/catalog")}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/catalog");
+          }}
           aria-label="Back"
           className="absolute left-[22px] top-[18px] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 backdrop-blur"
         >
           <ChevronLeft size={20} color="#fff" />
         </button>
         <button
-          onClick={() => navigate(`/catalog/${coffee.id}/edit`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/catalog/${coffee.id}/edit`);
+          }}
           aria-label="Edit"
           className="absolute right-[22px] top-[18px] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 backdrop-blur"
         >
           <Pencil size={18} color="#fff" />
         </button>
-        <div className="absolute inset-x-0 bottom-0 h-[110px] bg-gradient-to-t from-black/85 to-transparent" />
-        <div className="absolute inset-x-[22px] bottom-[18px] text-[#F3EBDF]">
+        {coffee.photoPath && (
+          <span className="pointer-events-none absolute right-[22px] top-[70px] flex h-8 w-8 items-center justify-center rounded-full bg-black/30 backdrop-blur">
+            <Expand size={15} color="#fff" />
+          </span>
+        )}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[110px] bg-gradient-to-t from-black/85 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-[22px] bottom-[18px] text-[#F3EBDF]">
           {coffee.roaster && <div className="text-[12.5px] opacity-85">{coffee.roaster}</div>}
           <div className="mt-[2px] font-serif text-[26px] font-semibold leading-[1.05]">
             {coffee.name}
@@ -89,7 +135,26 @@ export function CoffeeDetailScreen() {
         </div>
       </div>
 
+      {lightbox !== null && coffee.photos.length > 0 && (
+        <ImageLightbox images={coffee.photos} startIndex={lightbox} onClose={() => setLightbox(null)} />
+      )}
+
       <div className="mx-auto max-w-[760px] px-[22px] pb-10 pt-[18px]">
+        {/* extra photos */}
+        {coffee.photos.length > 1 && (
+          <div className="no-scrollbar mb-[18px] flex gap-2 overflow-x-auto">
+            {coffee.photos.map((p, i) => (
+              <button
+                key={p}
+                onClick={() => setLightbox(i)}
+                className="h-[60px] w-[60px] flex-none overflow-hidden rounded-[10px] border border-border"
+              >
+                <img src={p} alt="" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* score */}
         <div className="mb-[18px] flex items-center justify-between rounded-card border border-border bg-card px-4 py-[14px]">
           <div>
@@ -110,10 +175,18 @@ export function CoffeeDetailScreen() {
         <div className="mb-[18px] grid grid-cols-2 gap-px overflow-hidden rounded-card border border-border bg-border">
           <DetailCell label="Variety" value={coffee.variety ?? ""} />
           <DetailCell label="Process" value={coffee.process ?? ""} />
-          <DetailCell label="Bean origin" value={origin} span />
+          <DetailCell
+            label="Bean origin"
+            span
+            value={<DotList parts={[coffee.beanRegion, <CountryText country={coffee.beanCountry} />]} />}
+          />
           <DetailCell label="Altitude" value={coffee.altitudeM ? `${coffee.altitudeM} m` : ""} />
           <DetailCell label="Roast" value={coffee.roastLevel ?? ""} />
-          <DetailCell label="Roastery" value={roastery} span />
+          <DetailCell
+            label="Roastery"
+            span
+            value={<DotList parts={[roasteryName, <CountryText country={coffee.roasteryCountry} />]} />}
+          />
           <DetailCell label="Roast date" value={longDate(coffee.roastDate)} />
           <DetailCell label="Purchase date" value={longDate(coffee.purchaseDate)} />
         </div>
