@@ -76,10 +76,13 @@ export function usePutRecipe(id: number) {
   });
 }
 
-export function useUploadPhoto(id: number) {
+export function useUploadPhoto() {
   const invalidate = useInvalidateCoffees();
   return useMutation({
-    mutationFn: (file: File) => api.upload<Coffee>(`/coffees/${id}/photo`, file),
+    // id is passed at call time — binding it at hook-creation risked a stale 0
+    // during the create-then-upload flow in the new-coffee wizard.
+    mutationFn: ({ id, file }: { id: number; file: File }) =>
+      api.upload<Coffee>(`/coffees/${id}/photo`, file),
     onSuccess: invalidate,
   });
 }

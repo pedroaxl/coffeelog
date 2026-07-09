@@ -1,9 +1,10 @@
-import { COUNTRIES, flagEmoji } from "../lib/countries";
+import { FREQUENT_COUNTRIES, ALL_COUNTRIES, flagEmoji, isKnownCountry } from "../lib/countries";
 
 /**
  * Country dropdown (flag + name). Stores the country name to stay consistent
- * with existing data. If the current value isn't in the list (older free-text
- * entry), it's kept as an extra option so nothing is lost.
+ * with existing data. Frequent coffee origins are grouped at the top; every
+ * country follows, alphabetically sorted, so any country is easy to find. An
+ * unrecognized current value (older free-text entry) is kept as an option.
  */
 export function CountrySelect({
   value,
@@ -14,7 +15,6 @@ export function CountrySelect({
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
-  const known = COUNTRIES.some((c) => c.name === value);
   return (
     <select
       value={value}
@@ -22,12 +22,21 @@ export function CountrySelect({
       className="w-full appearance-none rounded-input border border-border-2 bg-card px-[13px] py-[11px] text-[14px] outline-none focus:border-terracotta"
     >
       <option value="">{placeholder}</option>
-      {value && !known && <option value={value}>{value}</option>}
-      {COUNTRIES.map((c) => (
-        <option key={c.code} value={c.name}>
-          {flagEmoji(c.code)} {c.name}
-        </option>
-      ))}
+      {value && !isKnownCountry(value) && <option value={value}>{value}</option>}
+      <optgroup label="Frequent">
+        {FREQUENT_COUNTRIES.map((c) => (
+          <option key={`f-${c.code}`} value={c.name}>
+            {flagEmoji(c.code)} {c.name}
+          </option>
+        ))}
+      </optgroup>
+      <optgroup label="All countries">
+        {ALL_COUNTRIES.map((c) => (
+          <option key={c.code} value={c.name}>
+            {flagEmoji(c.code)} {c.name}
+          </option>
+        ))}
+      </optgroup>
     </select>
   );
 }

@@ -25,7 +25,7 @@ export function EditCoffeeScreen() {
   const { data: coffee, isLoading } = useCoffee(coffeeId);
   const { data: settings } = useSettings();
   const update = useUpdateCoffee(coffeeId);
-  const uploadPhoto = useUploadPhoto(coffeeId);
+  const uploadPhoto = useUploadPhoto();
   const del = useDeleteCoffee();
   const toast = useToast();
 
@@ -86,9 +86,10 @@ export function EditCoffeeScreen() {
             busy={uploadPhoto.isPending}
             size={92}
             onFile={(file) =>
-              uploadPhoto.mutate(file, {
-                onError: () => toast({ variant: "error", message: "Couldn't upload that photo." }),
-              })
+              uploadPhoto.mutate(
+                { id: coffeeId, file },
+                { onError: () => toast({ variant: "error", message: "Couldn't upload that photo." }) }
+              )
             }
           />
           <Field label="Coffee name" className="flex-1">

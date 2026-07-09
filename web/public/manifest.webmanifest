@@ -1,0 +1,14 @@
+{
+  "name": "CoffeeLog",
+  "short_name": "CoffeeLog",
+  "description": "Self-hosted specialty-coffee catalog, storage tracking and QR labels",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#5C3D28",
+  "theme_color": "#5C3D28",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

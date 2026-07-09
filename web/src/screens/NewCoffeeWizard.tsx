@@ -23,8 +23,7 @@ export function NewCoffeeWizard() {
   const toast = useToast();
   const create = useCreateCoffee();
   const { data: settings } = useSettings();
-  const [createdId, setCreatedId] = useState<number | null>(null);
-  const uploadPhoto = useUploadPhoto(createdId ?? 0);
+  const uploadPhoto = useUploadPhoto();
 
   const [step, setStep] = useState(1);
   const [photo, setPhoto] = useState<{ file: File; url: string } | null>(null);
@@ -52,10 +51,9 @@ export function NewCoffeeWizard() {
       initialUnit: { weightG: Number(weight), initialState },
     };
     const coffee = await create.mutateAsync(input);
-    setCreatedId(coffee.id);
     if (photo) {
       try {
-        await uploadPhoto.mutateAsync(photo.file);
+        await uploadPhoto.mutateAsync({ id: coffee.id, file: photo.file });
       } catch {
         toast({ variant: "error", message: "Coffee saved, but the photo couldn't be uploaded." });
       }
