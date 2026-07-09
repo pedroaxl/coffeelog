@@ -99,6 +99,40 @@ describe("coffees CRUD", () => {
     expect(res.body.recipe.grinder).toBe("1Zpresso ZP6");
   });
 
+  it("adds a second bag that keeps its own state, weight and label", async () => {
+    const { app } = testApp();
+    const created = await request(app)
+      .post("/api/coffees")
+      .send(newCoffeePayload({ initialUnit: { weightG: 250, initialState: "frozen" } }));
+    const id = created.body.id;
+
+    const res = await request(app)
+      .post(`/api/coffees/${id}/units`)
+      .send({ kind: "bag", weightG: 250, initialState: "sealed" });
+    expect(res.status).toBe(201);
+
+    const bags = res.body.units.filter((u: { kind: string }) => u.kind === "bag");
+    expect(bags).toHaveLength(2);
+    // independent states and distinct labels
+    expect(bags.map((b: { status: string }) => b.status).sort()).toEqual(["defrosted", "frozen"]);
+    expect(new Set(bags.map((b: { qrId: string }) => b.qrId)).size).toBe(2);
+    expect(res.body.remainingG).toBe(500);
+    expect(res.body.activeUnitCount).toBe(2);
+  });
+
+  it("rejects an invalid added unit and 404s an unknown coffee", async () => {
+    const { app } = testApp();
+    const created = await request(app).post("/api/coffees").send(newCoffeePayload());
+    expect(
+      (await request(app).post(`/api/coffees/${created.body.id}/units`).send({ kind: "tube", weightG: 20 }))
+        .status
+    ).toBe(400);
+    expect(
+      (await request(app).post("/api/coffees/999/units").send({ kind: "bag", weightG: 250, initialState: "sealed" }))
+        .status
+    ).toBe(404);
+  });
+
   it("lists and deletes", async () => {
     const { app } = testApp();
     const created = await request(app).post("/api/coffees").send(newCoffeePayload());

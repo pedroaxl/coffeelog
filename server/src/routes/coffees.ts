@@ -70,6 +70,10 @@ const createSchema = coffeeFields.extend({
   initialUnit: initialUnit.optional(),
 });
 
+// Adding a further unit to an existing coffee (e.g. a second bag of the same
+// purchase). Each bag stays its own unit with its own state, dates and label.
+const addUnitSchema = initialUnit.extend({ kind: z.enum(["bag"]) });
+
 const updateSchema = coffeeFields
   .partial()
   .extend({
@@ -202,6 +206,28 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
       if (!parsed.success) throw badRequest("Invalid recipe", parsed.error.flatten());
       upsertRecipe(db, id, parsed.data);
       res.json(getCoffee(db, id));
+    })
+  );
+
+  // Add another unit (a second bag of the same coffee).
+  router.post(
+    "/:id/units",
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      const parsed = addUnitSchema.safeParse(req.body);
+      if (!parsed.success) throw badRequest("Invalid unit", parsed.error.flatten());
+      const bag = bagStateFromInitial(parsed.data.initialState);
+      insertUnit(db, {
+        coffeeId: id,
+        kind: "bag",
+        weightG: parsed.data.weightG,
+        sealState: bag.sealState,
+        tempState: bag.tempState,
+        frozenDate: "frozenDate" in bag ? bag.frozenDate : null,
+        openedDate: "openedDate" in bag ? bag.openedDate : null,
+      });
+      res.status(201).json(getCoffee(db, id));
     })
   );
 

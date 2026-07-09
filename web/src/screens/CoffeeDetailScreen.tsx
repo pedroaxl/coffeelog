@@ -60,7 +60,10 @@ function UnitRow({ unit, onClick }: { unit: Coffee["units"][number]; onClick: ()
       className="flex items-center gap-[11px] rounded-input border border-border bg-card px-[13px] py-[11px] text-left"
     >
       <StateDot status={unit.status} />
-      <span className="flex-1 text-[13.5px] font-semibold">{label}</span>
+      <span className="flex-1">
+        <span className="block text-[13.5px] font-semibold">{label}</span>
+        <span className="text-[11px] text-muted-2">#{unit.qrId}</span>
+      </span>
       <span className="text-[12.5px] text-muted">{gramsLabel(unit.weightG)}</span>
       <ChevronRight size={16} color="#B5A48F" />
     </button>

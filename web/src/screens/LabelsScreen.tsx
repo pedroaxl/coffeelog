@@ -131,7 +131,10 @@ function LabelPicker({ coffeeId, onBack }: { coffeeId: number; onBack: () => voi
                 >
                   {checked && <Check size={14} color="#fff" strokeWidth={3} />}
                 </span>
-                <span className="flex-1 text-[13.5px] font-semibold">{label}</span>
+                <span className="flex-1">
+                  <span className="block text-[13.5px] font-semibold">{label}</span>
+                  <span className="text-[11px] text-muted-2">#{u.qrId}</span>
+                </span>
                 <StatePill status={u.status} />
               </button>
             );

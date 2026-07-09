@@ -1,9 +1,20 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, Package, TestTube, Split, Tags } from "lucide-react";
-import { useCoffee } from "../api/hooks";
+import { ChevronLeft, Package, TestTube, Split, Tags, Plus } from "lucide-react";
+import { useCoffee, useAddBag } from "../api/hooks";
 import { StateDot } from "../components/StatePill";
+import { BottomSheet } from "../components/BottomSheet";
+import { useToast } from "../components/Toast";
 import { STATUS_STYLES, gramsLabel, shortDate } from "../lib/format";
 import type { StorageUnit } from "../api/types";
+
+type InitialState = "sealed" | "open" | "frozen";
+
+const STATE_OPTIONS: { key: InitialState; label: string; hint: string }[] = [
+  { key: "sealed", label: "Sealed", hint: "unopened, at room temp" },
+  { key: "open", label: "Open", hint: "opened, in use" },
+  { key: "frozen", label: "Frozen", hint: "sealed & frozen" },
+];
 
 function UnitRow({ unit, onClick }: { unit: StorageUnit; onClick: () => void }) {
   const s = STATUS_STYLES[unit.status];
@@ -29,6 +40,7 @@ function UnitRow({ unit, onClick }: { unit: StorageUnit; onClick: () => void }) 
           <span className="text-[11.5px] text-muted">
             {s.label}
             {date ? ` · ${shortDate(date)}` : ""}
+            {` · #${unit.qrId}`}
           </span>
         </span>
       </span>
@@ -42,7 +54,13 @@ export function StorageUnitsScreen() {
   const { id } = useParams();
   const coffeeId = Number(id);
   const navigate = useNavigate();
+  const toast = useToast();
   const { data: coffee, isLoading } = useCoffee(coffeeId);
+  const addBag = useAddBag(coffeeId);
+
+  const [addOpen, setAddOpen] = useState(false);
+  const [newWeight, setNewWeight] = useState("250");
+  const [newState, setNewState] = useState<InitialState>("sealed");
 
   if (isLoading || !coffee) {
     return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
@@ -86,8 +104,18 @@ export function StorageUnitsScreen() {
           </div>
         </div>
 
-        {/* bag */}
-        <div className="mb-2 text-[11.5px] font-semibold uppercase tracking-[0.6px] text-muted">Bag</div>
+        {/* bags */}
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="text-[11.5px] font-semibold uppercase tracking-[0.6px] text-muted">
+            {bags.length > 1 ? "Bags" : "Bag"}
+          </span>
+          <button
+            onClick={() => setAddOpen(true)}
+            className="flex items-center gap-[3px] text-[12px] font-semibold text-terracotta"
+          >
+            <Plus size={13} color="#BE6A3A" /> Add bag
+          </button>
+        </div>
         {bags.length > 0 ? (
           <div className="mb-[18px] flex flex-col gap-2">
             {bags.map((b) => (
@@ -143,6 +171,80 @@ export function StorageUnitsScreen() {
           <Tags size={17} color="#5C3D28" /> Labels
         </button>
       </div>
+
+      {/* add another bag of the same coffee (its own state, dates and label) */}
+      <BottomSheet open={addOpen} onClose={() => setAddOpen(false)}>
+        <div className="mb-1 font-serif text-[19px] font-semibold">Add a bag</div>
+        <p className="mb-4 text-[13.5px] leading-[1.5] text-muted">
+          Adds another bag of {coffee.name}. It gets its own state, dates and label, so you can
+          freeze or portion each bag separately.
+        </p>
+
+        <label className="mb-4 block">
+          <div className="mb-[6px] text-[12px] text-muted">Bag weight</div>
+          <div className="relative">
+            <input
+              type="number"
+              value={newWeight}
+              onChange={(e) => setNewWeight(e.target.value)}
+              className="w-full rounded-input border border-border-2 bg-card px-[13px] py-[11px] pr-8 text-[14px] font-semibold outline-none focus:border-terracotta"
+            />
+            <span className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[13px] text-muted">
+              g
+            </span>
+          </div>
+        </label>
+
+        <div className="mb-2 text-[12px] text-muted">Initial state</div>
+        <div className="mb-4 flex flex-col gap-2">
+          {STATE_OPTIONS.map((o) => (
+            <button
+              key={o.key}
+              onClick={() => setNewState(o.key)}
+              className={`flex items-center justify-between rounded-card border bg-card px-4 py-3 text-left ${
+                newState === o.key ? "border-terracotta" : "border-border-2"
+              }`}
+            >
+              <span>
+                <span className="block text-[14px] font-semibold">{o.label}</span>
+                <span className="text-[11.5px] text-muted">{o.hint}</span>
+              </span>
+              <span
+                className={`h-5 w-5 rounded-full border-2 ${
+                  newState === o.key ? "border-terracotta bg-terracotta" : "border-border-2"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-[10px]">
+          <button
+            onClick={() => setAddOpen(false)}
+            className="flex-1 rounded-btn bg-tan py-[13px] text-center text-[14px] font-semibold text-brand"
+          >
+            Cancel
+          </button>
+          <button
+            disabled={!(Number(newWeight) > 0) || addBag.isPending}
+            onClick={() =>
+              addBag.mutate(
+                { weightG: Number(newWeight), initialState: newState },
+                {
+                  onSuccess: () => {
+                    setAddOpen(false);
+                    toast({ variant: "success", message: "Bag added" });
+                  },
+                  onError: () => toast({ variant: "error", message: "Couldn't add the bag." }),
+                }
+              )
+            }
+            className="flex-1 rounded-btn bg-terracotta py-[13px] text-center text-[14px] font-semibold text-white disabled:opacity-50"
+          >
+            {addBag.isPending ? "Adding…" : "Add bag"}
+          </button>
+        </div>
+      </BottomSheet>
     </div>
   );
 }

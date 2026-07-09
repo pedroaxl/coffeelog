@@ -125,6 +125,16 @@ function useCoffeeCacheSync() {
   };
 }
 
+/** Add another bag to an existing coffee (e.g. a second bag of the same purchase). */
+export function useAddBag(coffeeId: number) {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (input: { weightG: number; initialState: "sealed" | "open" | "frozen" }) =>
+      api.post<Coffee>(`/coffees/${coffeeId}/units`, { kind: "bag", ...input }),
+    onSuccess: sync,
+  });
+}
+
 export interface PortionInput {
   tubes: { weightG: number }[];
   tubeState: TempState;

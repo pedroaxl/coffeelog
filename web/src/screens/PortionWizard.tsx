@@ -97,7 +97,9 @@ export function PortionWizard() {
                       <span className="block text-[14px] font-semibold">
                         {s.sealState === "open" ? "Open bag" : "Sealed bag"}
                       </span>
-                      <span className="text-[12px] text-muted">{gramsLabel(s.weightG)} available</span>
+                      <span className="text-[12px] text-muted">
+                        {gramsLabel(s.weightG)} available · #{s.qrId}
+                      </span>
                     </span>
                     <span
                       className={`h-5 w-5 rounded-full border-2 ${
