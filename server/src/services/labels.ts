@@ -70,14 +70,28 @@ export async function renderLabelPng(
   ctx.fillRect(0, 0, W, H);
 
   const pad = Math.round(H * 0.09);
+  // Human-readable code under the QR: distinguishes labels of the same coffee
+  // and is a fallback if the QR won't scan. Sized so QR + code fit as a group.
+  const codePx = Math.round(H * 0.115);
+  const codeGap = Math.round(H * 0.05);
   // Compact QR so the coffee name (the primary info) has room to breathe.
-  const qrSize = Math.min(H - pad * 2, Math.round(W * 0.36));
-  const qrY = Math.round((H - qrSize) / 2);
+  const qrSize = Math.min(H - pad * 2 - codeGap - codePx, Math.round(W * 0.36));
+  const groupH = qrSize + codeGap + codePx;
+  const qrY = Math.round((H - groupH) / 2);
 
-  // QR (left, vertically centered)
+  // QR (left column, the QR+code group vertically centered)
   const qrBuffer = await QRCode.toBuffer(qrUrl, { type: "png", margin: 1, width: qrSize });
   const qrImg = await loadImage(qrBuffer);
   ctx.drawImage(qrImg, pad, qrY, qrSize, qrSize);
+
+  // QR id centered under the QR (shrinks to fit the QR's width).
+  const codePxFit = fitFont(ctx, unit.qrId, qrSize, codePx, Math.round(codePx * 0.7), "600");
+  ctx.font = `600 ${codePxFit}px "IBM Plex Sans"`;
+  ctx.fillStyle = "#1a130d";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText(unit.qrId, pad + qrSize / 2, qrY + qrSize + codeGap);
+  ctx.textAlign = "left";
 
   // Text block (right of the QR), stacked top-down.
   const tx = pad + qrSize + Math.round(pad * 0.9);
