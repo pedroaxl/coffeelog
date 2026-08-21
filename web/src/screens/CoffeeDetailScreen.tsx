@@ -229,11 +229,25 @@ export function CoffeeDetailScreen() {
           </button>
         </div>
         <div className="mb-[22px] rounded-card bg-recipe p-4 text-[#EAD9C3]">
-          {r && (r.brewType || r.method || r.doseG || r.grinder || r.protocol) ? (
+          {r &&
+          (r.brewType ||
+            r.method ||
+            r.doseG ||
+            r.yieldG ||
+            r.waterTempC ||
+            r.grinder ||
+            r.grinderSetting ||
+            r.protocol) ? (
             <>
-              <div className="mb-3 flex gap-[18px]">
+              <div className="mb-3 grid grid-cols-3 gap-x-[18px] gap-y-3">
                 <RecipeStat label="Method" value={r.method ?? "—"} />
                 <RecipeStat label="Dose" value={r.doseG != null ? `${r.doseG} g` : "—"} />
+                <RecipeStat label="Yield" value={r.yieldG != null ? `${r.yieldG} g` : "—"} />
+                <RecipeStat label="Ratio" value={r.ratio != null ? `1 : ${r.ratio}` : "—"} />
+                <RecipeStat
+                  label="Water temp"
+                  value={r.waterTempC != null ? `${r.waterTempC}°C` : "—"}
+                />
                 <RecipeStat
                   label="Grinder"
                   value={[r.grinder, r.grinderSetting].filter(Boolean).join(" · ") || "—"}
