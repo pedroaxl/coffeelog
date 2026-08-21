@@ -21,6 +21,11 @@ export interface CoffeeFields {
   score: number | null;
 }
 
+export interface ConsumptionNote {
+  date: string; // YYYY-MM-DD of the consume
+  note: string;
+}
+
 export interface Coffee extends CoffeeFields {
   id: number;
   createdAt: string;
@@ -31,6 +36,7 @@ export interface Coffee extends CoffeeFields {
   units: StorageUnit[];
   remainingG: number;
   activeUnitCount: number;
+  consumptionNotes: ConsumptionNote[]; // recent brew notes, newest first
   status: "available" | "archived";
 }
 
@@ -80,6 +86,19 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     )
     .get(row.id) as { t: string | null };
   const photos = listPhotoPaths(db, row.id);
+  // Recent brew notes left when consuming units — most units are consumed with
+  // no note, so only non-empty, non-undone ones surface (newest first).
+  const noteRows = db
+    .prepare(
+      `SELECT notes, created_at FROM consumption_log
+        WHERE coffee_id = ? AND undone = 0 AND notes IS NOT NULL AND TRIM(notes) <> ''
+        ORDER BY created_at DESC, id DESC LIMIT 5`
+    )
+    .all(row.id) as { notes: string; created_at: string }[];
+  const consumptionNotes = noteRows.map((n) => ({
+    date: n.created_at.slice(0, 10),
+    note: n.notes,
+  }));
   return {
     id: row.id,
     name: row.name,
@@ -104,6 +123,7 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     units,
     remainingG: Math.round(remainingG * 10) / 10,
     activeUnitCount: active.length,
+    consumptionNotes,
     status: active.length > 0 ? "available" : "archived",
   };
 }

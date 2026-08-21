@@ -240,7 +240,7 @@ export function CoffeeDetailScreen() {
                 />
               </div>
               {r.protocol && (
-                <div className="border-t border-white/15 pt-3 text-[13px] leading-[1.55] opacity-90">
+                <div className="whitespace-pre-line border-t border-white/15 pt-3 text-[13px] leading-[1.55] opacity-90">
                   {r.protocol}
                 </div>
               )}
@@ -254,6 +254,26 @@ export function CoffeeDetailScreen() {
             </button>
           )}
         </div>
+
+        {/* brew notes left when consuming units (only when some exist) */}
+        {coffee.consumptionNotes.length > 0 && (
+          <>
+            <h2 className="mb-[10px] font-serif text-[16px] font-semibold">Brew notes</h2>
+            <div className="mb-[22px] flex flex-col gap-2">
+              {coffee.consumptionNotes.map((n, i) => (
+                <div
+                  key={i}
+                  className="rounded-card border border-border bg-card px-[13px] py-[11px]"
+                >
+                  <div className="text-[11px] text-muted">{longDate(n.date)}</div>
+                  <div className="mt-[3px] whitespace-pre-line text-[13.5px] leading-[1.5]">
+                    {n.note}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* units */}
         <div className="mb-[10px] flex items-baseline justify-between">

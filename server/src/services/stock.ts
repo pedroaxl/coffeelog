@@ -87,13 +87,23 @@ export function portionBag(db: Db, unitId: number, input: PortionInput): number 
         opened_date = COALESCE(opened_date, @today) WHERE id = @id`
     ).run({ id: unitId, total, today: today() });
 
+    // Portioning an already-frozen bag doesn't defrost-and-refreeze — the tubes
+    // hold coffee that has been frozen since the bag was, so they inherit the
+    // bag's frozen_date. Freezing tubes from a non-frozen bag is a fresh freeze.
+    const tubeFrozenDate =
+      input.tubeState === "frozen"
+        ? r.temp_state === "frozen"
+          ? r.frozen_date ?? today()
+          : today()
+        : null;
+
     for (const tube of input.tubes) {
       insertUnit(db, {
         coffeeId: r.coffee_id,
         kind: "tube",
         weightG: tube.weightG,
         tempState: input.tubeState,
-        frozenDate: input.tubeState === "frozen" ? today() : null,
+        frozenDate: tubeFrozenDate,
       });
     }
   });

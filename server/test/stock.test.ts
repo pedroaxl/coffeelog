@@ -34,6 +34,37 @@ describe("portioning", () => {
     expect(qrs.size).toBe(3);
   });
 
+  it("tubes from an already-frozen bag inherit the bag's frozen date", async () => {
+    const { app } = testApp();
+    const created = await request(app)
+      .post("/api/coffees")
+      .send({ name: "Frozen", initialUnit: { weightG: 250, initialState: "frozen" } });
+    const bagId = created.body.units[0].id;
+    // Backdate the bag's freeze so it can't be confused with today's date.
+    await request(app).patch(`/api/units/${bagId}`).send({ frozenDate: "2026-01-10" });
+
+    const res = await request(app)
+      .post(`/api/units/${bagId}/portion`)
+      .send({ tubes: [{ weightG: 20 }, { weightG: 20 }], tubeState: "frozen" });
+
+    const tubes = res.body.units.filter((u: { kind: string }) => u.kind === "tube");
+    expect(tubes.length).toBe(2);
+    expect(tubes.every((t: { frozenDate: string }) => t.frozenDate === "2026-01-10")).toBe(true);
+  });
+
+  it("freezing tubes from a non-frozen bag records a fresh freeze date (today)", async () => {
+    const { app } = testApp();
+    const { bagId } = await createWithOpenBag(app, 250);
+    const today = new Date().toISOString().slice(0, 10);
+
+    const res = await request(app)
+      .post(`/api/units/${bagId}/portion`)
+      .send({ tubes: [{ weightG: 20 }], tubeState: "frozen" });
+
+    const tube = res.body.units.find((u: { kind: string }) => u.kind === "tube");
+    expect(tube.frozenDate).toBe(today);
+  });
+
   it("rejects portioning more than the bag holds and rolls back", async () => {
     const { app, db } = testApp();
     const { bagId } = await createWithOpenBag(app, 30);

@@ -48,6 +48,11 @@ export interface StorageUnit {
   active: boolean;
 }
 
+export interface ConsumptionNote {
+  date: string; // YYYY-MM-DD
+  note: string;
+}
+
 export interface Coffee {
   id: number;
   name: string;
@@ -72,6 +77,7 @@ export interface Coffee {
   units: StorageUnit[];
   remainingG: number;
   activeUnitCount: number;
+  consumptionNotes: ConsumptionNote[]; // recent brew notes, newest first
   status: "available" | "archived"; // derived
 }
 

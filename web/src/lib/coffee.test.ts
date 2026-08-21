@@ -45,6 +45,7 @@ function coffee(partial: Partial<Coffee>): Coffee {
     units: [unit({})],
     remainingG: 200,
     activeUnitCount: 1,
+    consumptionNotes: [],
     status: "available",
     ...partial,
   };
