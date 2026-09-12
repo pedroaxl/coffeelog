@@ -13,6 +13,7 @@ export interface Settings {
   grinderOptions: string[];
   varietyOptions: string[];
   processOptions: string[];
+  filterOptions: string[];
 }
 
 interface SettingsRow {
@@ -28,6 +29,7 @@ interface SettingsRow {
   grinder_options: string;
   variety_options: string;
   process_options: string;
+  filter_options: string;
 }
 
 function mapRow(row: SettingsRow): Settings {
@@ -44,6 +46,7 @@ function mapRow(row: SettingsRow): Settings {
     grinderOptions: safeParseArray(row.grinder_options),
     varietyOptions: safeParseArray(row.variety_options),
     processOptions: safeParseArray(row.process_options),
+    filterOptions: safeParseArray(row.filter_options),
   };
 }
 
@@ -74,6 +77,7 @@ export interface SettingsPatch {
   grinderOptions?: string[];
   varietyOptions?: string[];
   processOptions?: string[];
+  filterOptions?: string[];
 }
 
 const COLUMN_MAP: Record<keyof SettingsPatch, string> = {
@@ -89,6 +93,7 @@ const COLUMN_MAP: Record<keyof SettingsPatch, string> = {
   grinderOptions: "grinder_options",
   varietyOptions: "variety_options",
   processOptions: "process_options",
+  filterOptions: "filter_options",
 };
 
 export function updateSettings(db: Db, patch: SettingsPatch): Settings {

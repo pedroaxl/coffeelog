@@ -41,5 +41,7 @@ and the transactional flows (portioning, consume/undo).
 
 ## Scope
 
-v1 is intentionally limited to the catalog, storage units and QR labels. See the
-backlog in the README before proposing larger features.
+CoffeeLog covers the catalog, storage units, QR labels, recipe versioning and the
+brew log. See the backlog in the README before proposing larger features, and
+**[docs/API.md](docs/API.md)** for the HTTP surface — it is a documented
+interface, not an internal detail, so changes to it belong in that file too.

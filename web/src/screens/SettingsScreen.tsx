@@ -147,8 +147,11 @@ export function SettingsScreen() {
             <Row label="Methods" align="start" last={false}>
               <TagEditor tags={data.methodOptions} onChange={(t) => patch({ methodOptions: t }, "Methods updated")} />
             </Row>
-            <Row label="Grinders" align="start" last>
+            <Row label="Grinders" align="start" last={false}>
               <TagEditor tags={data.grinderOptions} onChange={(t) => patch({ grinderOptions: t }, "Grinders updated")} />
+            </Row>
+            <Row label="Filters" align="start" last>
+              <TagEditor tags={data.filterOptions} onChange={(t) => patch({ filterOptions: t }, "Filters updated")} />
             </Row>
           </Section>
 

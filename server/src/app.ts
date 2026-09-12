@@ -6,6 +6,7 @@ import type { Db } from "./db/connection.js";
 import { settingsRouter } from "./routes/settings.js";
 import { coffeesRouter } from "./routes/coffees.js";
 import { unitsRouter, consumeRouter } from "./routes/units.js";
+import { brewsRouter, coffeeBrewsRouter } from "./routes/brews.js";
 import { alertsRouter } from "./routes/alerts.js";
 import { labelsRouter, scanRouter } from "./routes/labels.js";
 import { backupRouter } from "./routes/backup.js";
@@ -29,6 +30,8 @@ export function buildApp(db: Db, opts: AppOptions = {}): Express {
   api.get("/health", (_req, res) => res.json({ ok: true, version: "1.0.0" }));
   api.use("/settings", settingsRouter(db));
   api.use("/coffees", coffeesRouter(db, uploadsDir));
+  api.use("/coffees", coffeeBrewsRouter(db));
+  api.use("/brews", brewsRouter(db));
   api.use("/units", unitsRouter(db));
   api.use("/consume", consumeRouter(db));
   api.use("/alerts", alertsRouter(db));

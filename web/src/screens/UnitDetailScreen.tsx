@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Coffee as CoffeeIcon, Snowflake, Tags, Package, TestTube } from "lucide-react";
-import { useUnit, useConsume, useUndoConsume, useSetUnitState } from "../api/hooks";
+import { useUnit, useConsume, useUndoConsume, useSetUnitState, useLogBrew } from "../api/hooks";
+import { BrewForm, type BrewDraft } from "../components/BrewForm";
 import { useToast } from "../components/Toast";
 import { BottomSheet } from "../components/BottomSheet";
 import { StarScore } from "../components/StarScore";
@@ -19,8 +20,9 @@ export function UnitDetailScreen() {
   const consume = useConsume(id);
   const undo = useUndoConsume();
   const setState = useSetUnitState(id);
+  const logBrew = useLogBrew();
 
-  const [sheet, setSheet] = useState<null | "consume" | "editDate">(null);
+  const [sheet, setSheet] = useState<null | "brew" | "consume" | "editDate">(null);
   const [grams, setGrams] = useState("18");
   const [note, setNote] = useState("");
   const [frozenDraft, setFrozenDraft] = useState("");
@@ -34,6 +36,31 @@ export function UnitDetailScreen() {
   const isBag = unit.kind === "bag";
   const days = daysSince(unit.frozenDate);
   const r = coffee.recipe;
+
+  /**
+   * Saving a brew from a unit records the brew and draws the unit down in one
+   * action — two taps from this screen. Unticking the toggle logs the brew
+   * alone: the stock ledger and the brew log are allowed to drift apart.
+   */
+  async function doBrew(draft: BrewDraft) {
+    if (draft.consumeUnit) {
+      const res = await consume.mutateAsync(
+        isBag ? { grams: draft.grams ?? undefined, brew: draft.brew } : { brew: draft.brew }
+      );
+      setSheet(null);
+      const removed = isBag ? draft.grams ?? 0 : unit.weightG;
+      toast({
+        variant: "neutral",
+        message: `Brew logged · ${gramsLabel(removed)} removed`,
+        action: { label: "Undo", onClick: () => undo.mutate(res.logId) },
+      });
+      if (!isBag) navigate(`/catalog/${coffee.id}/units`);
+      return;
+    }
+    await logBrew.mutateAsync({ coffeeId: coffee.id, brew: { ...draft.brew, unitId: unit.id } });
+    setSheet(null);
+    toast({ message: "Brew logged" });
+  }
 
   async function doConsume() {
     const res = await consume.mutateAsync(
@@ -171,10 +198,17 @@ export function UnitDetailScreen() {
       {/* actions */}
       <div className="flex-none px-[22px] pb-6 pt-2">
         <button
-          onClick={() => setSheet("consume")}
+          onClick={() => setSheet("brew")}
           className="mb-[10px] flex w-full items-center justify-center gap-[9px] rounded-card bg-terracotta py-[15px] text-[15px] font-semibold text-white"
         >
-          <CoffeeIcon size={19} color="#fff" /> Consume this unit
+          <CoffeeIcon size={19} color="#fff" /> {r ? "Log brew" : "Log this brew"}
+        </button>
+        {/* Never buried: getting the stock right must stay a first-class action. */}
+        <button
+          onClick={() => setSheet("consume")}
+          className="mb-[10px] w-full rounded-btn bg-tan py-[12px] text-center text-[14px] font-semibold text-brand"
+        >
+          Just consume
         </button>
         <div className="flex gap-[10px]">
           <button
@@ -191,6 +225,17 @@ export function UnitDetailScreen() {
           </button>
         </div>
       </div>
+
+      {/* brew sheet — flow A with a recipe, flow B without */}
+      <BottomSheet open={sheet === "brew"} onClose={() => setSheet(null)}>
+        <div className="mb-3 font-serif text-[19px] font-semibold">Log this brew</div>
+        <BrewForm
+          coffee={coffee}
+          unit={unit}
+          saving={consume.isPending || logBrew.isPending}
+          onSave={doBrew}
+        />
+      </BottomSheet>
 
       {/* consume sheet (9b bag grams / 9c whole tube) */}
       <BottomSheet open={sheet === "consume"} onClose={() => setSheet(null)}>

@@ -1,6 +1,6 @@
 import type { Db } from "../db/connection.js";
 import { getNotes, replaceNotes } from "./notes.js";
-import { getRecipeForCoffee, type Recipe } from "./recipes.js";
+import { getRecipeForCoffee, type Recipe } from "./recipeVersions.js";
 import { listUnitsByCoffee, type StorageUnit } from "./units.js";
 import { listPhotoPaths } from "./coffeePhotos.js";
 
@@ -21,8 +21,9 @@ export interface CoffeeFields {
   score: number | null;
 }
 
+/** @deprecated Superseded by brews; derived from them and kept for one release. */
 export interface ConsumptionNote {
-  date: string; // YYYY-MM-DD of the consume
+  date: string; // YYYY-MM-DD
   note: string;
 }
 
@@ -36,6 +37,8 @@ export interface Coffee extends CoffeeFields {
   units: StorageUnit[];
   remainingG: number;
   activeUnitCount: number;
+  brewCount: number;
+  lastBrewedAt: string | null;
   consumptionNotes: ConsumptionNote[]; // recent brew notes, newest first
   status: "available" | "archived";
 }
@@ -86,17 +89,30 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     )
     .get(row.id) as { t: string | null };
   const photos = listPhotoPaths(db, row.id);
-  // Recent brew notes left when consuming units — most units are consumed with
-  // no note, so only non-empty, non-undone ones surface (newest first).
+  const brewStats = db
+    .prepare("SELECT COUNT(*) AS n, MAX(brewed_at) AS t FROM brews WHERE coffee_id = ?")
+    .get(row.id) as { n: number; t: string | null };
+  /*
+   * Deprecated field, kept for one release while the UI moves to the brew list.
+   * Brews are the record now, but a plain consume can still leave a free-text
+   * note without creating one, so both are shown — never the same note twice,
+   * since an imported or gesture-linked brew names its consumption row.
+   */
   const noteRows = db
     .prepare(
-      `SELECT notes, created_at FROM consumption_log
-        WHERE coffee_id = ? AND undone = 0 AND notes IS NOT NULL AND TRIM(notes) <> ''
-        ORDER BY created_at DESC, id DESC LIMIT 5`
+      `SELECT notes, at FROM (
+         SELECT notes, brewed_at AS at FROM brews
+          WHERE coffee_id = @id AND notes IS NOT NULL AND TRIM(notes) <> ''
+         UNION ALL
+         SELECT cl.notes, cl.created_at AS at FROM consumption_log cl
+          WHERE cl.coffee_id = @id AND cl.undone = 0
+            AND cl.notes IS NOT NULL AND TRIM(cl.notes) <> ''
+            AND NOT EXISTS (SELECT 1 FROM brews b WHERE b.consumption_log_id = cl.id)
+       ) ORDER BY at DESC LIMIT 5`
     )
-    .all(row.id) as { notes: string; created_at: string }[];
+    .all({ id: row.id }) as { notes: string; at: string }[];
   const consumptionNotes = noteRows.map((n) => ({
-    date: n.created_at.slice(0, 10),
+    date: n.at.slice(0, 10),
     note: n.notes,
   }));
   return {
@@ -123,6 +139,8 @@ function mapCoffee(db: Db, row: CoffeeRow): Coffee {
     units,
     remainingG: Math.round(remainingG * 10) / 10,
     activeUnitCount: active.length,
+    brewCount: brewStats.n,
+    lastBrewedAt: brewStats.t,
     consumptionNotes,
     status: active.length > 0 ? "available" : "archived",
   };

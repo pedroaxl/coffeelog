@@ -21,6 +21,7 @@ const patchSchema = z
     grinderOptions: stringList,
     varietyOptions: stringList,
     processOptions: stringList,
+    filterOptions: stringList,
   })
   .partial()
   .strict();

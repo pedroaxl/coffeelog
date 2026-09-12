@@ -11,6 +11,7 @@ import {
   consumeUnit,
   undoConsume,
 } from "../services/stock.js";
+import { brewInput } from "./brews.js";
 
 const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
 
@@ -39,6 +40,9 @@ const portionSchema = z.object({
 const consumeSchema = z.object({
   grams: z.number().positive().max(100000).optional(),
   note: z.string().max(2000).nullish(),
+  // Consuming and brewing are one gesture: send the brew along and both records
+  // are written together, linked, and undone together.
+  brew: brewInput.optional(),
 });
 
 export function unitsRouter(db: Db): Router {
@@ -81,8 +85,8 @@ export function unitsRouter(db: Db): Router {
     asyncHandler(async (req, res) => {
       const parsed = consumeSchema.safeParse(req.body);
       if (!parsed.success) throw badRequest("Invalid consume", parsed.error.flatten());
-      const { logId, coffeeId } = consumeUnit(db, Number(req.params.id), parsed.data);
-      res.json({ coffee: getCoffee(db, coffeeId), logId });
+      const { logId, coffeeId, brewId } = consumeUnit(db, Number(req.params.id), parsed.data);
+      res.json({ coffee: getCoffee(db, coffeeId), logId, brewId });
     })
   );
 

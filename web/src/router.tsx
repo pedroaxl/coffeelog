@@ -5,6 +5,8 @@ import { CatalogScreen } from "./screens/CatalogScreen";
 import { CoffeeDetailScreen } from "./screens/CoffeeDetailScreen";
 import { EditCoffeeScreen } from "./screens/EditCoffeeScreen";
 import { RecipeEditorScreen } from "./screens/RecipeEditorScreen";
+import { RecipeHistoryScreen } from "./screens/RecipeHistoryScreen";
+import { BrewDetailScreen } from "./screens/BrewDetailScreen";
 import { NewCoffeeWizard } from "./screens/NewCoffeeWizard";
 import { StorageUnitsScreen } from "./screens/StorageUnitsScreen";
 import { PortionWizard } from "./screens/PortionWizard";
@@ -24,6 +26,8 @@ export const router = createBrowserRouter([
       { path: "/catalog/:id", element: <CoffeeDetailScreen /> },
       { path: "/catalog/:id/edit", element: <EditCoffeeScreen /> },
       { path: "/catalog/:id/recipe", element: <RecipeEditorScreen /> },
+      { path: "/catalog/:id/recipe/versions", element: <RecipeHistoryScreen /> },
+      { path: "/brews/:brewId", element: <BrewDetailScreen /> },
       { path: "/catalog/:id/units", element: <StorageUnitsScreen /> },
       { path: "/catalog/:id/portion", element: <PortionWizard /> },
       { path: "/units/:unitId", element: <UnitDetailScreen /> },

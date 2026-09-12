@@ -2,19 +2,29 @@
 
 A self-hosted, single-user web app to catalog specialty coffee, track storage
 units (a bag plus individual frozen Falcon tubes) by weight and state, keep a
-semi-structured brew recipe per coffee, and generate QR labels for a
-**Niimbot B1** printer. Mobile-first and responsive — usable from phone, tablet
-and desktop over your local network.
+versioned brew recipe per coffee with a log of the brews it produced, and
+generate QR labels for a **Niimbot B1** printer. Mobile-first and responsive —
+usable from phone, tablet and desktop over your local network.
 
 > UI, code and docs are in English (this is published open source). Your own
 > data — coffee names, roaster names, tasting notes, recipe protocols — stays in
 > whatever language you type.
 
-## Features (v1)
+## Features
 
 - **Coffee catalog** — CRUD with photo, structured origin/roastery, tasting
   notes, a 1–5 **score** (editable anytime), and a semi-structured **recipe**
-  (method · dose · yield · ratio · temp · grinder + free-text protocol).
+  (method · dose · yield · ratio · temp · grinder · filter + free-text protocol).
+- **Recipe versioning** — the recipe is append-only history. A version nobody has
+  brewed yet is a draft and is edited in place; once a brew points at it, it is
+  frozen and saving forks the next version, with a one-line `changeNote` saying
+  why you re-dialed. A version is a `tweak` (one variable moved, so the two
+  compare) or a `baseline` (a reset).
+- **Brew log** — what actually happened, against the version that planned it.
+  With a recipe defined the form asks for one thing, the drain time, and a single
+  Save records the brew *and* draws down the unit. Executed parameters are stored
+  on every brew, so a brew can show "93°C → 94°C" against its recipe without ever
+  changing it; promoting a brew turns what happened into the new plan.
 - **Storage units** — each coffee can hold several units at once: a **Bag**
   (Sealed/Open × Frozen/Defrosted) and any number of **Falcon tubes** (each with
   its own weight; Frozen/Defrosted/Consumed). **Portion & freeze** splits an open
@@ -86,11 +96,17 @@ Everything is one SQLite file plus a photos directory under the data dir. Snapsh
 that directory (or the Docker volume), or use **Settings → Export backup (JSON)**
 for a portable dump.
 
-## Not in v1 (backlog)
+## API
 
-Full recipe engine/versioning, brew logs, automatic resting-window indicator, a
-structured equipment catalog, photo autofill, NFC, consumption stats, and a
-guided brew-assistant timer.
+The whole app is driven by a JSON API that is meant to be scripted from outside
+too. See **[docs/API.md](docs/API.md)**.
+
+## Backlog
+
+Brew comparison side by side, `experimentTag` filtering and the tasting-axis
+fields in the UI (the API already accepts them); a "not dialed in" home card;
+drain-time charts per recipe version; automatic resting-window indicator; a
+structured equipment catalog; photo autofill; NFC; and a guided brew timer.
 
 ## License
 

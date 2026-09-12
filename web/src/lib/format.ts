@@ -40,3 +40,28 @@ export const STATUS_STYLES: Record<UnitStatus, StatusStyle> = {
 export function gramsLabel(g: number): string {
   return `${Number.isInteger(g) ? g : g.toFixed(1)} g`;
 }
+
+/** Seconds as m:ss (170 -> "2:50"). Returns "" for null. */
+export function mmss(sec: number | null | undefined): string {
+  if (sec == null) return "";
+  const m = Math.floor(sec / 60);
+  return `${m}:${String(sec % 60).padStart(2, "0")}`;
+}
+
+/**
+ * Parse a drain time typed as "2:50" or as plain seconds ("170"). Returns null
+ * for anything empty or unreadable — the field is always optional.
+ */
+export function parseMmSs(text: string): number | null {
+  const value = text.trim();
+  if (!value) return null;
+  const parts = value.split(":");
+  if (parts.length === 2) {
+    const m = Number(parts[0]);
+    const s = Number(parts[1]);
+    if (!Number.isFinite(m) || !Number.isFinite(s)) return null;
+    return Math.round(m * 60 + s);
+  }
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.round(n) : null;
+}

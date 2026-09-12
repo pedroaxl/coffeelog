@@ -17,6 +17,7 @@ const settings: Settings = {
   grinderOptions: ["1Zpresso ZP6"],
   varietyOptions: ["Bourbon", "Geisha"],
   processOptions: ["Natural", "Washed"],
+  filterOptions: ["Cafec Abaca"],
 };
 
 beforeEach(() => {

@@ -13,8 +13,14 @@ import {
   replaceNotes,
   type CoffeeFields,
 } from "../repos/coffees.js";
-import { upsertRecipe } from "../repos/recipes.js";
+import {
+  createVersion,
+  patchRecipe,
+  listVersions,
+  getVersionByNumber,
+} from "../repos/recipeVersions.js";
 import { insertUnit } from "../repos/units.js";
+import { listBrews } from "../repos/brews.js";
 import {
   addPhoto,
   removePhotoRow,
@@ -47,16 +53,33 @@ const coffeeFields = z.object({
   score: z.number().int().min(1).max(5).nullish(),
 });
 
-const recipeInput = z.object({
-  brewType: z.enum(["filter", "espresso"]).nullish(),
-  method: nullableString,
-  doseG: z.number().min(0).max(1000).nullish(),
-  yieldG: z.number().min(0).max(5000).nullish(),
-  waterTempC: z.number().min(0).max(100).nullish(),
-  grinder: nullableString,
-  grinderSetting: nullableString,
-  protocol: z.string().max(5000).nullish(),
-});
+const drainSeconds = z.number().int().min(0).max(3600).nullish();
+
+// Unknown keys are stripped rather than rejected: scripts that round-trip a
+// recipe object still send the derived `ratio` back.
+const recipeInput = z
+  .object({
+    brewType: z.enum(["filter", "espresso"]).nullish(),
+    method: nullableString,
+    doseG: z.number().min(0).max(1000).nullish(),
+    yieldG: z.number().min(0).max(5000).nullish(),
+    waterTempC: z.number().min(0).max(100).nullish(),
+    grinder: nullableString,
+    grinderSetting: nullableString,
+    filter: nullableString,
+    drainTargetMinSec: drainSeconds,
+    drainTargetMaxSec: drainSeconds,
+    protocol: z.string().max(5000).nullish(),
+    changeNote: z.string().trim().max(300).nullish(),
+    kind: z.enum(["baseline", "tweak"]).nullish(),
+  })
+  .refine(
+    (v) =>
+      v.drainTargetMinSec == null ||
+      v.drainTargetMaxSec == null ||
+      v.drainTargetMinSec <= v.drainTargetMaxSec,
+    { message: "drain target min must not exceed max", path: ["drainTargetMinSec"] }
+  );
 
 // New-coffee wizard step 3: one bag with an initial state.
 const initialUnit = z.object({
@@ -144,7 +167,7 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
       const id = db.transaction(() => {
         const newId = insertCoffee(db, toFields(data));
         if (data.tastingNotes) replaceNotes(db, newId, data.tastingNotes);
-        if (data.recipe) upsertRecipe(db, newId, data.recipe);
+        if (data.recipe) createVersion(db, newId, data.recipe);
         if (data.initialUnit) {
           const bag = bagStateFromInitial(data.initialUnit.initialState);
           insertUnit(db, {
@@ -176,7 +199,7 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
       db.transaction(() => {
         updateCoffee(db, id, fields as Partial<CoffeeFields>);
         if (tastingNotes) replaceNotes(db, id, tastingNotes);
-        if (recipe) upsertRecipe(db, id, recipe);
+        if (recipe) patchRecipe(db, id, recipe);
       })();
 
       res.json(getCoffee(db, id));
@@ -197,15 +220,48 @@ export function coffeesRouter(db: Db, uploadsDir: string): Router {
     })
   );
 
-  router.put(
-    "/:id/recipe",
+  /**
+   * Recipe writes. POST appends a version (a full replace of the parameters);
+   * PATCH merges into the current one, which edits it in place while it is still
+   * a draft and forks a new version once a brew points at it. PUT is the v1
+   * spelling and behaves like POST, so existing scripts keep working.
+   *
+   * All three answer with the whole coffee, as v1 did — a client that wants to
+   * know whether a version was created reads `coffee.recipe.version`.
+   */
+  const writeRecipe = (mode: "create" | "patch") =>
     asyncHandler(async (req, res) => {
       const id = Number(req.params.id);
       if (!coffeeExists(db, id)) throw notFound("Coffee");
       const parsed = recipeInput.safeParse(req.body);
       if (!parsed.success) throw badRequest("Invalid recipe", parsed.error.flatten());
-      upsertRecipe(db, id, parsed.data);
-      res.json(getCoffee(db, id));
+      if (mode === "create") createVersion(db, id, parsed.data);
+      else patchRecipe(db, id, parsed.data);
+      // POST creates a resource; PUT keeps answering 200 as it did in v1.
+      res.status(req.method === "POST" ? 201 : 200).json(getCoffee(db, id));
+    });
+
+  router.post("/:id/recipe", writeRecipe("create"));
+  router.patch("/:id/recipe", writeRecipe("patch"));
+  router.put("/:id/recipe", writeRecipe("create"));
+
+  router.get(
+    "/:id/recipe/versions",
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      res.json(listVersions(db, id));
+    })
+  );
+
+  router.get(
+    "/:id/recipe/versions/:version",
+    asyncHandler(async (req, res) => {
+      const id = Number(req.params.id);
+      if (!coffeeExists(db, id)) throw notFound("Coffee");
+      const version = getVersionByNumber(db, id, Number(req.params.version));
+      if (!version) throw notFound("Recipe version");
+      res.json({ ...version, brews: listBrews(db, { recipeVersionId: version.id }) });
     })
   );
 

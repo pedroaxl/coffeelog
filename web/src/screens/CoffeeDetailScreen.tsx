@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Pencil, ChevronRight, Split, Expand } from "lucide-react";
-import { useCoffee, usePatchScore } from "../api/hooks";
+import { useCoffee, usePatchScore, useBrews } from "../api/hooks";
+import { BrewsByVersion } from "../components/BrewList";
 import { StarPicker } from "../components/StarScore";
 import { StateDot } from "../components/StatePill";
 import { ImageLightbox } from "../components/ImageLightbox";
@@ -77,6 +78,7 @@ export function CoffeeDetailScreen() {
   const navigate = useNavigate();
   const { data: coffee, isLoading } = useCoffee(coffeeId);
   const patchScore = usePatchScore(coffeeId);
+  const { data: brews } = useBrews(coffeeId);
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   if (isLoading) return <div className="min-h-full bg-cream p-6 text-muted">Loading…</div>;
@@ -215,6 +217,15 @@ export function CoffeeDetailScreen() {
         <div className="mb-[10px] flex items-center justify-between">
           <div className="flex items-center gap-[10px]">
             <h2 className="font-serif text-[16px] font-semibold">Recipe</h2>
+            {r && (
+              <button
+                onClick={() => navigate(`/catalog/${coffee.id}/recipe/versions`)}
+                className="rounded-pill bg-tan px-[8px] py-[3px] text-[11px] font-semibold text-brand"
+              >
+                v{r.version}
+                {r.brewCount > 0 ? ` · ${r.brewCount} brew${r.brewCount === 1 ? "" : "s"}` : " · draft"}
+              </button>
+            )}
             {r?.brewType && (
               <span className="rounded-pill bg-chip-terracotta-bg px-[10px] py-[3px] text-[11px] font-semibold uppercase tracking-[0.4px] text-accent-deep">
                 {r.brewType === "espresso" ? "Espresso" : "Filter"}
@@ -269,22 +280,21 @@ export function CoffeeDetailScreen() {
           )}
         </div>
 
-        {/* brew notes left when consuming units (only when some exist) */}
-        {coffee.consumptionNotes.length > 0 && (
+        {/* the brew log, grouped by the recipe version that produced each batch */}
+        {brews && brews.length > 0 && (
           <>
-            <h2 className="mb-[10px] font-serif text-[16px] font-semibold">Brew notes</h2>
-            <div className="mb-[22px] flex flex-col gap-2">
-              {coffee.consumptionNotes.map((n, i) => (
-                <div
-                  key={i}
-                  className="rounded-card border border-border bg-card px-[13px] py-[11px]"
-                >
-                  <div className="text-[11px] text-muted">{longDate(n.date)}</div>
-                  <div className="mt-[3px] whitespace-pre-line text-[13.5px] leading-[1.5]">
-                    {n.note}
-                  </div>
-                </div>
-              ))}
+            <div className="mb-[10px] flex items-baseline justify-between">
+              <h2 className="font-serif text-[16px] font-semibold">
+                Brews · {coffee.brewCount}
+              </h2>
+              {coffee.lastBrewedAt && (
+                <span className="text-[11.5px] text-muted">
+                  last {longDate(coffee.lastBrewedAt.slice(0, 10))}
+                </span>
+              )}
+            </div>
+            <div className="mb-[22px]">
+              <BrewsByVersion brews={brews} />
             </div>
           </>
         )}

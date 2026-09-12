@@ -2,6 +2,8 @@ import type { Db } from "../db/connection.js";
 import { today } from "../lib/dates.js";
 import { HttpError, badRequest, notFound } from "../lib/http-error.js";
 import { insertUnit, type SealState, type TempState } from "../repos/units.js";
+import { deleteBrewsForConsumption, type BrewInput } from "../repos/brews.js";
+import { logBrew } from "./brews.js";
 
 interface UnitRow {
   id: number;
@@ -114,52 +116,76 @@ export function portionBag(db: Db, unitId: number, input: PortionInput): number 
 export interface ConsumeInput {
   grams?: number;
   note?: string | null;
+  /**
+   * Consuming a unit and brewing it are the same gesture in practice, so a
+   * consume can carry the brew with it. Both records are written together and
+   * linked, and undoing the consume undoes the whole gesture.
+   */
+  brew?: BrewInput;
 }
 
 /**
  * Consume from a unit. A bag subtracts grams (and persists); a tube is consumed
- * whole. Records a consumption_log row that powers Undo. Returns the log id.
+ * whole. Records a consumption_log row that powers Undo, and — when the caller
+ * sends one — the brew that went with it. Returns the log id.
+ *
+ * When a brew is attached its note is the note: the free-text field on the
+ * consumption row stays empty so the same sentence isn't stored twice.
  */
 export function consumeUnit(
   db: Db,
   unitId: number,
   input: ConsumeInput
-): { logId: number; coffeeId: number } {
+): { logId: number; coffeeId: number; brewId: number | null } {
   const r = row(db, unitId);
   if (r.consumed === 1) throw badRequest("Unit already consumed");
 
-  const note = input.note?.trim() || null;
+  const note = input.brew ? null : input.note?.trim() || null;
 
-  if (r.kind === "bag") {
-    const grams = input.grams;
-    if (grams == null || grams <= 0) throw badRequest("Enter grams to consume");
-    if (grams > r.weight_g + 1e-6) throw badRequest("Not enough left in the bag");
-    const info = db.transaction(() => {
+  const result = db.transaction(() => {
+    let logId: number;
+    if (r.kind === "bag") {
+      const grams = input.grams;
+      if (grams == null || grams <= 0) throw badRequest("Enter grams to consume");
+      if (grams > r.weight_g + 1e-6) throw badRequest("Not enough left in the bag");
       db.prepare("UPDATE storage_units SET weight_g = weight_g - ? WHERE id = ?").run(
         grams,
         unitId
       );
-      return db
-        .prepare(
-          `INSERT INTO consumption_log (unit_id, coffee_id, kind, grams_delta, prev_weight, notes)
-           VALUES (?, ?, 'bag', ?, ?, ?)`
-        )
-        .run(unitId, r.coffee_id, grams, r.weight_g, note);
-    })();
-    return { logId: Number(info.lastInsertRowid), coffeeId: r.coffee_id };
-  }
+      logId = Number(
+        db
+          .prepare(
+            `INSERT INTO consumption_log (unit_id, coffee_id, kind, grams_delta, prev_weight, notes)
+             VALUES (?, ?, 'bag', ?, ?, ?)`
+          )
+          .run(unitId, r.coffee_id, grams, r.weight_g, note).lastInsertRowid
+      );
+    } else {
+      // tube — whole consume
+      db.prepare("UPDATE storage_units SET consumed = 1 WHERE id = ?").run(unitId);
+      logId = Number(
+        db
+          .prepare(
+            `INSERT INTO consumption_log (unit_id, coffee_id, kind, grams_delta, prev_state, notes)
+             VALUES (?, ?, 'tube', ?, ?, ?)`
+          )
+          .run(unitId, r.coffee_id, r.weight_g, r.temp_state, note).lastInsertRowid
+      );
+    }
 
-  // tube — whole consume
-  const info = db.transaction(() => {
-    db.prepare("UPDATE storage_units SET consumed = 1 WHERE id = ?").run(unitId);
-    return db
-      .prepare(
-        `INSERT INTO consumption_log (unit_id, coffee_id, kind, grams_delta, prev_state, notes)
-         VALUES (?, ?, 'tube', ?, ?, ?)`
-      )
-      .run(unitId, r.coffee_id, r.weight_g, r.temp_state, note);
+    let brewId: number | null = null;
+    if (input.brew) {
+      const brew = logBrew(db, r.coffee_id, {
+        unitId,
+        ...input.brew,
+        consumptionLogId: logId,
+      });
+      brewId = brew.id;
+    }
+    return { logId, brewId };
   })();
-  return { logId: Number(info.lastInsertRowid), coffeeId: r.coffee_id };
+
+  return { ...result, coffeeId: r.coffee_id };
 }
 
 interface LogRow {
@@ -183,6 +209,9 @@ export function undoConsume(db: Db, logId: number): number {
   if (log.unit_id == null) throw badRequest("The unit no longer exists");
 
   db.transaction(() => {
+    // Undo reverses the gesture, not just the stock: a brew recorded as part of
+    // this consume goes with it.
+    deleteBrewsForConsumption(db, logId);
     if (log.kind === "bag") {
       db.prepare("UPDATE storage_units SET weight_g = weight_g + ? WHERE id = ?").run(
         log.grams_delta,

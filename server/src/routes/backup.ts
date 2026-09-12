@@ -13,12 +13,20 @@ export function backupRouter(db: Db): Router {
       const consumptionLog = db
         .prepare("SELECT * FROM consumption_log ORDER BY id ASC")
         .all();
+      // Recipe history and brews are not carried in the coffee payload (which
+      // holds only the active recipe), so they are exported as their own tables.
+      const recipeVersions = db
+        .prepare("SELECT * FROM recipe_versions ORDER BY id ASC")
+        .all();
+      const brews = db.prepare("SELECT * FROM brews ORDER BY id ASC").all();
       const payload = {
         app: "CoffeeLog",
         version: "1.0.0",
         exportedAt: new Date().toISOString(),
         settings: getSettings(db),
         coffees: listCoffees(db),
+        recipeVersions,
+        brews,
         consumptionLog,
       };
       const date = new Date().toISOString().slice(0, 10);

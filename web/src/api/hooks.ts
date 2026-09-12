@@ -1,6 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "./client";
-import type { Alerts, Coffee, ConsumeResult, Recipe, Settings, TempState } from "./types";
+import type {
+  Alerts,
+  Brew,
+  BrewInput,
+  Coffee,
+  ConsumeResult,
+  Recipe,
+  RecipeInput,
+  RecipeKind,
+  Settings,
+  TempState,
+} from "./types";
 
 // ---- Coffees ----
 
@@ -19,7 +30,7 @@ export interface CoffeeInput {
   purchaseDate?: string | null;
   score?: number | null;
   tastingNotes?: string[];
-  recipe?: Partial<Omit<Recipe, "id" | "ratio">>;
+  recipe?: RecipeInput;
   initialUnit?: { weightG: number; initialState: "sealed" | "open" | "frozen" };
 }
 
@@ -39,6 +50,7 @@ function useInvalidateCoffees() {
   const qc = useQueryClient();
   return (coffee?: Coffee) => {
     qc.invalidateQueries({ queryKey: ["coffees"] });
+    qc.invalidateQueries({ queryKey: ["recipeVersions"] });
     if (coffee) qc.setQueryData(["coffee", coffee.id], coffee);
   };
 }
@@ -67,12 +79,25 @@ export function usePatchScore(id: number) {
   });
 }
 
-export function usePutRecipe(id: number) {
+/**
+ * Save the recipe. PATCH edits the current version while it is still a draft and
+ * forks a new one once a brew points at it, so the editor never has to decide
+ * which it is — read `coffee.recipe.version` from the response to find out.
+ */
+export function usePatchRecipe(id: number) {
   const invalidate = useInvalidateCoffees();
   return useMutation({
-    mutationFn: (recipe: Partial<Omit<Recipe, "id" | "ratio">>) =>
-      api.put<Coffee>(`/coffees/${id}/recipe`, recipe),
+    mutationFn: (recipe: RecipeInput) => api.patch<Coffee>(`/coffees/${id}/recipe`, recipe),
     onSuccess: invalidate,
+  });
+}
+
+/** Full recipe history for a coffee, newest first. */
+export function useRecipeVersions(id: number | undefined) {
+  return useQuery({
+    queryKey: ["recipeVersions", id],
+    queryFn: () => api.get<Recipe[]>(`/coffees/${id}/recipe/versions`),
+    enabled: id != null && !Number.isNaN(id),
   });
 }
 
@@ -122,6 +147,8 @@ function useCoffeeCacheSync() {
     qc.invalidateQueries({ queryKey: ["coffees"] });
     qc.invalidateQueries({ queryKey: ["alerts"] });
     qc.invalidateQueries({ queryKey: ["unit"] });
+    qc.invalidateQueries({ queryKey: ["brews"] });
+    qc.invalidateQueries({ queryKey: ["recipeVersions"] });
   };
 }
 
@@ -164,8 +191,73 @@ export function useSetUnitState(unitId: number) {
 export function useConsume(unitId: number) {
   const sync = useCoffeeCacheSync();
   return useMutation({
-    mutationFn: (input: { grams?: number; note?: string | null }) =>
+    // A brew sent along is recorded with the consume and undone with it.
+    mutationFn: (input: { grams?: number; note?: string | null; brew?: BrewInput }) =>
       api.post<ConsumeResult>(`/units/${unitId}/consume`, input),
+    onSuccess: (res) => sync(res.coffee),
+  });
+}
+
+// ---- Brews ----
+
+export function useBrews(coffeeId: number | undefined) {
+  return useQuery({
+    queryKey: ["brews", coffeeId],
+    queryFn: () => api.get<Brew[]>(`/coffees/${coffeeId}/brews`),
+    enabled: coffeeId != null && !Number.isNaN(coffeeId),
+  });
+}
+
+export function useBrew(brewId: number | undefined) {
+  return useQuery({
+    queryKey: ["brew", brewId],
+    queryFn: () => api.get<Brew>(`/brews/${brewId}`),
+    enabled: brewId != null && !Number.isNaN(brewId),
+  });
+}
+
+/** Log a brew on its own — the stock ledger is left alone. */
+export function useLogBrew() {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    // The coffee id is passed at call time so screens can create the mutation
+    // before their data has loaded.
+    mutationFn: ({ coffeeId, brew }: { coffeeId: number; brew: BrewInput }) =>
+      api.post<{ brew: Brew; coffee: Coffee }>(`/coffees/${coffeeId}/brews`, brew),
+    onSuccess: (res) => sync(res.coffee),
+  });
+}
+
+export function usePatchBrew(brewId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (patch: BrewInput) => api.patch<Brew>(`/brews/${brewId}`, patch),
+    onSuccess: (brew) => {
+      qc.setQueryData(["brew", brew.id], brew);
+      qc.invalidateQueries({ queryKey: ["brews"] });
+      qc.invalidateQueries({ queryKey: ["coffee", brew.coffeeId] });
+    },
+  });
+}
+
+export function useDeleteBrew() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (brewId: number) => api.del<void>(`/brews/${brewId}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["brews"] });
+      qc.invalidateQueries({ queryKey: ["coffees"] });
+      qc.invalidateQueries({ queryKey: ["coffee"] });
+    },
+  });
+}
+
+/** Turn what happened into the plan: a new recipe version from this brew. */
+export function usePromoteBrew(brewId: number) {
+  const sync = useCoffeeCacheSync();
+  return useMutation({
+    mutationFn: (opts: { changeNote?: string | null; kind?: RecipeKind }) =>
+      api.post<{ recipeVersion: Recipe; coffee: Coffee }>(`/brews/${brewId}/promote`, opts),
     onSuccess: (res) => sync(res.coffee),
   });
 }
