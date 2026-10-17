@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Plus, Star, Snowflake, Clock, Split } from "lucide-react";
+import { Plus, Snowflake, Clock, Split } from "lucide-react";
 import { useCoffees } from "../api/hooks";
 import { CoffeeCard } from "../components/CoffeeCard";
 import {
@@ -15,8 +15,7 @@ const SCOPES: { key: CatalogScope; label: string }[] = [
   { key: "archived", label: "Archived" },
 ];
 
-const SORTS: { key: CatalogSort; label: string; icon: typeof Star; color: string }[] = [
-  { key: "stars", label: "Stars", icon: Star, color: "#C79A33" },
+const SORTS: { key: CatalogSort; label: string; icon: typeof Clock; color: string }[] = [
   { key: "longest", label: "Longest", icon: Snowflake, color: "#5B7B8C" },
   { key: "recent", label: "Recent", icon: Clock, color: "#5C3D28" },
   { key: "portion", label: "Portion", icon: Split, color: "#9A5228" },
@@ -26,7 +25,7 @@ const SORTS: { key: CatalogSort; label: string; icon: typeof Star; color: string
 export function CatalogScreen() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const initialSort = (["stars", "longest", "recent", "portion"] as CatalogSort[]).includes(
+  const initialSort = (["longest", "recent", "portion"] as CatalogSort[]).includes(
     params.get("filter") as CatalogSort
   )
     ? (params.get("filter") as CatalogSort)

@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { filterAndSort, primaryStatus, hasOpenBag } from "./coffee";
+import {
+  filterAndSort,
+  hasOpenBag,
+  inventorySummary,
+  freezerUnits,
+  groupedWeights,
+  freezerList,
+} from "./coffee";
 import type { Coffee, StorageUnit } from "../api/types";
 
 function unit(partial: Partial<StorageUnit>): StorageUnit {
@@ -53,15 +60,87 @@ function coffee(partial: Partial<Coffee>): Coffee {
   };
 }
 
-describe("primaryStatus", () => {
-  it("prefers open, then frozen, then defrosted, then consumed", () => {
-    expect(primaryStatus(coffee({ units: [unit({ status: "open" })] }))).toBe("open");
-    expect(
-      primaryStatus(coffee({ units: [unit({ status: "frozen", sealState: "sealed", tempState: "frozen" })] }))
-    ).toBe("frozen");
-    expect(primaryStatus(coffee({ units: [], activeUnitCount: 0, status: "archived" }))).toBe(
-      "consumed"
-    );
+function tube(partial: Partial<StorageUnit>): StorageUnit {
+  return unit({
+    kind: "tube",
+    weightG: 18,
+    sealState: null,
+    tempState: "frozen",
+    status: "frozen",
+    frozenDate: "2026-09-01",
+    openedDate: null,
+    ...partial,
+  });
+}
+
+function frozenBag(partial: Partial<StorageUnit>): StorageUnit {
+  return unit({
+    weightG: 250,
+    sealState: "sealed",
+    tempState: "frozen",
+    status: "frozen",
+    frozenDate: "2026-09-01",
+    openedDate: null,
+    ...partial,
+  });
+}
+
+describe("inventorySummary", () => {
+  it("buckets active units, tubes first, skipping consumed ones", () => {
+    const c = coffee({
+      units: [
+        tube({ id: 1 }),
+        tube({ id: 2 }),
+        tube({ id: 3, consumed: true, status: "consumed", active: false }),
+        unit({ id: 4 }),
+        frozenBag({ id: 5 }),
+      ],
+    });
+    expect(inventorySummary(c)).toEqual([
+      { kind: "tube", status: "frozen", count: 2 },
+      { kind: "bag", status: "frozen", count: 1 },
+      { kind: "bag", status: "open", count: 1 },
+    ]);
+  });
+});
+
+describe("freezerUnits", () => {
+  it("keeps frozen tubes, and only sealed frozen bags", () => {
+    const c = coffee({
+      units: [
+        tube({ id: 1 }),
+        tube({ id: 2, tempState: "defrosted", status: "defrosted" }),
+        frozenBag({ id: 3 }),
+        frozenBag({ id: 4, sealState: "open" }),
+        unit({ id: 5 }),
+      ],
+    });
+    expect(freezerUnits(c, "tube").map((u) => u.id)).toEqual([1]);
+    expect(freezerUnits(c, "bag").map((u) => u.id)).toEqual([3]);
+  });
+});
+
+describe("groupedWeights", () => {
+  it("groups equal weights heaviest first and drops 1×", () => {
+    const units = [15, 18, 18, 18, 20].map((g, i) => tube({ id: i, weightG: g }));
+    expect(groupedWeights(units)).toBe("20 g · 3× 18 g · 15 g");
+  });
+});
+
+describe("freezerList", () => {
+  it("lists available coffees with freezer units, longest frozen first", () => {
+    const fresh = coffee({ id: 1, name: "Fresh", units: [tube({ frozenDate: "2026-10-10" })] });
+    const old = coffee({
+      id: 2,
+      name: "Old",
+      units: [tube({ frozenDate: "2026-09-20" }), tube({ frozenDate: "2026-08-01" })],
+    });
+    const noTubes = coffee({ id: 3, units: [frozenBag({})] });
+    const archived = coffee({ id: 4, status: "archived", units: [tube({})] });
+    const list = freezerList([fresh, old, noTubes, archived], "tube");
+    expect(list.map((e) => e.coffee.id)).toEqual([2, 1]);
+    expect(list[0].oldestFrozenDate).toBe("2026-08-01");
+    expect(freezerList([fresh, old, noTubes], "bag").map((e) => e.coffee.id)).toEqual([3]);
   });
 });
 
@@ -83,10 +162,9 @@ describe("filterAndSort", () => {
     expect(filterAndSort(all, "all", "recent", "")).toHaveLength(2);
   });
 
-  it("sorts by stars and filters by search", () => {
-    const a = coffee({ id: 1, name: "Alpha", score: 2 });
-    const b = coffee({ id: 2, name: "Beta", score: 5 });
-    expect(filterAndSort([a, b], "all", "stars", "").map((c) => c.id)).toEqual([2, 1]);
+  it("filters by search", () => {
+    const a = coffee({ id: 1, name: "Alpha" });
+    const b = coffee({ id: 2, name: "Beta" });
     expect(filterAndSort([a, b], "all", "recent", "beta").map((c) => c.id)).toEqual([2]);
   });
 

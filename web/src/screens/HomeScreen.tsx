@@ -1,36 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ScanLine, Plus, Split, Snowflake, ChevronRight } from "lucide-react";
+import { ScanLine, Plus, Split, Snowflake, ChevronRight, Package, TestTube } from "lucide-react";
 import { BeanMark, LogoTile } from "../components/Logo";
 import { CoffeeCard } from "../components/CoffeeCard";
 import { useAlerts, useCoffees, useSettings } from "../api/hooks";
-import { earliestFrozenDate } from "../lib/coffee";
-import type { Coffee } from "../api/types";
+import { freezerList, groupedWeights } from "../lib/coffee";
+import { daysSince } from "../lib/format";
+import type { Coffee, UnitKind } from "../api/types";
 
-type ListKey = "recent" | "longest" | "top" | "used";
+type CardListKey = "recent" | "used";
+type ListKey = "tubes" | "bags" | CardListKey;
 const LISTS: { key: ListKey; label: string }[] = [
+  { key: "tubes", label: "Tubes in freezer" },
+  { key: "bags", label: "Bags in freezer" },
   { key: "recent", label: "Most recent" },
-  { key: "longest", label: "Longest frozen" },
-  { key: "top", label: "Top rated" },
   { key: "used", label: "Recently used" },
 ];
 
-function selectList(coffees: Coffee[], key: ListKey): Coffee[] {
+function selectList(coffees: Coffee[], key: CardListKey): Coffee[] {
   const avail = coffees.filter((c) => c.status === "available");
-  switch (key) {
-    case "longest":
-      return avail
-        .filter((c) => earliestFrozenDate(c))
-        .sort((a, b) => (earliestFrozenDate(a)! < earliestFrozenDate(b)! ? -1 : 1));
-    case "top":
-      return avail.filter((c) => c.score != null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-    case "used":
-      return avail
-        .filter((c) => c.lastUsedAt)
-        .sort((a, b) => (a.lastUsedAt! < b.lastUsedAt! ? 1 : -1));
-    default:
-      return [...avail].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  if (key === "used") {
+    return avail
+      .filter((c) => c.lastUsedAt)
+      .sort((a, b) => (a.lastUsedAt! < b.lastUsedAt! ? 1 : -1));
   }
+  return [...avail].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 /** Home (badge 5a) — two alert cards + selectable coffee lists. */
@@ -38,11 +32,11 @@ export function HomeScreen() {
   const navigate = useNavigate();
   const { data: alerts } = useAlerts();
   const { data: coffees } = useCoffees();
-  const [list, setList] = useState<ListKey>("recent");
+  const [list, setList] = useState<ListKey>("tubes");
 
   if (coffees && coffees.length === 0) return <EmptyHome />;
 
-  const shown = coffees ? selectList(coffees, list) : [];
+  const freezerKind: UnitKind | null = list === "tubes" ? "tube" : list === "bags" ? "bag" : null;
 
   return (
     <div className="flex min-h-full flex-col bg-brand">
@@ -135,19 +129,93 @@ export function HomeScreen() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-[11px] px-[22px]">
-          {shown.length === 0 ? (
-            <div className="py-6 text-center text-[13px] text-muted">
-              No coffees in this list yet.
-              <br />
-              <button onClick={() => navigate("/catalog/new")} className="mt-2 inline-flex items-center gap-1 font-semibold text-terracotta">
-                Add a coffee <ChevronRight size={14} />
-              </button>
-            </div>
-          ) : (
-            shown.map((c) => <CoffeeCard key={c.id} coffee={c} />)
-          )}
+        {!coffees ? null : freezerKind ? (
+          <FreezerList coffees={coffees} kind={freezerKind} />
+        ) : (
+          <CardList coffees={selectList(coffees, list as CardListKey)} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CardList({ coffees }: { coffees: Coffee[] }) {
+  const navigate = useNavigate();
+  return (
+    <div className="flex flex-col gap-[11px] px-[22px]">
+      {coffees.length === 0 ? (
+        <div className="py-6 text-center text-[13px] text-muted">
+          No coffees in this list yet.
+          <br />
+          <button onClick={() => navigate("/catalog/new")} className="mt-2 inline-flex items-center gap-1 font-semibold text-terracotta">
+            Add a coffee <ChevronRight size={14} />
+          </button>
         </div>
+      ) : (
+        coffees.map((c) => <CoffeeCard key={c.id} coffee={c} />)
+      )}
+    </div>
+  );
+}
+
+/**
+ * What's in the freezer, one compact row per coffee: grouped unit weights and
+ * how long the oldest unit has been frozen, longest first. Bags = sealed only.
+ */
+function FreezerList({ coffees, kind }: { coffees: Coffee[]; kind: UnitKind }) {
+  const navigate = useNavigate();
+  const { data: settings } = useSettings();
+  const entries = freezerList(coffees, kind);
+  const total = entries.reduce((n, e) => n + e.units.length, 0);
+  const Icon = kind === "tube" ? TestTube : Package;
+  const noun = kind === "tube" ? "tube" : "bag";
+
+  if (entries.length === 0) {
+    return (
+      <div className="px-[22px] py-6 text-center text-[13px] text-muted">
+        {kind === "tube" ? "No frozen tubes right now." : "No sealed bags in the freezer."}
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-[22px]">
+      <div className="mb-2 text-[11.5px] text-muted">
+        {total} {noun}
+        {total === 1 ? "" : "s"} · oldest first
+      </div>
+      <div className="overflow-hidden rounded-[18px] border border-border bg-card shadow-card">
+        {entries.map(({ coffee, units, oldestFrozenDate }, i) => {
+          const days = daysSince(oldestFrozenDate);
+          const over = days != null && settings != null && days > settings.warnFrozenOverDays;
+          return (
+            <button
+              key={coffee.id}
+              onClick={() => navigate(`/catalog/${coffee.id}`)}
+              className={`flex w-full items-center gap-[10px] px-[14px] py-[11px] text-left ${
+                i > 0 ? "border-t border-divider" : ""
+              }`}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="flex items-baseline justify-between gap-2">
+                  <span className="truncate text-[14.5px] font-semibold">{coffee.name}</span>
+                  <span
+                    className={`flex-none text-[12.5px] font-semibold ${
+                      over ? "text-state-defrosted" : "text-brand"
+                    }`}
+                  >
+                    {days != null ? `${days} d` : "—"}
+                  </span>
+                </span>
+                <span className="mt-[3px] flex items-center gap-[5px] text-[12.5px] text-[#4A6878]">
+                  <Icon size={13} strokeWidth={2.2} color="#5B7B8C" />
+                  {groupedWeights(units)}
+                </span>
+              </span>
+              <ChevronRight size={15} color="#C9B9A4" className="flex-none" />
+            </button>
+          );
+        })}
       </div>
     </div>
   );
